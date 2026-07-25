@@ -1,209 +1,518 @@
 <!DOCTYPE html>
-<html lang="ha">
+<html lang="en">
 <head>
+
+    <!-- ==========================================
+         BASIC META
+    =========================================== -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Quizzes - Omnora Student AI</title>
-    <link rel="stylesheet" href="css/main.css">
-    
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Student Quiz Verification | Omnora Student AI</title>
+
+    <meta name="description"
+          content="Verify your Omnora Student AI account before accessing daily quizzes.">
+
+    <meta name="keywords"
+          content="Omnora Student AI, Quiz Verification, OMS-ID, Student Login, AI Education">
+
+    <meta name="author"
+          content="Omnora Labs">
+
+    <meta name="theme-color"
+          content="#081120">
+
+    <!-- ==========================================
+         FAVICON
+    =========================================== -->
+
+    <link rel="icon"
+          type="image/png"
+          href="assets/images/favicon.png">
+
+    <!-- ==========================================
+         GOOGLE FONTS
+    =========================================== -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- ==========================================
+         GLOBAL STYLES
+    =========================================== -->
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/cards.css">
+    <link rel="stylesheet" href="css/brain.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Quiz Styles -->
+    <link rel="stylesheet" href="css/quizzes.css">
+
 </head>
+
 <body>
 
+<!-- ==========================================
+     BACKGROUND EFFECTS
+========================================== -->
 
-    <div class="registration-container">
-    
-    <h1>Student Registration</h1>
-    <p>Complete your information before starting today's quiz.</p>
+<div class="background-grid"></div>
+<div class="background-glow glow-1"></div>
+<div class="background-glow glow-2"></div>
 
-    <form id="registrationForm">
+<!-- ==========================================
+     HEADER
+========================================== -->
 
-        <input
-            type="text"
-            id="fullName"
-            placeholder="Full Name"
-            required
-        >
+<header class="main-header">
 
-        <input
-            type="text"
-            id="schoolName"
-            placeholder="School Name"
-            required
-        >
+    <div class="container">
 
-        <input
-            type="text"
-            id="admissionNumber"
-            placeholder="Admission Number"
-            required
-        >
+        <a href="index.html" class="logo">
 
-<select id="country" required>
-    <option value="">Select Country</option>
+            <img
+                src="assets/images/omnora-logo.png"
+                alt="Omnora Student AI Logo">
 
-    <!-- Featured -->
-    <option value="United States">🇺🇸 United States (USA)</option>
+            <span>Omnora Student AI</span>
 
-    <!-- Africa -->
-    <optgroup label="Africa">
-        <option>Nigeria</option>
-        <option>Ghana</option>
-        <option>South Africa</option>
-        <option>Kenya</option>
-        <option>Uganda</option>
-        <option>Tanzania</option>
-        <option>Ethiopia</option>
-        <option>Egypt</option>
-        <option>Morocco</option>
-        <option>Algeria</option>
-        <option>Tunisia</option>
-        <option>Libya</option>
-        <option>Sudan</option>
-        <option>South Sudan</option>
-        <option>Niger</option>
-        <option>Chad</option>
-        <option>Cameroon</option>
-        <option>Central African Republic</option>
-        <option>Republic of the Congo</option>
-        <option>Democratic Republic of the Congo</option>
-        <option>Gabon</option>
-        <option>Equatorial Guinea</option>
-        <option>Senegal</option>
-        <option>Mali</option>
-        <option>Burkina Faso</option>
-        <option>Benin</option>
-        <option>Togo</option>
-        <option>Ivory Coast</option>
-        <option>Liberia</option>
-        <option>Sierra Leone</option>
-        <option>Guinea</option>
-        <option>Guinea-Bissau</option>
-        <option>Gambia</option>
-        <option>Cape Verde</option>
-        <option>Mauritania</option>
-        <option>Rwanda</option>
-        <option>Burundi</option>
-        <option>Zimbabwe</option>
-        <option>Zambia</option>
-        <option>Botswana</option>
-        <option>Namibia</option>
-        <option>Angola</option>
-        <option>Mozambique</option>
-        <option>Malawi</option>
-        <option>Madagascar</option>
-        <option>Mauritius</option>
-        <option>Seychelles</option>
-        <option>Comoros</option>
-        <option>Djibouti</option>
-        <option>Eritrea</option>
-        <option>Somalia</option>
-        <option>Lesotho</option>
-        <option>Eswatini</option>
-        <option>São Tomé and Príncipe</option>
-    </optgroup>
+        </a>
 
-    <!-- Major Countries -->
-    <optgroup label="Major Countries">
-        <option>United Kingdom</option>
-        <option>China</option>
-        <option>Russia</option>
-        <option>Japan</option>
-        <option>South Korea</option>
-        <option>India</option>
-        <option>Canada</option>
-        <option>Germany</option>
-        <option>France</option>
-        <option>Italy</option>
-        <option>Spain</option>
-        <option>Netherlands</option>
-        <option>Australia</option>
-        <option>Brazil</option>
-        <option>Mexico</option>
-        <option>Turkey</option>
-        <option>Saudi Arabia</option>
-        <option>United Arab Emirates</option>
-        <option>Singapore</option>
-        <option>Malaysia</option>
-    </optgroup>
+        <nav class="desktop-nav">
 
-    <option value="Other">Other Country...</option>
-</select>
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="student-profile.html">Profile</a>
+            <a href="leaderboard.html">Leaderboard</a>
 
-        
-        
-        <select id="studentClass" required>
-            <option value="">Select Class</option>
-
-            <optgroup label="Primary">
-                <option>Primary 1</option>
-                <option>Primary 2</option>
-                <option>Primary 3</option>
-                <option>Primary 4</option>
-                <option>Primary 5</option>
-                <option>Primary 6</option>
-            </optgroup>
-
-            <optgroup label="Junior Secondary">
-                <option>JSS 1</option>
-                <option>JSS 2</option>
-                <option>JSS 3</option>
-            </optgroup>
-
-            <optgroup label="Senior Secondary">
-                <option>SSS 1</option>
-                <option>SSS 2</option>
-                <option>SSS 3</option>
-            </optgroup>
-
-        </select>
-
-        <input
-            type="password"
-            id="quizPin"
-            maxlength="4"
-            placeholder="4 Digit Quiz PIN"
-            required
-        >
-
-        <button type="submit" id="startQuizBtn">
-            Start Quiz
-        </button>
-
-    </form>
-
- </div>
-        
-    <div id="quizContainer" class="quiz-container" style="display:none;">
-
-    <h1>Daily Quiz</h1>
-
-    <div class="score">0/10 Points</div>
-
-    <div class="quiz-progress">
-
-        <div id="progressText">
-            Question 1 / 10
-        </div>
-
-        <div class="progress-bar">
-            <div id="progressFill"></div>
-        </div>
-
-        <div id="timer">
-            5:00
-        </div>
+        </nav>
 
     </div>
 
-    <div id="quizQuestion" class="question"></div>
+</header>
 
-    <div id="quizOptions" class="options"></div>
+<!-- ==========================================
+     MAIN CONTENT
+========================================== -->
 
-    <button id="nextBtn" onclick="nextQuestion()">
-        Next
-    </button>
-    <script src="js/question-bank.js/question-bank.js"></script>
-        
-    <script src="js/quizzes.js/quizzes.js"></script>
+<main class="quiz-page">
+
+    <section class="quiz-verification-section">
+
+        <div class="container">
+
+            <div class="quiz-header">
+
+                <span class="section-badge">
+
+                    Student Verification
+
+                </span>
+
+                <h1>
+
+                    Student Quiz Verification
+
+                </h1>
+
+                <p>
+
+                    We've simplified quiz authentication to make access even easier.
+                    Simply sign in with your existing OMS-ID and account password,
+                    so you only need to remember one secure login for your
+                    Omnora Student AI account.
+
+                </p>
+
+            </div>
+                        <!-- ==========================================
+                 QUIZ VERIFICATION CARD
+            =========================================== -->
+
+            <div class="quiz-verification-card">
+
+                <div class="verification-icon">
+
+                    <img
+                        src="assets/images/omnora-brain.png"
+                        alt="Omnora Student AI">
+
+                </div>
+
+                <div class="verification-content">
+
+                    <h2>
+
+                        Verify Your Student Account
+
+                    </h2>
+
+                    <p>
+
+                        Enter your OMS-ID and account password to verify
+                        your identity before accessing today's quiz.
+
+                    </p>
+
+                </div>
+
+                <!-- ==============================
+                     VERIFICATION FORM
+                =============================== -->
+
+                <form
+                    id="quizVerificationForm"
+                    class="verification-form"
+                    autocomplete="on">
+
+                    <!-- OMS-ID -->
+
+                    <div class="form-group">
+
+                        <label for="omsId">
+
+                            OMS-ID
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="omsId"
+                            name="omsId"
+                            placeholder="Enter your OMS-ID"
+                            autocomplete="username"
+                            required>
+
+                    </div>
+
+                    <!-- Password -->
+
+                    <div class="form-group">
+
+                        <label for="accountPassword">
+
+                            Account Password
+
+                        </label>
+
+                        <input
+                            type="password"
+                            id="accountPassword"
+                            name="accountPassword"
+                            placeholder="Enter your account password"
+                            autocomplete="current-password"
+                            required>
+
+                    </div>
+
+                    <!-- Remember Device -->
+
+                    <div class="remember-device">
+
+                        <label class="checkbox">
+
+                            <input
+                                type="checkbox"
+                                id="rememberDevice">
+
+                            <span>
+
+                                Remember this device
+
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                    <!-- Verification Status -->
+
+                    <div
+                        id="verificationMessage"
+                        class="verification-message">
+
+                    </div>
+
+                    <!-- Submit -->
+
+                    <button
+                        type="submit"
+                        class="primary-btn verify-btn">
+
+                        Verify &amp; Start Quiz
+
+                    </button>
+
+                </form>
+
+                <!-- ==============================
+                     ACCOUNT LINKS
+                =============================== -->
+
+                <div class="verification-links">
+
+                    <a href="forgot-omsid.html">
+
+                        Forgot your OMS-ID?
+
+                    </a>
+
+                    <a href="forgot-password.html">
+
+                        Forgot your Password?
+
+                    </a>
+
+                    <a
+                        href="student-register.html"
+                        class="create-account-link">
+
+                        Don't have an account?
+                        <strong>Create Student Account</strong>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+        <!-- ==========================================
+         QUIZ CONTAINER
+         Hidden until verification succeeds
+    =========================================== -->
+
+    <section
+        id="quizContainer"
+        class="quiz-container"
+        hidden>
+
+        <div class="quiz-card">
+
+            <!-- Progress Header -->
+
+            <div class="quiz-top">
+
+                <div class="quiz-progress">
+
+                    <div class="progress-info">
+
+                        <span id="questionCounter">
+
+                            Question 1 of 20
+
+                        </span>
+
+                        <span id="quizScore">
+
+                            Score: 0
+
+                        </span>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div
+                            id="progressFill"
+                            class="progress-fill">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Timer -->
+
+                <div
+                    id="quizTimer"
+                    class="quiz-timer">
+
+                    20:00
+
+                </div>
+
+            </div>
+
+            <!-- Question -->
+
+            <div class="question-wrapper">
+
+                <h2 id="questionText">
+
+                    Loading question...
+
+                </h2>
+
+            </div>
+
+            <!-- Options -->
+
+            <div
+                id="optionsContainer"
+                class="options-container">
+
+            </div>
+
+            <!-- Navigation -->
+
+            <div class="quiz-actions">
+
+                <button
+                    id="nextQuestionBtn"
+                    class="primary-btn">
+
+                    Next Question
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+         QUIZ RESULT
+    =========================================== -->
+
+    <section
+        id="quizResult"
+        class="quiz-result"
+        hidden>
+
+        <div class="result-card">
+
+            <img
+                src="assets/images/omnora-brain.png"
+                alt="Quiz Complete">
+
+            <h2>
+
+                Quiz Completed 🎉
+
+            </h2>
+
+            <p>
+
+                Great job! Your quiz has been submitted successfully.
+
+            </p>
+
+            <div class="result-summary">
+
+                <div class="summary-item">
+
+                    <span>
+
+                        Final Score
+
+                    </span>
+
+                    <strong id="finalScore">
+
+                        0 / 20
+
+                    </strong>
+
+                </div>
+
+                <div class="summary-item">
+
+                    <span>
+
+                        Percentage
+
+                    </span>
+
+                    <strong id="finalPercentage">
+
+                        0%
+
+                    </strong>
+
+                </div>
+
+                <div class="summary-item">
+
+                    <span>
+
+                        Rank Points
+
+                    </span>
+
+                    <strong id="earnedPoints">
+
+                        +0 XP
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+            <div class="result-actions">
+
+                <a
+                    href="dashboard.html"
+                    class="primary-btn">
+
+                    Return to Dashboard
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<footer class="main-footer">
+
+    <div class="container">
+
+        <p>
+
+            © 2026 Omnora Labs.
+            All Rights Reserved.
+
+        </p>
+
+    </div>
+
+</footer>
+
+<!-- ==========================================
+     JAVASCRIPT
+========================================== -->
+
+<script src="js/utils.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/quizzes.js"></script>
+
 </body>
-  </html>
+</html>
