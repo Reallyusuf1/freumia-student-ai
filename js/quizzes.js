@@ -1,238 +1,119 @@
+/**
+ * ============================================================
+ * Omnora Student AI V2
+ * File: js/quizzes.js
+ * Purpose: Quiz Initialization & Session Detection
+ * Commit 1
+ * ============================================================
+ */
 
-// ================================
-// Quiz State
-// ================================
+const QuizApp = {
 
-let currentQuestionIndex = 0;
-let score = 0;
-let selectedAnswer = null;
-let quizStarted = false;
-let quizQuestions = [];
-let studentData = {};
+    elements: {},
 
-// ==================================================
-// Quiz Engine Module
-// --------------------------------------------------
-// Responsibilities:
-// • Load quiz questions
-// • Display current question
-// • Handle answer selection
-// • Track quiz progress
-// • Calculate score
-// • Navigate between questions
-// • Complete the quiz
-// ==================================================
+    async init() {
 
-function showQuestion() {
-            const q = quizQuestions[currentQuestionIndex];
-            document.getElementById('quizQuestion').innerHTML = `<p><strong>Question ${currentQuestionIndex + 1}:</strong> ${q.question}</p>`;
-            
-            let optionsHTML = "";
+        this.cacheElements();
 
-          q.options.forEach(opt => {
-          optionsHTML += `<button onclick="selectAnswer('${opt[0]}')">${opt}</button>`;
-           });
-            
-            document.getElementById('quizOptions').innerHTML = optionsHTML;
-          updateProgress();
-            document.getElementById('nextBtn').style.display = 'none';
-}
+        this.bindEvents();
 
-function selectAnswer(selected) {
-            const correct = quizQuestions[currentQuestionIndex].answer;
-            if (selected === correct) score += 2.5;
-            document.getElementById('nextBtn').style.display = 'block';
-}
+        await this.restoreSession();
 
+    },
 
-function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizQuestions.length) {
-                showQuestion();
-                      clearInterval(quizTimer);
-            } 
-            else {
-                finishQuiz(`Quiz Complete! You earned ${Math.round(score)} points!`);
-                window.location.href = "index.html"; // Return to main page
-            }
-          clearInterval(quizTimer);
-}
+    cacheElements() {
 
-// ==============================
-// Registration
-// ==============================
+        this.elements.form =
+            document.getElementById("quizVerificationForm");
 
-function registerStudent(event) {
-    event.preventDefault();
+        this.elements.omsId =
+            document.getElementById("omsId");
 
-    if (!validateRegistration()) {
-        return;
-    }
+        this.elements.password =
+            document.getElementById("password");
 
-    studentData = {
-        fullName: document.getElementById("fullName").value.trim(),
-        schoolName: document.getElementById("schoolName").value.trim(),
-        admissionNumber: document.getElementById("admissionNumber").value.trim(),
-        country: document.getElementById("country").value,
-        studentClass: document.getElementById("studentClass").value,
-        quizPin: document.getElementById("quizPin").value
-    };
+        this.elements.submitButton =
+            document.getElementById("verifyQuizButton");
 
-    quizStarted = true;
-     quizQuestions = questionBank
-    .filter(q => q.level === studentData.studentClass)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 10);
+    },
 
-    unlockQuiz();
-}
+    bindEvents() {
 
-function validateRegistration() {
+        if (this.elements.form) {
 
-    const fullName = document.getElementById("fullName").value.trim();
-    const schoolName = document.getElementById("schoolName").value.trim();
-    const admissionNumber = document.getElementById("admissionNumber").value.trim();
-    const country = document.getElementById("country").value;
-    const studentClass = document.getElementById("studentClass").value;
-    const quizPin = document.getElementById("quizPin").value.trim();
-
-    if (
-        !fullName ||
-        !schoolName ||
-        !admissionNumber ||
-        !country ||
-        !studentClass
-    ) {
-        alert("Please complete all required fields.");
-        return false;
-    }
-
-    if (!/^\d{4}$/.test(quizPin)) {
-        alert("Quiz PIN must be exactly 4 digits.");
-        return false;
-    }
-
-    return true;
-}
-
-function unlockQuiz() {
-
-    document.getElementById("quizContainer").style.display = "block";
-
-    document.querySelector(".registration-container").style.display = "none";
-
-    showQuestion();
-    startTimer();
-
-}
-
-function resetRegistration() {
-
-    document.getElementById("registrationForm").reset();
-
-    studentData = {};
-
-    quizStarted = false;
-
-    selectedAnswer = null;
-
-    currentQuestionIndex = 0;
-
-    score = 0;
-
-}
-
-// ==============================
-// Timer
-// ==============================
-let quizTimer = null;
-let timeRemaining = 600; // 10 minutes
-
-function startTimer() {
-
-    clearInterval(quizTimer);
-
-    timeRemaining = 600;
-
-    updateTimer();
-
-    quizTimer = setInterval(() => {
-
-        timeRemaining--;
-
-        updateTimer();
-
-        if (timeRemaining <= 0) {
-
-            clearInterval(quizTimer);
-
-            finishQuiz("Time is up!");
+            this.elements.form.addEventListener(
+                "submit",
+                this.handleVerification.bind(this)
+            );
 
         }
 
-    }, 1000);
+    },
 
-}
+    async restoreSession() {
 
-function updateTimer() {
+        try {
 
-    const minutes = Math.floor(timeRemaining / 60);
-    const seconds = timeRemaining % 60;
+            if (
+                typeof OmnoraAuth === "undefined" ||
+                !OmnoraAuth.getCurrentSession
+            ) {
 
-    const timer = document.getElementById("timer");
+                console.warn("OmnoraAuth unavailable.");
 
-    if (timer) {
-        timer.textContent =
-            `${minutes}:${seconds.toString().padStart(2, "0")}`;
+                return;
+
+            }
+
+            const session =
+                await OmnoraAuth.getCurrentSession();
+
+            if (!session) return;
+
+            const user =
+                await OmnoraAuth.getCurrentUser();
+
+            if (!user) return;
+
+            this.prefillOmsId(user);
+
+        } catch (error) {
+
+            console.error(
+                "Session restore failed:",
+                error
+            );
+
+        }
+
+    },
+
+    prefillOmsId(user) {
+
+        if (!this.elements.omsId) return;
+
+        this.elements.omsId.value =
+            user.omsId || "";
+
+        this.elements.omsId.removeAttribute("readonly");
+        this.elements.omsId.removeAttribute("disabled");
+
+    },
+
+    async handleVerification(event) {
+
+        event.preventDefault();
+
+        console.log(
+            "Quiz verification will be implemented in Commit 2."
+        );
+
     }
 
-}
+};
 
-// ==============================
-// Progress
-// ==============================
-function updateProgress() {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => QuizApp.init()
+);
 
-    const progressText =
-        document.getElementById("progressText");
-
-    const progressFill =
-        document.getElementById("progressFill");
-
-    progressText.textContent =
-        `Question ${currentQuestionIndex + 1} / ${quizQuestions.length}`;
-
-    progressFill.style.width =
-        `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`;
-
-}
-
-// ==============================
-// Results
-// ==============================
-function finishQuiz() {
-
-    clearInterval(quizTimer);
-
-    const totalQuestions = quizQuestions.length;
-
-alert(`
-🎉 Congratulations!
-
-You scored ${score} / ${totalQuestions}
-
-You earned ${score} OSAI Points.
-`);
-
-}
-
-// ==============================
-// Storage
-// ==============================
-
-// ==============================
-// Initialize Quiz
-// ==============================
-document
-    .getElementById("registrationForm")
-    .addEventListener("submit", registerStudent);
