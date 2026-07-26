@@ -91,31 +91,12 @@ const QuizApp = {
     prefillOmsId(user) {
 
         if (!this.elements.omsId) return;
-
-        this.elements.omsId.value =
-            user.omsId || "";
+        this.elements.omsId.value = "";
 
         this.elements.omsId.removeAttribute("readonly");
         this.elements.omsId.removeAttribute("disabled");
 
     },
-
-    async handleVerification(event) {
-
-        event.preventDefault();
-
-        console.log(
-            "Quiz verification will be implemented in Commit 2."
-        );
-
-    }
-
-};
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => QuizApp.init()
-);
 async handleVerification(event) {
 
     event.preventDefault();
@@ -139,7 +120,22 @@ async handleVerification(event) {
     try {
 
         const hasSession =
-            await this.hasActiveSession();
+    await this.hasActiveSession();
+        async hasActiveSession() {
+
+    const session =
+        await OmnoraAuth.getCurrentSession();
+
+    return !!session;
+
+},
+
+    const session =
+        await OmnoraAuth.getCurrentSession();
+
+    return !!session;
+
+},
 
         if (!hasSession) {
 
@@ -161,7 +157,27 @@ async handleVerification(event) {
 
         this.openQuiz();
 
-    } catch (error) {
+    }
+    openQuiz() {
+
+    const verification =
+        document.getElementById(
+            "quizVerificationCard"
+        );
+
+    const quiz =
+        document.getElementById(
+            "quizContainer"
+        );
+
+    if (verification)
+        verification.hidden = true;
+
+    if (quiz)
+        quiz.hidden = false;
+
+},
+    catch (error) {
 
         console.error(error);
 
@@ -187,5 +203,16 @@ setLoading(isLoading) {
             : "Verify & Start Quiz";
 
             }
+showSuccess(message){
 
+    console.log(message);
+    this.showSuccess("Verification successful.");
+
+},
+showError(message) {
+
+    alert(message);
+
+},
+};
 
