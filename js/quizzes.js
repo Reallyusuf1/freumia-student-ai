@@ -116,4 +116,76 @@ document.addEventListener(
     "DOMContentLoaded",
     () => QuizApp.init()
 );
+async handleVerification(event) {
+
+    event.preventDefault();
+
+    const omsId =
+        this.elements.omsId.value.trim();
+
+    const password =
+        this.elements.password.value;
+
+    if (!omsId || !password) {
+
+        alert("Please enter OMS-ID and password.");
+
+        return;
+
+    }
+
+    this.setLoading(true);
+
+    try {
+
+        const hasSession =
+            await this.hasActiveSession();
+
+        if (!hasSession) {
+
+            const result =
+                await OmnoraAuth.verifyStudentForQuiz({
+    omsId,
+    password
+});
+
+            if (!result.success) {
+
+                alert(result.message);
+
+                return;
+
+            }
+
+        }
+
+        this.openQuiz();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Verification failed.");
+
+    } finally {
+
+        this.setLoading(false);
+
+    }
+
+}
+setLoading(isLoading) {
+
+    if (!this.elements.submitButton) return;
+
+    this.elements.submitButton.disabled =
+        isLoading;
+
+    this.elements.submitButton.textContent =
+        isLoading
+            ? "Verifying..."
+            : "Verify & Start Quiz";
+
+            }
+
 
