@@ -1,0 +1,271 @@
+/* ==========================================
+   INVITE PAGE
+========================================== */
+
+.invite-page{
+
+    min-height:100vh;
+
+    background:#071326;
+
+    color:#ffffff;
+
+}
+
+/* ==========================================
+   HERO
+========================================== */
+
+.invite-hero{
+
+    padding:90px 20px 60px;
+
+    text-align:center;
+
+}
+
+.invite-hero h1{
+
+    font-size:2.7rem;
+
+    margin:20px 0;
+
+    line-height:1.2;
+
+}
+
+.hero-text{
+
+    max-width:720px;
+
+    margin:0 auto;
+
+    color:#cfd5ec;
+
+    line-height:1.8;
+
+    font-size:1.08rem;
+
+}
+
+.gradient-text{
+
+    background:linear-gradient(90deg,#6f5cff,#00d4ff);
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+
+}
+
+/* ==========================================
+   SECTION
+========================================== */
+
+.invite-section{
+
+    padding:70px 20px;
+
+}
+
+/* ==========================================
+   CARDS
+========================================== */
+
+.invite-cards{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:24px;
+
+    margin-top:40px;
+
+}
+
+.invite-card{
+
+    background:rgba(255,255,255,.05);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:18px;
+
+    padding:28px;
+
+    text-align:center;
+
+    backdrop-filter:blur(18px);
+
+    transition:.35s;
+
+}
+
+.invite-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:#6f5cff;
+
+}
+
+.invite-card h3{
+
+    color:#b9c5ff;
+
+    margin-bottom:18px;
+
+    font-weight:600;
+
+}
+
+.invite-card h2{
+
+    font-size:2.3rem;
+
+    color:#7f8cff;
+
+}
+
+.invite-card p{
+
+    margin-top:10px;
+
+    color:#cfd5ec;
+
+}
+
+/* ==========================================
+   REFERRAL LINK
+========================================== */
+
+#referral-link{
+
+    width:100%;
+
+    margin-top:25px;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#111d36;
+
+    color:#ffffff;
+
+    font-size:1rem;
+
+}
+
+.invite-buttons{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:16px;
+
+    margin-top:25px;
+
+}
+
+.invite-buttons button{
+
+    flex:1;
+
+    min-width:170px;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    color:#ffffff;
+
+    background:linear-gradient(135deg,#5b5fff,#8d38ff);
+
+    transition:.3s;
+
+}
+
+.invite-buttons button:hover{
+
+    transform:translateY(-3px);
+
+}
+
+/* ==========================================
+   HOW IT WORKS
+========================================== */
+
+.invite-section ol{
+
+    margin-top:25px;
+
+    padding-left:25px;
+
+}
+
+.invite-section li{
+
+    margin-bottom:18px;
+
+    color:#d8def7;
+
+    line-height:1.8;
+
+}
+
+/* ==========================================
+   FUTURE OPPORTUNITIES
+========================================== */
+
+.invite-section p{
+
+    color:#cfd5ec;
+
+    line-height:1.9;
+
+    margin-bottom:22px;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:768px){
+
+    .invite-hero{
+
+        padding-top:70px;
+
+    }
+
+    .invite-hero h1{
+
+        font-size:2rem;
+
+    }
+
+    .invite-buttons{
+
+        flex-direction:column;
+
+    }
+
+    .invite-buttons button{
+
+        width:100%;
+
+    }
+
+}
