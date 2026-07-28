@@ -187,6 +187,48 @@ async function createStudentProfile(
     }
 }
 
+/**
+ * Generate unique referral code.
+ */
+async function generateReferralCode() {
+
+    const characters =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    while (true) {
+
+        let code = "OMR-";
+
+        for (let i = 0; i < 6; i++) {
+
+            code += characters.charAt(
+                Math.floor(
+                    Math.random() * characters.length
+                )
+            );
+
+        }
+
+        const supabase = getSupabase();
+
+        const { data, error } =
+            await supabase
+                .from("profiles")
+                .select("id")
+                .eq("referral_code", code)
+                .maybeSingle();
+
+        if (error) {
+            throw error;
+        }
+
+        if (!data) {
+            return code;
+        }
+
+    }
+
+}
 
 /**
  * Register Student
