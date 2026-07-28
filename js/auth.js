@@ -282,6 +282,8 @@ if (omsError) {
     if (!data?.user) {
     throw new Error("Student account was not created.");
     }
+    const referralCode =
+    await generateReferralCode();
 
     await createStudentProfile(
 
