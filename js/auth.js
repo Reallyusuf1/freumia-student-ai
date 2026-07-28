@@ -295,9 +295,9 @@ if (omsError) {
 
             ...formData,
 
-            oms_id: omsId
+            oms_id: omsId,
 
-            referral_code: referralCode
+            referral_code: referralCode,
 
         }
 
