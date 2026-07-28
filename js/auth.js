@@ -178,6 +178,8 @@ async function createStudentProfile(
                 avatar_url:
                     profile.avatar_url || null,
 
+                referral_code: profile.referral_code,
+
                 role: "student"
 
             });
