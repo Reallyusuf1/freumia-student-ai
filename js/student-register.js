@@ -7,16 +7,39 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    saveReferralFromUrl();
+
     const form = document.getElementById("studentRegisterForm");
 
     if (!form) return;
 
     form.addEventListener("submit", handleStudentRegistration);
+
 });
 
 /**
  * Student Registration
  */
+function saveReferralFromUrl() {
+
+    const params = new URLSearchParams(window.location.search);
+
+    const referralCode = params.get("ref");
+
+    if (!referralCode) return;
+
+    sessionStorage.setItem(
+        "omnora_referral",
+        referralCode
+    );
+
+    console.log(
+        "Referral saved:",
+        referralCode
+    );
+
+}
 async function handleStudentRegistration(event) {
     event.preventDefault();
 
