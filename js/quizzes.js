@@ -267,3 +267,167 @@ document.addEventListener(
     () => QuizApp.init()
 
 );
+/* ============================================================
+ * Commit 2
+ * Quiz Engine
+ * ============================================================
+ */
+
+    quiz: {
+        questions: [],
+        currentIndex: 0,
+        score: 0,
+        answers: [],
+        started: false
+    },
+
+    initializeQuiz() {
+
+        this.quiz.currentIndex = 0;
+        this.quiz.score = 0;
+        this.quiz.answers = [];
+        this.quiz.started = false;
+
+        if (typeof window.quizQuestions !== "undefined") {
+
+            this.quiz.questions = [...window.quizQuestions];
+
+        }
+
+        this.startQuiz();
+
+    },
+
+    startQuiz() {
+
+        this.quiz.started = true;
+
+        this.renderCurrentQuestion();
+
+        if (typeof this.startTimer === "function") {
+
+            this.startTimer();
+
+        }
+
+    },
+
+    renderCurrentQuestion() {
+
+        if (!this.quiz.questions.length) {
+
+            console.warn("No quiz questions found.");
+
+            return;
+
+        }
+
+        const question =
+            this.quiz.questions[
+                this.quiz.currentIndex
+            ];
+
+        if (
+            typeof window.renderQuestion ===
+            "function"
+        ) {
+
+            window.renderQuestion(question);
+
+        }
+
+    },
+
+    submitAnswer(answer) {
+
+        const question =
+            this.quiz.questions[
+                this.quiz.currentIndex
+            ];
+
+        if (!question) return;
+
+        this.quiz.answers.push({
+
+            questionId:
+                question.id ??
+                this.quiz.currentIndex,
+
+            answer
+
+        });
+
+        if (answer === question.correctAnswer) {
+
+            this.quiz.score++;
+
+        }
+
+        this.nextQuestion();
+
+    },
+
+    nextQuestion() {
+
+        this.quiz.currentIndex++;
+
+        if (
+            this.quiz.currentIndex >=
+            this.quiz.questions.length
+        ) {
+
+            this.finishQuiz();
+
+            return;
+
+        }
+
+        this.renderCurrentQuestion();
+
+    },
+
+    finishQuiz() {
+
+        const result = {
+
+            student:
+                this.student,
+
+            score:
+                this.quiz.score,
+
+            total:
+                this.quiz.questions.length,
+
+            answers:
+                this.quiz.answers,
+
+            completedAt:
+                new Date().toISOString()
+
+        };
+
+        console.log(
+            "Quiz Completed",
+            result
+        );
+
+        if (
+            typeof window.showQuizResult ===
+            "function"
+        ) {
+
+            window.showQuizResult(result);
+
+        }
+
+    },
+
+    resetQuiz() {
+
+        this.quiz.currentIndex = 0;
+        this.quiz.score = 0;
+        this.quiz.answers = [];
+        this.quiz.started = false;
+
+    },
