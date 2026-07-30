@@ -41,6 +41,7 @@ async function initInvitePage() {
 }
 
 async function loadReferralCount(userId) {
+loadReferralHistory(user.id);
 
     const supabase = window.supabaseClient;
 
@@ -97,5 +98,72 @@ function setupShareButtons(link) {
             );
 
         };
+
+}
+async function loadReferralHistory(userId) {
+
+    const supabase = window.supabaseClient;
+
+    const { data, error } = await supabase
+        .from("student_referrals")
+        .select(`
+            reward_points,
+            status,
+            created_at,
+            invited:profiles!student_referrals_invited_profile_id_fkey(
+                full_name,
+                oms_id
+            )
+        `)
+        .eq("inviter_profile_id", userId)
+        .order("created_at", { ascending:false });
+
+    if (error) throw error;
+
+    const container =
+        document.getElementById("referral-history-list");
+
+    if (!data.length) {
+
+        container.innerHTML =
+            '<div class="history-empty">No referrals yet.</div>';
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    data.forEach(ref => {
+
+        container.innerHTML += `
+
+<div class="referral-history-item">
+
+<div class="history-left">
+
+<h4>${ref.invited.full_name}</h4>
+
+<p>${ref.invited.oms_id}</p>
+
+</div>
+
+<div class="history-right">
+
+<div class="reward">
++${ref.reward_points} OMS
+</div>
+
+<div class="status">
+${ref.status}
+</div>
+
+</div>
+
+</div>
+
+`;
+
+    });
 
 }
