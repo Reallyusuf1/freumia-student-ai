@@ -328,9 +328,11 @@ if (omsError) {
         }
 
     );
-    await processReferral(
-    data.user.id
-);
+    try {
+    await processReferral(data.user.id);
+} catch (error) {
+    console.error("Referral Processing:", error);
+    }
 
     return {
 
