@@ -30,6 +30,8 @@ async function initInvitePage() {
             profile.oms_points ?? 0;
 
         loadReferralCount(user.id);
+        loadReferralHistory(user.id);
+        
 
         setupShareButtons(referralLink);
 
@@ -41,7 +43,6 @@ async function initInvitePage() {
 }
 
 async function loadReferralCount(userId) {
-loadReferralHistory(user.id);
 
     const supabase = window.supabaseClient;
 
@@ -115,8 +116,12 @@ async function loadReferralHistory(userId) {
                 oms_id
             )
         `)
+    
         .eq("inviter_profile_id", userId)
         .order("created_at", { ascending:false });
+
+    console.log("Referral History:", data);
+    console.log("Referral Error:", error);
 
     if (error) throw error;
 
