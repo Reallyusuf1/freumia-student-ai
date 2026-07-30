@@ -226,49 +226,7 @@
 /*===========================================
 REFERRAL HISTORY 
 =========================================*/
-.referral-history-card{
-    margin-top:40px;
-}
-
-.referral-history-list{
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-}
-
-.referral-history-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    padding:18px;
-
-    border-radius:14px;
-
-    background:rgba(255,255,255,.05);
-}
-
-.history-left h4{
-    margin:0;
-}
-
-.history-left p{
-    opacity:.7;
-    font-size:.9rem;
-}
-
-.history-right{
-    text-align:right;
-}
-
-.reward{
-    color:#6c7cff;
-    font-weight:700;
-}
-
-.status{
-    color:#45d483;
-}
+coming soon
 
 /* ==========================================
    FUTURE OPPORTUNITIES
