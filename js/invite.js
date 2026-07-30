@@ -120,8 +120,8 @@ async function loadReferralHistory(userId) {
         .eq("inviter_profile_id", userId)
         .order("created_at", { ascending:false });
 
-    console.log("Referral History:", data);
-    console.log("Referral Error:", error);
+    
+    console.log(JSON.stringify(data, null, 2));
 
     if (error) throw error;
 
