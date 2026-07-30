@@ -243,73 +243,19 @@ async function processReferral(invitedProfileId) {
 
     const supabase = getSupabase();
 
-    const {
-        data: inviter,
-        error: inviterError
-    } = await supabase
-        .from("profiles")
-        .select("id, oms_points")
-        .eq("referral_code", referralCode)
-        .maybeSingle();
-
-    if (inviterError) {
-        throw inviterError;
-    }
-
-    if (!inviter) {
-        sessionStorage.removeItem("omnora_referral");
-        return;
-    }
-
-    if (inviter.id === invitedProfileId) {
-        sessionStorage.removeItem("omnora_referral");
-        return;
-    }
-
-    const {
-        error: referralError
-    } = await supabase
-        .from("student_referrals")
-        .insert({
-
-            inviter_profile_id: inviter.id,
-
-            invited_profile_id: invitedProfileId,
-
-            reward_points: 10,
-
-            reward_type: "invite",
-
-            source: "student_invite",
-
-            status: "completed"
-
-        });
-
-    if (referralError) {
-        throw referralError;
-    }
-
-    const {
-        error: updateError
-    } = await supabase
-        .from("profiles")
-        .update({
-
-            oms_points:
-                (inviter.oms_points || 0) + 10
-
-        })
-        .eq("id", inviter.id);
-
-    if (updateError) {
-        throw updateError;
-    }
-
-    sessionStorage.removeItem(
-        "omnora_referral"
+    const { error } = await supabase.rpc(
+        "process_student_referral",
+        {
+            p_referral_code: referralCode,
+            p_invited_profile_id: invitedProfileId
+        }
     );
 
+    if (error) {
+        throw error;
+    }
+
+    sessionStorage.removeItem("omnora_referral");
 }
 
 /**
