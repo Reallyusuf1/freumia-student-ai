@@ -21,7 +21,7 @@ async function initInvitePage() {
         if (error) throw error;
 
         const referralLink =
-            `${window.location.origin}/student-register.html?ref=${profile.referral_code}`;
+`${window.location.origin}/omnora-student-ai/student-register.html?ref=${profile.referral_code}`;
 
         document.getElementById("referral-link").value =
             referralLink;
