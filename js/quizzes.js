@@ -16,10 +16,9 @@ const QuizApp = {
     async init() {
 
         this.cacheElements();
-
-        this.bindEvents();
-
-        await this.checkAuthentication();
+this.cacheQuizElements();
+this.bindEvents();
+await this.checkAuthentication();
 
     },
 
@@ -383,6 +382,13 @@ document.addEventListener(
         }
 
         this.renderCurrentQuestion();
+        this.renderCurrentQuestion();
+
+if (typeof this.startTimer === "function") {
+
+    this.startTimer();
+
+}
 
     },
 
@@ -429,5 +435,195 @@ document.addEventListener(
         this.quiz.score = 0;
         this.quiz.answers = [];
         this.quiz.started = false;
+
+    },
+/* ============================================================
+ * Commit 3
+ * Quiz UI Integration
+ * ============================================================
+ */
+
+    cacheQuizElements() {
+
+        this.elements.question =
+            document.getElementById("questionText");
+
+        this.elements.answers =
+            document.getElementById("answersContainer");
+
+        this.elements.progress =
+            document.getElementById("quizProgress");
+
+        this.elements.score =
+            document.getElementById("quizScore");
+
+        this.elements.timer =
+            document.getElementById("quizTimer");
+
+        this.elements.nextButton =
+            document.getElementById("nextQuestionButton");
+
+    },
+
+    renderCurrentQuestion() {
+
+        const question =
+            this.quiz.questions[this.quiz.currentIndex];
+
+        if (!question) return;
+
+        if (this.elements.question) {
+
+            this.elements.question.textContent =
+                question.question;
+
+        }
+
+        if (this.elements.answers) {
+
+            this.elements.answers.innerHTML = "";
+
+            question.options.forEach(option => {
+
+                const button =
+                    document.createElement("button");
+
+                button.type = "button";
+
+                button.className =
+                    "quiz-answer";
+
+                button.textContent = option;
+
+                button.addEventListener(
+                    "click",
+                    () => this.submitAnswer(option)
+                );
+
+                this.elements.answers.appendChild(button);
+
+            });
+
+        }
+
+        this.updateProgress();
+
+    },
+
+    updateProgress() {
+
+        if (this.elements.progress) {
+
+            this.elements.progress.textContent =
+                `${this.quiz.currentIndex + 1} / ${this.quiz.questions.length}`;
+
+        }
+
+        if (this.elements.score) {
+
+            this.elements.score.textContent =
+                this.quiz.score;
+
+        }
+
+    },
+
+    startTimer() {
+
+        clearInterval(this.quiz.timer);
+
+        let remaining = 30;
+
+        if (this.elements.timer) {
+
+            this.elements.timer.textContent =
+                remaining;
+
+        }
+
+        this.quiz.timer = setInterval(() => {
+
+            remaining--;
+
+            if (this.elements.timer) {
+
+                this.elements.timer.textContent =
+                    remaining;
+
+            }
+
+            if (remaining <= 0) {
+
+                clearInterval(this.quiz.timer);
+
+                this.submitAnswer(null);
+
+            }
+
+        }, 1000);
+
+    },
+
+    submitAnswer(answer) {
+
+        clearInterval(this.quiz.timer);
+
+        const question =
+            this.quiz.questions[this.quiz.currentIndex];
+
+        if (!question) return;
+
+        this.quiz.answers.push({
+
+            questionId:
+                question.id ??
+                this.quiz.currentIndex,
+
+            answer
+
+        });
+
+        if (answer === question.correctAnswer) {
+
+            this.quiz.score++;
+
+        }
+
+        this.nextQuestion();
+
+    },
+
+    finishQuiz() {
+
+        clearInterval(this.quiz.timer);
+
+        const result = {
+
+            student: this.student,
+            score: this.quiz.score,
+            total: this.quiz.questions.length,
+            answers: this.quiz.answers,
+            completedAt: new Date().toISOString()
+
+        };
+
+        if (this.elements.score) {
+
+            this.elements.score.textContent =
+                this.quiz.score;
+
+        }
+
+        if (typeof window.showQuizResult === "function") {
+
+            window.showQuizResult(result);
+
+        } else {
+
+            alert(
+                `Quiz completed!\n\nScore: ${this.quiz.score}/${this.quiz.questions.length}`
+            );
+
+        }
 
     },
