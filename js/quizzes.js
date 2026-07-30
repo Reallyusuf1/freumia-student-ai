@@ -1,9 +1,9 @@
 /**
  * ============================================================
- * Omnora Student AI V2
+ * Omnora Student AI
  * File: js/quizzes.js
- * Purpose: Quiz Initialization & Session Detection
  * Commit 1
+ * Purpose: Quiz Authentication & Session Guard
  * ============================================================
  */
 
@@ -11,13 +11,15 @@ const QuizApp = {
 
     elements: {},
 
+    student: null,
+
     async init() {
 
         this.cacheElements();
 
         this.bindEvents();
 
-        await this.restoreSession();
+        await this.checkAuthentication();
 
     },
 
@@ -35,6 +37,12 @@ const QuizApp = {
         this.elements.submitButton =
             document.getElementById("verifyQuizButton");
 
+        this.elements.verificationCard =
+            document.getElementById("quizVerificationCard");
+
+        this.elements.quizContainer =
+            document.getElementById("quizContainer");
+
     },
 
     bindEvents() {
@@ -50,7 +58,7 @@ const QuizApp = {
 
     },
 
-    async restoreSession() {
+    async checkAuthentication() {
 
         try {
 
@@ -61,6 +69,8 @@ const QuizApp = {
 
                 console.warn("OmnoraAuth unavailable.");
 
+                this.showVerification();
+
                 return;
 
             }
@@ -68,151 +78,192 @@ const QuizApp = {
             const session =
                 await OmnoraAuth.getCurrentSession();
 
-            if (!session) return;
+            if (!session) {
 
-            const user =
-                await OmnoraAuth.getCurrentUser();
-
-            if (!user) return;
-
-            this.prefillOmsId(user);
-
-        } catch (error) {
-
-            console.error(
-                "Session restore failed:",
-                error
-            );
-
-        }
-
-    },
-
-    prefillOmsId(user) {
-
-        if (!this.elements.omsId) return;
-        this.elements.omsId.value = "";
-
-        this.elements.omsId.removeAttribute("readonly");
-        this.elements.omsId.removeAttribute("disabled");
-
-    },
-async handleVerification(event) {
-
-    event.preventDefault();
-
-    const omsId =
-        this.elements.omsId.value.trim();
-
-    const password =
-        this.elements.password.value;
-
-    if (!omsId || !password) {
-
-        alert("Please enter OMS-ID and password.");
-
-        return;
-
-    }
-
-    this.setLoading(true);
-
-    try {
-
-        const hasSession =
-    await this.hasActiveSession();
-        async hasActiveSession() {
-
-    const session =
-        await OmnoraAuth.getCurrentSession();
-
-    return !!session;
-
-},
-
-    const session =
-        await OmnoraAuth.getCurrentSession();
-
-    return !!session;
-
-},
-
-        if (!hasSession) {
-
-            const result =
-                await OmnoraAuth.verifyStudentForQuiz({
-    omsId,
-    password
-});
-
-            if (!result.success) {
-
-                alert(result.message);
+                this.showVerification();
 
                 return;
 
             }
 
+            this.student =
+                await OmnoraAuth.getCurrentUser();
+
+            this.prefillStudent();
+
+            this.openQuiz();
+
+        } catch (error) {
+
+            console.error(
+                "Authentication check failed:",
+                error
+            );
+
+            this.showVerification();
+
         }
 
-        this.openQuiz();
+    },
 
-    }
-    openQuiz() {
+    prefillStudent() {
 
-    const verification =
-        document.getElementById(
-            "quizVerificationCard"
-        );
+        if (
+            !this.student ||
+            !this.elements.omsId
+        ) {
 
-    const quiz =
-        document.getElementById(
-            "quizContainer"
-        );
+            return;
 
-    if (verification)
-        verification.hidden = true;
+        }
 
-    if (quiz)
-        quiz.hidden = false;
+        this.elements.omsId.value =
+            this.student.oms_id || "";
 
-},
-    catch (error) {
+        this.elements.omsId.readOnly = true;
 
-        console.error(error);
+    },
 
-        alert("Verification failed.");
+    async handleVerification(event) {
 
-    } finally {
+        event.preventDefault();
 
-        this.setLoading(false);
+        const omsId =
+            this.elements.omsId.value.trim();
 
-    }
+        const password =
+            this.elements.password.value;
 
-}
-setLoading(isLoading) {
+        if (!omsId || !password) {
 
-    if (!this.elements.submitButton) return;
+            return this.showError(
+                "Please enter OMS-ID and password."
+            );
 
-    this.elements.submitButton.disabled =
-        isLoading;
+        }
 
-    this.elements.submitButton.textContent =
-        isLoading
-            ? "Verifying..."
-            : "Verify & Start Quiz";
+        this.setLoading(true);
+
+        try {
+
+            const result =
+                await OmnoraAuth.loginStudent({
+
+                    omsId,
+                    password
+
+                });
+
+            if (!result.success) {
+
+                return this.showError(
+                    result.message ||
+                    "Verification failed."
+                );
 
             }
-showSuccess(message){
 
-    console.log(message);
-    this.showSuccess("Verification successful.");
+            this.student =
+                await OmnoraAuth.getCurrentUser();
 
-},
-showError(message) {
+            this.prefillStudent();
 
-    alert(message);
+            this.showSuccess(
+                "Verification successful."
+            );
 
-},
+            this.openQuiz();
+
+        } catch (error) {
+
+            console.error(error);
+
+            this.showError(
+                "Unable to verify student."
+            );
+
+        } finally {
+
+            this.setLoading(false);
+
+        }
+
+    },
+
+    openQuiz() {
+
+        if (this.elements.verificationCard) {
+
+            this.elements.verificationCard.hidden = true;
+
+        }
+
+        if (this.elements.quizContainer) {
+
+            this.elements.quizContainer.hidden = false;
+
+        }
+
+        if (typeof this.initializeQuiz === "function") {
+
+            this.initializeQuiz();
+
+        }
+
+    },
+
+    showVerification() {
+
+        if (this.elements.verificationCard) {
+
+            this.elements.verificationCard.hidden = false;
+
+        }
+
+        if (this.elements.quizContainer) {
+
+            this.elements.quizContainer.hidden = true;
+
+        }
+
+    },
+
+    setLoading(isLoading) {
+
+        if (!this.elements.submitButton) {
+
+            return;
+
+        }
+
+        this.elements.submitButton.disabled =
+            isLoading;
+
+        this.elements.submitButton.textContent =
+            isLoading
+                ? "Verifying..."
+                : "Verify & Start Quiz";
+
+    },
+
+    showSuccess(message) {
+
+        console.log(message);
+
+    },
+
+    showError(message) {
+
+        alert(message);
+
+    }
+
 };
 
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    () => QuizApp.init()
+
+);
