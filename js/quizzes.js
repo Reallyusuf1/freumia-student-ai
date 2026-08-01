@@ -318,32 +318,6 @@ showSuccess(message) {
 
     },
 
-    renderCurrentQuestion() {
-
-        if (!this.quiz.questions.length) {
-
-            console.warn("No quiz questions found.");
-
-            return;
-
-        }
-
-        const question =
-            this.quiz.questions[
-                this.quiz.currentIndex
-            ];
-
-        if (
-            typeof window.renderQuestion ===
-            "function"
-        ) {
-
-            window.renderQuestion(question);
-
-        }
-
-    },
-
     submitAnswer(answer) {
 
         const question =
@@ -584,6 +558,7 @@ if (typeof this.startTimer === "function") {
         }
 
     },
+};
 document.addEventListener(
 
     "DOMContentLoaded",
