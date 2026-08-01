@@ -664,30 +664,38 @@
 
 }
 
-.quiz-answer {
-    transition: all 0.25s ease;
-    cursor: pointer;
+.quiz-answer{
+    width:100%;
+    text-align:left;
+    padding:18px 22px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.05);
+    color:#fff;
+    cursor:pointer;
+    transition:all .25s ease;
 }
 
-.quiz-answer:hover {
-    transform: translateY(-2px);
+.quiz-answer:hover{
+    border-color:#4f8cff;
+    background:rgba(79,140,255,.12);
+    transform:translateY(-2px);
 }
 
-.quiz-answer.selected {
-    background: #4f7cff;
-    color: #fff;
-    border-color: #4f7cff;
-    box-shadow: 0 0 12px rgba(79,124,255,.35);
+.quiz-answer.selected{
+    background:linear-gradient(135deg,#356dff,#6d4dff);
+    color:#fff;
+    border-color:transparent;
+    box-shadow:0 12px 30px rgba(79,124,255,.35);
 }
 
-.quiz-answer:disabled {
-    opacity: .75;
-    cursor: default;
+.quiz-answer:disabled{
+    opacity:.85;
+    cursor:default;
 }
-.quiz-answer.selected:disabled {
-    background: #4f7cff !important;
-    color: #fff !important;
-    border-color: #4f7cff !important;
+
+.quiz-answer.selected:disabled{
+    opacity:1;
 }
 
 /* ==========================================================
