@@ -352,35 +352,37 @@ showSuccess(message) {
 
     submitAnswer(answer) {
 
-        const question =
-            this.quiz.questions[
-                this.quiz.currentIndex
-            ];
+    const question =
+        this.quiz.questions[
+            this.quiz.currentIndex
+        ];
 
-        if (!question) return;
+    if (!question) return;
 
-        this.quiz.answers.push({
+    this.quiz.answers.push({
 
-            questionId:
-                question.id ??
-                this.quiz.currentIndex,
+        questionId:
+            question.id ??
+            this.quiz.currentIndex,
 
-            answer
+        answer
 
-        });
+    });
 
-        
-        if (answer === question.answer) {
-    this.quiz.score++;
-        }
+    const selectedAnswer =
+        typeof answer === "string"
+            ? answer.split(".")[0].trim()
+            : null;
 
-            // TODO:
-// Score will be verified by Supabase RPC.
-            
+    if (selectedAnswer === question.answer) {
+        this.quiz.score++;
+    }
 
-        this.nextQuestion();
+    this.updateProgress();
 
-    },
+    this.nextQuestion();
+
+},
 
     nextQuestion() {
 
