@@ -662,6 +662,19 @@ return {
 
 },
 
+    async updateStudentProfile(result) {
+
+    // TODO:
+    // Commit 8D
+    // Replace with:
+    // await OmnoraSupabase.updateStudentProfile(result);
+
+    return {
+        success: true
+    };
+
+},
+
     finishQuiz() {
 
         clearInterval(this.quiz.timer);
@@ -714,6 +727,19 @@ if (this.elements.timer) {
     await this.updateLeaderboard(
         response.data
     );
+
+        const profileResponse =
+    await this.updateStudentProfile(
+        response.data
+    );
+
+if (!profileResponse.success) {
+
+    console.warn(
+        "Student profile update failed."
+    );
+
+}
 
 if (!leaderboardResponse.success) {
 
