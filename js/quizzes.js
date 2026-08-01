@@ -639,10 +639,13 @@ this.elements.finishButton =
 // TODO Commit 8D:
 // Student XP update
 
-    return {
-        success: true,
-        data: result
-    };
+    const response =
+    await OmnoraSupabase.finishQuiz(result);
+
+return {
+    success: true,
+    data: response
+};
 
 },
 
@@ -765,7 +768,7 @@ this.elements.resultSection.focus();
         if (this.elements.earnedPoints) {
 
     this.elements.earnedPoints.textContent =
-        `${result.score * 2} XP`;
+    `${result.xp} XP`;
 
     }
         
