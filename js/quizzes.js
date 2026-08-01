@@ -6,11 +6,10 @@
  * Purpose: Quiz Authentication & Session Guard
  * ============================================================
  */
+const QUIZ_TIME_LIMIT = 30;
+const PASSING_SCORE = 50;
 
 const QuizApp = {
-
-    const QUIZ_TIME_LIMIT = 30;
-const PASSING_SCORE = 50;
 
     elements: {},
 
@@ -254,15 +253,20 @@ await this.checkAuthentication();
 
     },
 
-    showError(message) {
-
-        showToast(message, type = "error") {
+showToast(message, type = "error") {
     console[type === "error" ? "error" : "log"](message);
 
     // TODO:
     // Replace with Omnora UI Toast component.
-        }
-    } 
+},
+
+showError(message) {
+    this.showToast(message, "error");
+},
+
+showSuccess(message) {
+    this.showToast(message, "success");
+},
 /* ============================================================
  * Commit 2
  * Quiz Engine
