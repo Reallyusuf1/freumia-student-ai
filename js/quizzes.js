@@ -6,8 +6,10 @@
  * Purpose: Quiz Authentication & Session Guard
  * ============================================================
  */
-const QUIZ_TIME_LIMIT = 30;
-const PASSING_SCORE = 50;
+const QUIZ_CONFIG = Object.freeze({
+    TIME_LIMIT: 30,
+    PASSING_SCORE: 50
+});
 
 const QuizApp = {
 
@@ -247,12 +249,6 @@ await this.checkAuthentication();
 
     },
 
-    showSuccess(message) {
-
-        console.log(message);
-
-    },
-
 showToast(message, type = "error") {
     console[type === "error" ? "error" : "log"](message);
 
@@ -403,7 +399,9 @@ if (typeof this.startTimer === "function") {
 }
 
     },
+    
 
+    const result = { ... }
         if (window.DEBUG_MODE) {
     console.log(result);
         }
@@ -522,7 +520,7 @@ if (typeof this.startTimer === "function") {
 
         clearInterval(this.quiz.timer);
 
-        let remaining = QUIZ_TIME_LIMIT;
+        let remaining = QUIZ_CONFIG.TIME_LIMIT;
 
         if (this.elements.timer) {
 
@@ -567,9 +565,16 @@ if (typeof this.startTimer === "function") {
     finishQuiz() {
 
         clearInterval(this.quiz.timer);
+        this.quiz.timer = null;
 
         // TODO:
 // Replace local result with finish_quiz() RPC response.
+
+        // TODO:
+// await OmnoraSupabase.finishQuiz(...)
+
+        // TODO Commit 8.3:
+// Replace local scoring with RPC response.
 
         const result = {
 
@@ -594,9 +599,10 @@ if (typeof this.startTimer === "function") {
 
         } else {
 
-            alert(
-                `Quiz completed!\n\nScore: ${this.quiz.score}/${this.quiz.questions.length}`
-            );
+            this.showToast(
+    `Quiz completed! Score: ${this.quiz.score}/${this.quiz.questions.length}`,
+    "success"
+);
 
         }
 
