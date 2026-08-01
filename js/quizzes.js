@@ -457,7 +457,7 @@ if (typeof this.startTimer === "function") {
         this.elements.nextButton =
             document.getElementById("nextQuestionButton");
 
-        this.elements.resultCard =
+        this.elements.resultSection =
     document.getElementById("quizResult");
 
 this.elements.resultScore =
@@ -471,6 +471,9 @@ this.elements.resultPercentage =
 
 this.elements.resultStatus =
     document.getElementById("resultStatus");
+
+        this.elements.earnedPoints =
+    document.getElementById("earnedPoints");
 
 this.elements.finishButton =
     document.getElementById("finishQuizButton");
@@ -629,7 +632,7 @@ this.elements.finishButton =
     showQuizResult(result) {
 
         if (
-    !this.elements.resultCard ||
+    !this.elements.resultSection ||
     !this.elements.resultScore ||
     !this.elements.resultTotal
 ) {
@@ -640,8 +643,8 @@ this.elements.finishButton =
         this.elements.quizContainer.hidden = true;
     }
 
-    if (this.elements.resultCard) {
-        this.elements.resultCard.hidden = false;
+    if (this.elements.resultSection) {
+    this.elements.resultSection.hidden = false;
     }
 
     const percentage =
@@ -668,6 +671,10 @@ this.elements.finishButton =
         passed
             ? "result-status passed"
             : "result-status failed";
+        if (this.elements.earnedPoints) {
+
+    this.elements.earnedPoints.textContent =
+        `${result.score * 2} XP`;
 
     }
 };
