@@ -95,7 +95,7 @@ await this.checkAuthentication();
 
     }
 
-    }
+    },
 
     async checkAuthentication() {
 
@@ -377,8 +377,6 @@ showSuccess(message) {
             // TODO:
 // Score will be verified by Supabase RPC.
             
-
-            this.quiz.score++;
 
         }
 
