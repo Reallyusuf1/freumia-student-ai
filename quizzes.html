@@ -378,19 +378,35 @@
 
             <div class="quiz-actions">
 
-                <button
-    id="nextQuestionButton"
-                    class="primary-btn">
-
-                    Next Question
-
-                </button>
-
             </div>
 
         </div>
 
     </section>
+    
+<div id="quizResultCard" hidden class="quiz-result-card">
+
+    <h2>Quiz Completed</h2>
+
+    <div class="result-score">
+        <span id="resultScore">0</span> /
+        <span id="resultTotal">20</span>
+    </div>
+
+    <div id="resultPercentage">
+        0%
+    </div>
+
+    <div id="resultStatus"
+         class="result-status">
+        FAILED
+    </div>
+
+    <button id="finishQuizButton">
+        Back to Dashboard
+    </button>
+
+</div>
 
     <!-- ==========================================
          QUIZ RESULT
