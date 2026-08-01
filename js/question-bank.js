@@ -6534,6 +6534,10 @@ const questionBank = [
     ],
 
     answer: "C"
-},
+}
+
+   ];
+
+window.quizQuestions = questionBank;
    
    
