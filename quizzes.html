@@ -383,30 +383,6 @@
         </div>
 
     </section>
-    
-<div id="quizResultCard" hidden class="quiz-result-card">
-
-    <h2>Quiz Completed</h2>
-
-    <div class="result-score">
-        <span id="resultScore">0</span> /
-        <span id="resultTotal">20</span>
-    </div>
-
-    <div id="resultPercentage">
-        0%
-    </div>
-
-    <div id="resultStatus"
-         class="result-status">
-        FAILED
-    </div>
-
-    <button id="finishQuizButton">
-        Back to Dashboard
-    </button>
-
-</div>
 
     <!-- ==========================================
          QUIZ RESULT
@@ -445,7 +421,7 @@
 
                     </span>
 
-                    <strong id="finalScore">
+                    <strong id="resultScore"
 
                         0 / 20
 
@@ -461,7 +437,7 @@
 
                     </span>
 
-                    <strong id="finalPercentage">
+                    <strong id="resultPercentage">
 
                         0%
 
@@ -500,17 +476,14 @@
 
             </div>
 
-            <div class="result-actions">
+            <button
+    id="finishQuizButton"
+    class="primary-btn"
+    type="button">
 
-                <a
-                    href="dashboard.html"
-                    class="primary-btn">
+    Return to Dashboard
 
-                    Return to Dashboard
-
-                </a>
-
-            </div>
+            </button>
 
         </div>
 
