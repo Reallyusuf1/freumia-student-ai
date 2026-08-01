@@ -624,6 +624,28 @@ this.elements.finishButton =
 
     },
 
+    async saveQuizAttempt(result) {
+
+    // TODO:
+    // Commit 8B
+    // return await OmnoraSupabase.finishQuiz(result);
+
+        // TODO Commit 8B:
+// OmnoraSupabase.finishQuiz()
+
+// TODO Commit 8C:
+// Leaderboard update
+
+// TODO Commit 8D:
+// Student XP update
+
+    return {
+        success: true,
+        data: result
+    };
+
+},
+
     finishQuiz() {
 
         clearInterval(this.quiz.timer);
@@ -669,7 +691,20 @@ if (this.elements.timer) {
 
         }
 
-        this.showQuizResult(result);
+        const response =
+    await this.saveQuizAttempt(result);
+
+if (!response.success) {
+
+    this.showError(
+        "Unable to save quiz result."
+    );
+
+    return;
+
+}
+
+this.showQuizResult(response.data);
 
     },
 
