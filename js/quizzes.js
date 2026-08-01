@@ -53,11 +53,16 @@ await this.checkAuthentication();
         if (this.elements.finishButton) {
 
     this.elements.finishButton.addEventListener(
-        "click",
-        () => {
-            window.location.href = "dashboard.html";
-        }
-    );
+    "click",
+    () => {
+
+        this.elements.finishButton.disabled = true;
+
+        window.location.href =
+            "index.html";
+
+    }
+);
 
         }
 
@@ -597,6 +602,13 @@ this.elements.finishButton =
     finishQuiz() {
 
         clearInterval(this.quiz.timer);
+if (this.elements.timer) {
+
+    this.elements.timer.textContent =
+        "Completed";
+
+}
+        
         this.quiz.timer = null;
 
         // TODO:
@@ -625,6 +637,13 @@ this.elements.finishButton =
 
         }
 
+        if (document.getElementById("progressFill")) {
+
+    document.getElementById("progressFill").style.width =
+        "100%";
+
+        }
+
         this.showQuizResult(result);
 
     },
@@ -646,6 +665,12 @@ this.elements.finishButton =
     if (this.elements.resultSection) {
     this.elements.resultSection.hidden = false;
     }
+        this.elements.resultSection.setAttribute(
+    "tabindex",
+    "-1"
+);
+
+this.elements.resultSection.focus();
 
     const percentage =
         Math.round(
@@ -671,6 +696,12 @@ this.elements.finishButton =
         passed
             ? "result-status passed"
             : "result-status failed";
+
+        this.elements.resultStatus.setAttribute(
+    "aria-live",
+    "polite"
+);
+        
         if (this.elements.earnedPoints) {
 
     this.elements.earnedPoints.textContent =
