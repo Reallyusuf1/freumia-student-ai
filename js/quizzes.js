@@ -64,7 +64,7 @@ await this.checkAuthentication();
 
     let questions = [];
 
-    if (typeof window.questionBank === "undefined") {
+    if (typeof window.quizQuestions === "undefined") {
         throw new Error("Question bank not loaded.");
     }
 
@@ -73,13 +73,13 @@ await this.checkAuthentication();
 
     if (classLevel) {
 
-        questions = window.questionBank.filter(
+        questions = window.quizQuestions.filter(
             question => question.level === classLevel
         );
 
     } else {
 
-        questions = [...window.questionBank];
+        questions = [...window.quizQuestions];
 
     }
 
@@ -370,7 +370,7 @@ showSuccess(message) {
         });
 
         
-        if (answer === question.correctAnswer) {
+        if (answer === question.answer) {
     this.quiz.score++;
         }
 
