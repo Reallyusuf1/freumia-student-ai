@@ -352,13 +352,6 @@ showSuccess(message) {
 
     submitAnswer(answer) {
 
-        const buttons =
-    this.elements.answers?.querySelectorAll(".quiz-answer");
-
-buttons?.forEach(btn => {
-    btn.disabled = true;
-});
-
     const question =
         this.quiz.questions[
             this.quiz.currentIndex
@@ -389,7 +382,7 @@ buttons?.forEach(btn => {
 
     setTimeout(() => {
     this.nextQuestion();
-}, 800);
+}, 300);
 
 },
 
@@ -499,7 +492,9 @@ if (typeof this.startTimer === "function") {
 
     button.classList.add("selected");
 
-    this.submitAnswer(option);
+    setTimeout(() => {
+        this.submitAnswer(option);
+    }, 800);
 
 });
 
