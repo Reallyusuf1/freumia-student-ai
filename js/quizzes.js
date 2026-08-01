@@ -547,22 +547,47 @@ this.elements.finishButton =
 
     updateProgress() {
 
-        if (this.elements.progress) {
+    const current =
+        this.quiz.currentIndex + 1;
 
-            this.elements.progress.textContent =
-                `${this.quiz.currentIndex + 1} / ${this.quiz.questions.length}`;
+    const total =
+        this.quiz.questions.length;
 
-        }
+    if (this.elements.progress) {
 
-        if (this.elements.score) {
+        this.elements.progress.textContent =
+            `Question ${current} of ${total}`;
 
-            this.elements.score.textContent =
-                this.quiz.score;
+    }
 
-        }
+    if (this.elements.score) {
 
-    },
+        this.elements.score.textContent =
+            `Score: ${this.quiz.score}`;
 
+    }
+
+    const progressFill =
+        document.getElementById("progressFill");
+
+    if (progressFill) {
+
+        progressFill.style.width =
+            `${(current / total) * 100}%`;
+
+    }
+
+},
+
+    formatTime(seconds) {
+
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+
+},
+    
     startTimer() {
 
         clearInterval(this.quiz.timer);
@@ -572,7 +597,7 @@ this.elements.finishButton =
         if (this.elements.timer) {
 
             this.elements.timer.textContent =
-                remaining;
+    this.formatTime(remaining);
 
         }
 
@@ -583,7 +608,7 @@ this.elements.finishButton =
             if (this.elements.timer) {
 
                 this.elements.timer.textContent =
-                    remaining;
+    this.formatTime(remaining);
 
             }
 
