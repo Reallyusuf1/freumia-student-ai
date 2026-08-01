@@ -363,9 +363,12 @@ showSuccess(message) {
 
         });
 
+        
         if (answer === question.correctAnswer) {
+
             // TODO:
 // Score will be verified by Supabase RPC.
+            
 
             this.quiz.score++;
 
@@ -400,22 +403,6 @@ if (typeof this.startTimer === "function") {
 
     },
     
-
-    const result = { ... }
-        if (window.DEBUG_MODE) {
-    console.log(result);
-        }
-
-        if (
-            typeof window.showQuizResult ===
-            "function"
-        ) {
-
-            window.showQuizResult(result);
-
-        }
-
-    },
 
     resetQuiz() {
 
@@ -549,16 +536,6 @@ if (typeof this.startTimer === "function") {
             }
 
         }, 1000);
-
-    },
-
-        if (answer === question.correctAnswer) {
-
-            this.quiz.score++;
-
-        }
-
-        this.nextQuestion();
 
     },
 
