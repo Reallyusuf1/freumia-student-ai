@@ -352,6 +352,13 @@ showSuccess(message) {
 
     submitAnswer(answer) {
 
+        const buttons =
+    this.elements.answers?.querySelectorAll(".quiz-answer");
+
+buttons?.forEach(btn => {
+    btn.disabled = true;
+});
+
     const question =
         this.quiz.questions[
             this.quiz.currentIndex
@@ -380,7 +387,9 @@ showSuccess(message) {
 
     this.updateProgress();
 
+    setTimeout(() => {
     this.nextQuestion();
+}, 800);
 
 },
 
@@ -476,10 +485,23 @@ if (typeof this.startTimer === "function") {
 
                 button.textContent = option;
 
-                button.addEventListener(
-                    "click",
-                    () => this.submitAnswer(option)
-                );
+                button.addEventListener("click", () => {
+
+    if (button.disabled) return;
+
+    const buttons =
+        this.elements.answers.querySelectorAll(".quiz-answer");
+
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+
+    this.submitAnswer(option);
+
+});
 
                 this.elements.answers.appendChild(button);
 
