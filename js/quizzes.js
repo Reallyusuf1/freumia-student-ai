@@ -370,7 +370,7 @@ showSuccess(message) {
         });
 
         
-        if (answer === question.answer) {
+        if (answer === question.correctAnswer) {
     this.quiz.score++;
         }
 
