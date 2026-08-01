@@ -50,6 +50,17 @@ await this.checkAuthentication();
 
     bindEvents() {
 
+        if (this.elements.finishButton) {
+
+    this.elements.finishButton.addEventListener(
+        "click",
+        () => {
+            window.location.href = "dashboard.html";
+        }
+    );
+
+        }
+
         if (this.elements.form) {
 
             this.elements.form.addEventListener(
@@ -446,6 +457,24 @@ if (typeof this.startTimer === "function") {
         this.elements.nextButton =
             document.getElementById("nextQuestionButton");
 
+        this.elements.resultCard =
+    document.getElementById("quizResultCard");
+
+this.elements.resultScore =
+    document.getElementById("resultScore");
+
+this.elements.resultTotal =
+    document.getElementById("resultTotal");
+
+this.elements.resultPercentage =
+    document.getElementById("resultPercentage");
+
+this.elements.resultStatus =
+    document.getElementById("resultStatus");
+
+this.elements.finishButton =
+    document.getElementById("finishQuizButton");
+
     },
 
     renderCurrentQuestion() {
@@ -593,21 +622,58 @@ if (typeof this.startTimer === "function") {
 
         }
 
-        if (typeof window.showQuizResult === "function") {
-
-            window.showQuizResult(result);
-
-        } else {
-
-            this.showToast(
-    `Quiz completed! Score: ${this.quiz.score}/${this.quiz.questions.length}`,
-    "success"
-);
-
-        }
+        this.showQuizResult(result);
 
     },
+
+    showQuizResult(result) {
+
+        if (
+    !this.elements.resultCard ||
+    !this.elements.resultScore ||
+    !this.elements.resultTotal
+) {
+    return;
+        }
+
+    if (this.elements.quizContainer) {
+        this.elements.quizContainer.hidden = true;
+    }
+
+    if (this.elements.resultCard) {
+        this.elements.resultCard.hidden = false;
+    }
+
+    const percentage =
+        Math.round(
+            (result.score / result.total) * 100
+        );
+
+    this.elements.resultScore.textContent =
+        result.score;
+
+    this.elements.resultTotal.textContent =
+        result.total;
+
+    this.elements.resultPercentage.textContent =
+        `${percentage}%`;
+
+    const passed =
+        percentage >= QUIZ_CONFIG.PASSING_SCORE;
+
+    this.elements.resultStatus.textContent =
+        passed ? "PASSED" : "FAILED";
+
+    this.elements.resultStatus.className =
+        passed
+            ? "result-status passed"
+            : "result-status failed";
+
+    }
 };
+
+},
+
 document.addEventListener(
 
     "DOMContentLoaded",
