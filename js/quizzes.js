@@ -321,22 +321,20 @@ showSuccess(message) {
 
     async initializeQuiz() {
 
-        this.quiz.currentIndex = 0;
-        this.quiz.score = 0;
-        this.quiz.answers = [];
-        this.quiz.started = false;
+    this.quiz.currentIndex = 0;
+    this.quiz.score = 0;
+    this.quiz.answers = [];
+    this.quiz.started = false;
 
-        await this.loadQuizQuestions();
+    await this.loadQuizQuestions();
 
-            // TODO:
-// Replace window.quizQuestions with
-// OmnoraSupabase.getQuizQuestions()
+    // TODO:
+    // Replace window.quizQuestions with
+    // OmnoraSupabase.getQuizQuestions()
 
-        }
+    this.startQuiz();
 
-        this.startQuiz();
-
-    },
+},
 
     startQuiz() {
 
@@ -372,7 +370,9 @@ showSuccess(message) {
         });
 
         
-        if (answer === question.correctAnswer) {
+        if (answer === question.answer) {
+    this.quiz.score++;
+        }
 
             // TODO:
 // Score will be verified by Supabase RPC.
