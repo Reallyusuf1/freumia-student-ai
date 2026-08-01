@@ -256,16 +256,6 @@ await this.checkAuthentication();
         alert(message);
 
     }
-
-};
-
-document.addEventListener(
-
-    "DOMContentLoaded",
-
-    () => QuizApp.init()
-
-);
 /* ============================================================
  * Commit 2
  * Quiz Engine
@@ -273,12 +263,18 @@ document.addEventListener(
  */
 
     quiz: {
-        questions: [],
-        currentIndex: 0,
-        score: 0,
-        answers: [],
-        started: false
-    },
+    questions: [],
+    currentIndex: 0,
+    score: 0,
+    answers: [],
+    started: false,
+
+    attemptId: null,
+    classLevel: null,
+    subject: null,
+    difficulty: null,
+    timer: null
+}
 
     initializeQuiz() {
 
@@ -382,7 +378,6 @@ document.addEventListener(
         }
 
         this.renderCurrentQuestion();
-        this.renderCurrentQuestion();
 
 if (typeof this.startTimer === "function") {
 
@@ -392,31 +387,9 @@ if (typeof this.startTimer === "function") {
 
     },
 
-    finishQuiz() {
-
-        const result = {
-
-            student:
-                this.student,
-
-            score:
-                this.quiz.score,
-
-            total:
-                this.quiz.questions.length,
-
-            answers:
-                this.quiz.answers,
-
-            completedAt:
-                new Date().toISOString()
-
-        };
-
-        console.log(
-            "Quiz Completed",
-            result
-        );
+        if (window.DEBUG_MODE) {
+    console.log(result);
+        }
 
         if (
             typeof window.showQuizResult ===
@@ -564,25 +537,6 @@ if (typeof this.startTimer === "function") {
 
     },
 
-    submitAnswer(answer) {
-
-        clearInterval(this.quiz.timer);
-
-        const question =
-            this.quiz.questions[this.quiz.currentIndex];
-
-        if (!question) return;
-
-        this.quiz.answers.push({
-
-            questionId:
-                question.id ??
-                this.quiz.currentIndex,
-
-            answer
-
-        });
-
         if (answer === question.correctAnswer) {
 
             this.quiz.score++;
@@ -627,3 +581,10 @@ if (typeof this.startTimer === "function") {
         }
 
     },
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    () => QuizApp.init()
+
+);
