@@ -708,6 +708,8 @@ this.elements.resultSection.focus();
         `${result.score * 2} XP`;
 
     }
+        
+    }
 };
 
 document.addEventListener(
