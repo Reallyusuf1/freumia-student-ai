@@ -649,6 +649,19 @@ return {
 
 },
 
+    async updateLeaderboard(result) {
+
+    // TODO:
+    // Commit 8C
+    // Replace with:
+    // await OmnoraSupabase.updateLeaderboard(result);
+
+    return {
+        success: true
+    };
+
+},
+
     finishQuiz() {
 
         clearInterval(this.quiz.timer);
@@ -696,6 +709,19 @@ if (this.elements.timer) {
 
         const response =
     await this.saveQuizAttempt(result);
+
+        const leaderboardResponse =
+    await this.updateLeaderboard(
+        response.data
+    );
+
+if (!leaderboardResponse.success) {
+
+    console.warn(
+        "Leaderboard update failed."
+    );
+
+}
 
 if (!response.success) {
 
