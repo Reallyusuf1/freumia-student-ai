@@ -378,8 +378,6 @@ showSuccess(message) {
 // Score will be verified by Supabase RPC.
             
 
-        }
-
         this.nextQuestion();
 
     },
