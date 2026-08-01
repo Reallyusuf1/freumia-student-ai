@@ -9,6 +9,9 @@
 
 const QuizApp = {
 
+    const QUIZ_TIME_LIMIT = 30;
+const PASSING_SCORE = 50;
+
     elements: {},
 
     student: null,
@@ -253,9 +256,13 @@ await this.checkAuthentication();
 
     showError(message) {
 
-        alert(message);
+        showToast(message, type = "error") {
+    console[type === "error" ? "error" : "log"](message);
 
-    }
+    // TODO:
+    // Replace with Omnora UI Toast component.
+        }
+    } 
 /* ============================================================
  * Commit 2
  * Quiz Engine
@@ -286,6 +293,10 @@ await this.checkAuthentication();
         if (typeof window.quizQuestions !== "undefined") {
 
             this.quiz.questions = [...window.quizQuestions];
+
+            // TODO:
+// Replace window.quizQuestions with
+// OmnoraSupabase.getQuizQuestions()
 
         }
 
@@ -353,6 +364,8 @@ await this.checkAuthentication();
         });
 
         if (answer === question.correctAnswer) {
+            // TODO:
+// Score will be verified by Supabase RPC.
 
             this.quiz.score++;
 
@@ -505,7 +518,7 @@ if (typeof this.startTimer === "function") {
 
         clearInterval(this.quiz.timer);
 
-        let remaining = 30;
+        let remaining = QUIZ_TIME_LIMIT;
 
         if (this.elements.timer) {
 
@@ -550,6 +563,9 @@ if (typeof this.startTimer === "function") {
     finishQuiz() {
 
         clearInterval(this.quiz.timer);
+
+        // TODO:
+// Replace local result with finish_quiz() RPC response.
 
         const result = {
 
