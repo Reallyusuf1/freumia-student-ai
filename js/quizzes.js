@@ -281,7 +281,7 @@ showSuccess(message) {
     subject: null,
     difficulty: null,
     timer: null
-}
+},
 
     initializeQuiz() {
 
