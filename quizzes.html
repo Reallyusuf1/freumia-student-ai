@@ -143,7 +143,9 @@
                  QUIZ VERIFICATION CARD
             =========================================== -->
 
-            <div class="quiz-verification-card">
+            <div
+    id="quizVerificationCard"
+    class="quiz-verification-card">
 
                 <div class="verification-icon">
 
@@ -210,8 +212,8 @@
                         </label>
 
                         <input
-                            type="password"
-                            id="accountPassword"
+    type="password"
+    id="password"
                             name="accountPassword"
                             placeholder="Enter your account password"
                             autocomplete="current-password"
@@ -279,7 +281,7 @@
                     </a>
 
                     <a
-                        href="student-register-page.html"
+                        href="student-register.html"
                         class="create-account-link">
 
                         Don't have an account?
@@ -314,7 +316,7 @@
 
                     <div class="progress-info">
 
-                        <span id="questionCounter">
+                        <span id="quizProgress">
 
                             Question 1 of 20
 
@@ -367,7 +369,7 @@
             <!-- Options -->
 
             <div
-                id="optionsContainer"
+    id="answersContainer"
                 class="options-container">
 
             </div>
@@ -377,7 +379,7 @@
             <div class="quiz-actions">
 
                 <button
-                    id="nextQuestionBtn"
+    id="nextQuestionButton"
                     class="primary-btn">
 
                     Next Question
