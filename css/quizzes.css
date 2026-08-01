@@ -804,6 +804,60 @@
 
 }
 
+.quiz-result-card{
+
+    margin-top:40px;
+
+    padding:40px 24px;
+
+    border-radius:24px;
+
+    text-align:center;
+
+    background:rgba(255,255,255,.05);
+
+}
+
+.result-score{
+
+    font-size:3rem;
+
+    font-weight:700;
+
+    color:#fff;
+
+}
+
+.result-status{
+
+    margin-top:20px;
+
+    padding:12px 24px;
+
+    border-radius:999px;
+
+    display:inline-block;
+
+    font-weight:700;
+
+}
+
+.result-status.passed{
+
+    background:#16a34a;
+
+    color:#fff;
+
+}
+
+.result-status.failed{
+
+    background:#dc2626;
+
+    color:#fff;
+
+}
+
 /* ==========================================================
    RESPONSIVE
 ========================================================== */
