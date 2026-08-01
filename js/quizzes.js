@@ -458,7 +458,7 @@ if (typeof this.startTimer === "function") {
             document.getElementById("nextQuestionButton");
 
         this.elements.resultCard =
-    document.getElementById("quizResultCard");
+    document.getElementById("quizResult");
 
 this.elements.resultScore =
     document.getElementById("resultScore");
@@ -671,8 +671,6 @@ this.elements.finishButton =
 
     }
 };
-
-},
 
 document.addEventListener(
 
