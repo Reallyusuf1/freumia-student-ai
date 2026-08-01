@@ -60,6 +60,42 @@ await this.checkAuthentication();
         }
 
     },
+    async loadQuizQuestions() {
+
+    let questions = [];
+
+    if (typeof window.questionBank === "undefined") {
+        throw new Error("Question bank not loaded.");
+    }
+
+    const classLevel =
+        this.student?.class_level ?? null;
+
+    if (classLevel) {
+
+        questions = window.questionBank.filter(
+            question => question.level === classLevel
+        );
+
+    } else {
+
+        questions = [...window.questionBank];
+
+    }
+
+    questions.sort(() => Math.random() - 0.5);
+
+    this.quiz.questions = questions.slice(0, 20);
+
+    if (this.quiz.questions.length === 0) {
+
+        throw new Error(
+            "No quiz questions available."
+        );
+
+    }
+
+    }
 
     async checkAuthentication() {
 
@@ -193,7 +229,7 @@ await this.checkAuthentication();
 
     },
 
-    openQuiz() {
+    async openQuiz() {
 
         if (this.elements.verificationCard) {
 
@@ -209,7 +245,7 @@ await this.checkAuthentication();
 
         if (typeof this.initializeQuiz === "function") {
 
-            this.initializeQuiz();
+            await this.initializeQuiz();
 
         }
 
@@ -283,16 +319,14 @@ showSuccess(message) {
     timer: null
 },
 
-    initializeQuiz() {
+    async initializeQuiz() {
 
         this.quiz.currentIndex = 0;
         this.quiz.score = 0;
         this.quiz.answers = [];
         this.quiz.started = false;
 
-        if (typeof window.quizQuestions !== "undefined") {
-
-            this.quiz.questions = [...window.quizQuestions];
+        await this.loadQuizQuestions();
 
             // TODO:
 // Replace window.quizQuestions with
