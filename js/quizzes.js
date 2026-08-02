@@ -705,71 +705,29 @@ if (this.elements.timer) {
         
         this.quiz.timer = null;
 
-        // TODO:
-// Replace local result with finish_quiz() RPC response.
-
-        // TODO:
-// await OmnoraSupabase.finishQuiz(...)
-
-        // TODO Commit 8.3:
-// Replace local scoring with RPC response.
+        const result = await OmnoraSupabase.finishQuiz({
+    attempt_id: this.quiz.attemptId,
+    answers: this.quiz.answers
+});
 
         if (this.elements.score) {
 
             this.elements.score.textContent =
-                this.quiz.score;
-
+    result.score;
+            
         }
+        
+        await OmnoraSupabase.updateStudentProfile({
+    profileId: this.profile.id,
+    totalQuizzes: result.total_quizzes,
+    totalPoints: result.total_points,
+    averageScore: result.average_score,
+    bestScore: result.best_score
+});
 
-        const response =
-    await this.saveQuizAttempt();
+        await OmnoraSupabase.updateLeaderboard();
 
-        if (document.getElementById("progressFill")) {
-
-    document.getElementById("progressFill").style.width =
-        "100%";
-
-        }
-
-        const leaderboardResponse =
-    await this.updateLeaderboard(
-        response.data
-    );
-
-        const profileResponse =
-    await this.updateStudentProfile(
-        response.data
-    );
-
-if (!profileResponse.success) {
-
-    console.warn(
-        "Student profile update failed."
-    );
-
-}
-
-if (!leaderboardResponse.success) {
-
-    console.warn(
-        "Leaderboard update failed."
-    );
-
-}
-
-if (!response.success) {
-
-    this.showError(
-        "Unable to save quiz result."
-    );
-
-    return;
-
-}
-
-this.showQuizResult(response.data);
-
-    },
+this.showQuizResult(result);
 
     showQuizResult(result) {
 
