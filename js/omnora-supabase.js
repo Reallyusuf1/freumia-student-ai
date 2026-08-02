@@ -59,7 +59,7 @@ const OmnoraSupabase = {
         .eq("class_level", classLevel)
         .eq("subject", subject)
         .eq("is_active", true)
-        .order("question_order", { ascending: true });
+        .order("question_code", { ascending: true });
 
     if (error) {
         throw error;
