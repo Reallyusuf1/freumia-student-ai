@@ -710,8 +710,6 @@ if (this.elements.timer) {
 
 this.showQuizResult(result);
 
-            }
-
 },
 
     showQuizResult(result) {
