@@ -675,7 +675,7 @@ return {
 
 },
 
-    finishQuiz() {
+    async finishQuiz() {
 
         clearInterval(this.quiz.timer);
 if (this.elements.timer) {
