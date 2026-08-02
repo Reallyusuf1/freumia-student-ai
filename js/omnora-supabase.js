@@ -60,14 +60,25 @@ const OmnoraSupabase = {
     };
 },
 
-    async updateStudentProfile(result) {
+    async updateStudentProfile(payload) {
+    const { data, error } = await this.client
+        .from("profiles")
+        .update({
+            total_quizzes: payload.totalQuizzes,
+            total_points: payload.totalPoints,
+            average_score: payload.averageScore,
+            best_score: payload.bestScore,
+            last_quiz_date: new Date().toISOString()
+        })
+        .eq("id", payload.profileId)
+        .select()
+        .single();
 
-        // Commit 9C
-        return {
-            success: true,
-            data: result
-        };
+    if (error) {
+        throw error;
+    }
 
+    return data;
     }
 
 };
