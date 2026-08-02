@@ -34,6 +34,20 @@ const OmnoraSupabase = {
 
     },
 
+    async startQuiz(payload) {
+    const { data, error } =
+        await this.client.rpc(
+            "start_quiz",
+            payload
+        );
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+},
+
     async updateLeaderboard(result) {
 
         // Commit 9B
