@@ -37,22 +37,6 @@ if (!window.supabase) {
 
 }
 
-async finishQuiz(payload) {
-
-    const { data, error } =
-        await this.client.rpc(
-            "finish_quiz",
-            payload
-        );
-
-    if (error) {
-        throw error;
-    }
-
-    return data;
-
-},
-
 /**
  * Returns true if Supabase Client is available.
  */
