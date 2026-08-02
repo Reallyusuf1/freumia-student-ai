@@ -52,15 +52,13 @@ const OmnoraSupabase = {
     return data;
 },
 
-    async updateLeaderboard(result) {
-
-        // Commit 9B
-        return {
-            success: true,
-            data: result
-        };
-
-    },
+    async updateLeaderboard() {
+    // Leaderboard is a database VIEW generated from profiles.
+    // It refreshes automatically when the profiles table is updated.
+    return {
+        success: true
+    };
+},
 
     async updateStudentProfile(result) {
 
