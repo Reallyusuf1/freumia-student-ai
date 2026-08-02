@@ -352,17 +352,26 @@ showSuccess(message) {
 
 },
 
-    startQuiz() {
+    async startQuiz() {
+    try {
+        const attempt = await OmnoraSupabase.startQuiz({
+            // params
+        });
+
+        this.quiz.attemptId = attempt.id ?? attempt.attempt_id;
 
         this.quiz.started = true;
-
         this.renderCurrentQuestion();
 
         if (typeof this.startTimer === "function") {
-
             this.startTimer();
-
         }
+    } catch (error) {
+        console.error(error);
+        this.showError("Unable to start quiz.");
+        return;
+    }
+    }
 
     },
 
@@ -624,8 +633,6 @@ this.elements.finishButton =
 
     },
 
-    async saveQuizAttempt(result) {
-
     // TODO:
     // Commit 8B
     // return await OmnoraSupabase.finishQuiz(result);
@@ -639,13 +646,21 @@ this.elements.finishButton =
 // TODO Commit 8D:
 // Student XP update
 
-    const response =
-    await OmnoraSupabase.finishQuiz(result);
+    async saveQuizAttempt() {
 
-return {
-    success: true,
-    data: response
-};
+    if (!this.quiz.attemptId) {
+        throw new Error("Quiz attempt not found.");
+    }
+
+    const response =
+        await OmnoraSupabase.finishQuiz(
+            this.quiz.attemptId
+        );
+
+    return {
+        success: true,
+        data: response
+    };
 
 },
 
@@ -696,16 +711,6 @@ if (this.elements.timer) {
         // TODO Commit 8.3:
 // Replace local scoring with RPC response.
 
-        const result = {
-
-            student: this.student,
-            score: this.quiz.score,
-            total: this.quiz.questions.length,
-            answers: this.quiz.answers,
-            completedAt: new Date().toISOString()
-
-        };
-
         if (this.elements.score) {
 
             this.elements.score.textContent =
@@ -713,15 +718,15 @@ if (this.elements.timer) {
 
         }
 
+        const response =
+    await this.saveQuizAttempt();
+
         if (document.getElementById("progressFill")) {
 
     document.getElementById("progressFill").style.width =
         "100%";
 
         }
-
-        const response =
-    await this.saveQuizAttempt(result);
 
         const leaderboardResponse =
     await this.updateLeaderboard(
