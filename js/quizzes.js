@@ -78,38 +78,16 @@ await this.checkAuthentication();
     },
     async loadQuizQuestions() {
 
-    let questions = [];
+    const questions = await OmnoraSupabase.getQuizQuestions(
+    this.quiz.classLevel,
+    this.quiz.subject
+);
 
-    if (typeof window.quizQuestions === "undefined") {
-        throw new Error("Question bank not loaded.");
-    }
+this.quiz.questions = questions;
 
-    const classLevel =
-        this.student?.class_level ?? null;
-
-    if (classLevel) {
-
-        questions = window.quizQuestions.filter(
-            question => question.level === classLevel
-        );
-
-    } else {
-
-        questions = [...window.quizQuestions];
-
-    }
-
-    questions.sort(() => Math.random() - 0.5);
-
-    this.quiz.questions = questions.slice(0, 20);
-
-    if (this.quiz.questions.length === 0) {
-
-        throw new Error(
-            "No quiz questions available."
-        );
-
-    }
+if (!this.quiz.questions.length) {
+    throw new Error("No quiz questions found.");
+}
 
     },
 
@@ -260,6 +238,9 @@ await this.checkAuthentication();
         }
 
         if (typeof this.initializeQuiz === "function") {
+
+            this.quiz.classLevel = this.student.class_level;
+this.quiz.subject = this.student.favorite_subject;
 
             await this.initializeQuiz();
 
