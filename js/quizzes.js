@@ -354,7 +354,7 @@ showSuccess(message) {
         console.error(error);
         this.showError("Unable to start quiz.");
         return;
-    }
+        
     }
 
     },
