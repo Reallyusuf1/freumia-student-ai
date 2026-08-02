@@ -355,8 +355,11 @@ showSuccess(message) {
     async startQuiz() {
     try {
         const attempt = await OmnoraSupabase.startQuiz({
-            // params
-        });
+    profile_id: this.profile.id,
+    class_level: this.quiz.classLevel,
+    subject: this.quiz.subject,
+    mode: this.quiz.mode
+});
 
         this.quiz.attemptId = attempt.id ?? attempt.attempt_id;
 
