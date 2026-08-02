@@ -52,6 +52,22 @@ const OmnoraSupabase = {
     return data;
 },
 
+    async getQuizQuestions(classLevel, subject) {
+    const { data, error } = await this.client
+        .from("quiz_questions")
+        .select("*")
+        .eq("class_level", classLevel)
+        .eq("subject", subject)
+        .eq("is_active", true)
+        .order("question_order", { ascending: true });
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+},
+
     async updateLeaderboard() {
     // Leaderboard is a database VIEW generated from profiles.
     // It refreshes automatically when the profiles table is updated.
