@@ -18,6 +18,22 @@ const OmnoraSupabase = {
 
     },
 
+    async getStudentProfile(userId) {
+
+    const { data, error } = await this.client
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+
+},
+
     async finishQuiz(payload) {
 
         const { data, error } =
