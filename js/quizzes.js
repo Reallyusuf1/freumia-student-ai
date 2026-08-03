@@ -242,8 +242,7 @@ this.student =
 
         if (typeof this.initializeQuiz === "function") {
 
-            console.log("Student Object:", this.student);
-console.log("Class Level:", this.student?.class_level);
+
 
             this.quiz.classLevel = this.student.class_level;
 this.quiz.subject = this.student.favorite_subject;
@@ -342,7 +341,7 @@ showSuccess(message) {
     async startQuiz() {
     try {
         const attempt = await OmnoraSupabase.startQuiz({
-    profile_id: this.profile.id,
+    profile_id: this.student.id,
     class_level: this.quiz.classLevel,
     subject: this.quiz.subject,
     mode: this.quiz.mode
@@ -705,7 +704,7 @@ if (this.elements.timer) {
         }
         
         await OmnoraSupabase.updateStudentProfile({
-    profileId: this.profile.id,
+    profileId: this.student.id,
     totalQuizzes: result.total_quizzes,
     totalPoints: result.total_points,
     averageScore: result.average_score,
