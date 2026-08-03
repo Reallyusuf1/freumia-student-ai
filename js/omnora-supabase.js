@@ -138,4 +138,15 @@ const { data, error } = await query.order(
 
 };
 
+async checkDailyQuizEligibility(profileId) {
+
+    // TODO:
+    // Commit 4
+    // Check whether the student has already completed
+    // today's daily quiz.
+
+    throw new Error("Not implemented");
+
+},
+
 window.OmnoraSupabase = OmnoraSupabase;
