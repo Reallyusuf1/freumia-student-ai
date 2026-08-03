@@ -316,6 +316,12 @@ this.student =
 
     },
 
+    /* ============================================================
+ * Helpers
+ * ============================================================
+ */
+    
+
 showToast(message, type = "error") {
     console[type === "error" ? "error" : "log"](message);
 
@@ -363,7 +369,7 @@ showSuccess(message) {
     // Replace window.quizQuestions with
     // OmnoraSupabase.getQuizQuestions()
 
-    this.startQuiz();
+    await this.startQuiz();
 
 },
 
