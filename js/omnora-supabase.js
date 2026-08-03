@@ -68,14 +68,26 @@ const OmnoraSupabase = {
     return data;
 },
 
-    async getQuizQuestions(classLevel, subject) {
-    const { data, error } = await this.client
-        .from("quiz_questions")
-        .select("*")
-        .eq("class_level", classLevel)
-        .eq("subject", subject)
-        .eq("is_active", true)
-        .order("question_code", { ascending: true });
+    async getQuizQuestions(
+    classLevel,
+    subject,
+    difficulty = null
+) {
+    let query = this.client
+    .from("quiz_questions")
+    .select("*")
+    .eq("class_level", classLevel)
+    .eq("subject", subject)
+    .eq("is_active", true);
+
+if (difficulty) {
+    query = query.eq("difficulty", difficulty);
+}
+
+const { data, error } = await query.order(
+    "question_code",
+    { ascending: true }
+);
 
     if (error) {
         throw error;
