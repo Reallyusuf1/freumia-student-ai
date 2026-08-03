@@ -245,7 +245,6 @@ this.student =
 
 
             this.quiz.classLevel = this.student.class_level;
-this.quiz.subject = this.student.favorite_subject;
 
             await this.initializeQuiz();
 
