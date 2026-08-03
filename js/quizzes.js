@@ -148,7 +148,19 @@ this.student = await OmnoraSupabase.getStudentProfile(authUser.id);
 
             this.prefillStudent();
 
-            this.openQuiz();
+const eligibility =
+    await OmnoraSupabase.checkDailyQuizEligibility(
+        this.student.id
+    );
+
+if (!eligibility) {
+    this.showError("Unable to verify daily quiz.");
+    return;
+}
+
+this.quizEligibility = eligibility;
+
+this.openQuiz();
 
         } catch (error) {
 
