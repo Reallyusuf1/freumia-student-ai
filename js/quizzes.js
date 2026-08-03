@@ -239,6 +239,9 @@ if (!this.quiz.questions.length) {
 
         if (typeof this.initializeQuiz === "function") {
 
+            console.log("Student Object:", this.student);
+console.log("Class Level:", this.student?.class_level);
+
             this.quiz.classLevel = this.student.class_level;
 this.quiz.subject = this.student.favorite_subject;
 
