@@ -196,8 +196,11 @@ this.student = await OmnoraSupabase.getStudentProfile(authUser.id);
 
             }
 
-            this.student =
-                await OmnoraAuth.getCurrentUser();
+            const authUser =
+    await OmnoraAuth.getCurrentUser();
+
+this.student =
+    await OmnoraSupabase.getStudentProfile(authUser.id);
 
             this.prefillStudent();
 
