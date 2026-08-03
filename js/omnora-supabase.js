@@ -93,7 +93,18 @@ const { data, error } = await query.order(
         throw error;
     }
 
-    return data;
+    return data.map(question => ({
+    ...question,
+
+    options: [
+        question.option_a,
+        question.option_b,
+        question.option_c,
+        question.option_d
+    ],
+
+    answer: question.correct_answer
+}));
 },
 
     async updateLeaderboard() {
