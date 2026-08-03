@@ -338,6 +338,15 @@ showSuccess(message) {
 },
 
     async startQuiz() {
+
+        if (!this.student?.id) {
+    return this.showError("Student profile not found.");
+}
+
+if (!this.quiz.classLevel) {
+    return this.showError("Class level is missing.");
+}
+
     try {
         const attempt = await OmnoraSupabase.startQuiz({
     profile_id: this.student.id,
