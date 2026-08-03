@@ -140,26 +140,18 @@ const { data, error } = await query.order(
 
 async checkDailyQuizEligibility(profileId) {
 
-    // TODO:
-    // Commit 4
-    // Check whether the student has already completed
-    // today's daily quiz.
+    const { data, error } = await this.client.rpc(
+        "can_start_daily",
+        {
+            p_profile_id: profileId
+        }
+    );
 
-    // STEP 1
-// Check for today's quiz attempt.
-//
-// STEP 2
-// If status = "completed"
-// return { eligible: false }
-//
-// STEP 3
-// If status = "in_progress"
-// return resume information.
-//
-// STEP 4
-// If no attempt exists
-// return { eligible: true }
+    if (error) {
+        throw error;
+    }
 
+    return data;
 },
 
 window.OmnoraSupabase = OmnoraSupabase;
