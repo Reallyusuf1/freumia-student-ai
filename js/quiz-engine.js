@@ -2,38 +2,40 @@
  * ==========================================
  * OMNORA STUDENT AI V2
  * Quiz Engine
+ * Business Logic Layer
  * ==========================================
  */
 
 class QuizEngine {
     constructor() {
+        this.profile = null;
         this.attempt = null;
         this.questions = [];
-        this.currentIndex = 0;
+        this.currentQuestionIndex = 0;
         this.answers = [];
-        this.profile = null;
+        this.startedAt = null;
     }
 
+    // Entry Point
     async initialize() {}
 
+    // Eligibility
     async checkEligibility() {}
 
-    async resumeQuiz() {}
-
+    // Session
     async startNewQuiz() {}
-
-    async loadQuestions() {}
-
-    async submitAnswer() {}
-
-    async nextQuestion() {}
-
-    async finishQuiz() {}
-
+    async resumeQuiz() {}
     async saveProgress() {}
-
     async restoreProgress() {}
 
+    // Questions
+    async loadQuestions() {}
+    getCurrentQuestion() {}
+    async submitAnswer(answer) {}
+    async nextQuestion() {}
+
+    // Completion
+    async finishQuiz() {}
     reset() {}
 }
 
