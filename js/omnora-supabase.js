@@ -118,7 +118,7 @@ const OmnoraSupabase = {
     return data;
     }
 
-};
+},
 
 async checkDailyQuizEligibility(profileId) {
 
