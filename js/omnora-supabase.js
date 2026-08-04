@@ -68,43 +68,31 @@ const OmnoraSupabase = {
     return data;
 },
 
-    async getQuizQuestions(
+    async getQuizQuestions({
+    profileId,
     classLevel,
     subject,
-    difficulty = null
-) {
-    let query = this.client
-    .from("quiz_questions")
-    .select("*")
-    .eq("class_level", classLevel)
-    .eq("subject", subject)
-    .eq("is_active", true);
+    difficulty = null,
+    limit = 20
+}) {
 
-if (difficulty) {
-    query = query.eq("difficulty", difficulty);
-}
-
-const { data, error } = await query.order(
-    "question_code",
-    { ascending: true }
-);
+    const { data, error } =
+        await this.client.rpc(
+            "get_quiz_questions",
+            {
+                p_profile_id: profileId,
+                p_class_level: classLevel,
+                p_subject: subject,
+                p_difficulty: difficulty,
+                p_limit: limit
+            }
+        );
 
     if (error) {
         throw error;
     }
 
-    return data.map(question => ({
-    ...question,
-
-    options: [
-        question.option_a,
-        question.option_b,
-        question.option_c,
-        question.option_d
-    ],
-
-    answer: question.correct_answer
-}));
+    return data || [];
 },
 
     async updateLeaderboard() {
