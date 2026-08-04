@@ -1,115 +1,331 @@
 /**
- * ==========================================
+ * =====================================================
  * OMNORA STUDENT AI V2
  * Quiz Engine
- * Business Logic Layer
- * ==========================================
+ * Phase 1 - Core Engine
+ * =====================================================
  */
 
 class QuizEngine {
+
     constructor() {
+
         this.profile = null;
+
+        this.eligibility = null;
+
         this.attempt = null;
+
         this.questions = [];
+
         this.currentQuestionIndex = 0;
+
         this.answers = [];
+
         this.startedAt = null;
+
     }
 
-    // Entry Point
+    /**
+     * ----------------------------------------
+     * Initialize Engine
+     * ----------------------------------------
+     */
+
     async initialize(profile) {
-    this.profile = profile;
 
-    this.eligibility =
-        await OmnoraSupabase.checkDailyQuizEligibility(profile.id);
+        if (!profile) {
+            throw new Error("Student profile is required.");
+        }
 
-    return this.eligibility;
+        this.profile = profile;
+
+        this.eligibility =
+            await OmnoraSupabase.checkDailyQuizEligibility(
+                profile.id
+            );
+
+        return this.eligibility;
+
     }
 
-    // Eligibility
-    async checkEligibility() {}
+    /**
+     * ----------------------------------------
+     * Eligibility
+     * ----------------------------------------
+     */
 
-    // Session
-    async startNewQuiz() {
-    const attempt = await OmnoraSupabase.startQuiz({
-        profile_id: this.profile.id,
-        class_level: this.profile.class_level,
-        subject: "general",
-        mode: "student"
+    checkEligibility() {
+
+        return this.eligibility;
+
+    }
+
+    /**
+     * ----------------------------------------
+     * Start Quiz Session
+     * ----------------------------------------
+     */
+
+    async startNewQuiz({
+
+        subject,
+
+        difficulty = null,
+
+        mode = "student"
+
+    }) {
+
+        if (!this.profile) {
+            throw new Error("QuizEngine is not initialized.");
+        }
+
+        if (!this.eligibility) {
+            throw new Error("Eligibility has not been checked.");
+        }
+
+        const attemptId =
+            await OmnoraSupabase.startQuiz({
+
+                profile_id: this.profile.id,
+
+                class_level: this.profile.class_level,
+
+                subject,
+
+                mode
+
+            });
+
+        this.attempt = {
+
+            id: attemptId,
+
+            subject,
+
+            difficulty,
+
+            mode
+
+        };
+
+        this.startedAt = new Date();
+
+        return this.attempt;
+
+    }
+
+    /**
+     * ----------------------------------------
+     * Resume Current Session
+     * ----------------------------------------
+     */
+
+    async resumeQuiz() {
+
+        return this.attempt;
+
+    }
+
+    /**
+     * ----------------------------------------
+     * Load Questions
+     * ----------------------------------------
+     */
+
+    async loadQuestions() {
+
+        if (!this.attempt) {
+            throw new Error("Quiz session has not started.");
+        }
+
+        const questions =
+            await OmnoraSupabase.getQuizQuestions({
+
+                profileId:
+                    this.profile.id,
+
+                classLevel:
+                    this.profile.class_level,
+
+                subject:
+                    this.attempt.subject,
+
+                difficulty:
+                    this.attempt.difficulty,
+
+                limit: 20
+
+            });
+
+        if (!questions.length) {
+
+            throw new Error(
+                "No quiz questions available."
+            );
+
+        }
+
+        this.questions = questions;
+
+        this.currentQuestionIndex = 0;
+
+        return this.questions;
+
+    }
+
+}
+
+/**
+ * ----------------------------------------
+ * Get Current Question
+ * ----------------------------------------
+ */
+getCurrentQuestion() {
+
+    if (!this.questions.length) {
+        return null;
+    }
+
+    return this.questions[this.currentQuestionIndex];
+
+}
+
+/**
+ * ----------------------------------------
+ * Submit Answer
+ * ----------------------------------------
+ */
+async submitAnswer(selectedAnswer) {
+
+    const question = this.getCurrentQuestion();
+
+    if (!question) {
+        throw new Error("No active question.");
+    }
+
+    const result =
+        await OmnoraSupabase.submitQuizAnswer({
+
+            attemptId: this.attempt.id,
+
+            profileId: this.profile.id,
+
+            questionId: question.id,
+
+            selectedAnswer
+
+        });
+
+    this.answers.push({
+
+        questionId: question.id,
+
+        selectedAnswer,
+
+        result
+
     });
 
-    this.attempt = attempt;
+    return result;
 
-    return this.attempt;
-    }
-        async resumeQuiz() {
+}
+
+/**
+ * ----------------------------------------
+ * Next Question
+ * ----------------------------------------
+ */
+nextQuestion() {
 
     if (
-        !this.eligibility ||
-        !this.eligibility.attempt
+        this.currentQuestionIndex >=
+        this.questions.length - 1
     ) {
         return null;
     }
 
-    this.attempt = this.eligibility.attempt;
+    this.currentQuestionIndex++;
 
-    return this.attempt;
-        }
-    
-    async saveProgress() {}
-    async restoreProgress() {}
+    return this.getCurrentQuestion();
 
-    // Questions
-    async loadQuestions() {
+}
 
-    try {
+/**
+ * ----------------------------------------
+ * Save Progress
+ * ----------------------------------------
+ */
+saveProgress() {
 
-        const questions =
-            await OmnoraSupabase.getQuizQuestions({
-                profileId: this.profile.id,
-                classLevel: this.profile.class_level,
-                subject: "general",
-                difficulty: "easy"
-            });
+    return {
+        attemptId: this.attempt?.id ?? null,
+        currentQuestionIndex: this.currentQuestionIndex,
+        answered: this.answers.length
+    };
 
-        if (questions && questions.length > 0) {
+}
 
-            this.questions = questions;
-            return this.questions;
+/**
+ * ----------------------------------------
+ * Restore Progress
+ * ----------------------------------------
+ */
+restoreProgress(progress) {
 
-        }
-
-    } catch (error) {
-
-        console.warn(
-            "Supabase questions unavailable. Using local question bank.",
-            error
-        );
-
+    if (!progress) {
+        return;
     }
 
-    // Fallback
+    this.currentQuestionIndex =
+        progress.currentQuestionIndex ?? 0;
 
-const filteredQuestions = [...window.quizQuestions]
-    .filter(question =>
-        question.level === this.profile.class_level &&
-        question.subject === "general" &&
-        question.difficulty === "easy"
-    )
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 10);
+}
 
-this.questions = filteredQuestions;
+/**
+ * ----------------------------------------
+ * Finish Quiz
+ * ----------------------------------------
+ */
+async finishQuiz() {
 
-return this.questions;
-    
-    getCurrentQuestion() {}
-    async submitAnswer(answer) {}
-    async nextQuestion() {}
+    if (!this.attempt) {
+        throw new Error("No active quiz attempt.");
+    }
 
-    // Completion
-    async finishQuiz() {}
-    reset() {}
+    const summary =
+        await OmnoraSupabase.finishQuiz({
+            attemptId: this.attempt.id
+        });
+
+    await OmnoraSupabase.updateLeaderboard();
+
+    this.completedAt = new Date();
+
+    return summary;
+
+}
+
+/**
+ * ----------------------------------------
+ * Reset Engine
+ * ----------------------------------------
+ */
+reset() {
+
+    this.attempt = null;
+
+    this.questions = [];
+
+    this.answers = [];
+
+    this.currentQuestionIndex = 0;
+
+    this.startedAt = null;
+
+    this.completedAt = null;
+
 }
 
 window.QuizEngine = QuizEngine;
