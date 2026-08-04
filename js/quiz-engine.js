@@ -173,8 +173,6 @@ class QuizEngine {
 
         return this.questions;
 
-    }
-
 }
 
 /**
