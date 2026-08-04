@@ -31,6 +31,8 @@ const QuizApp = {
 
     student: null,
 
+    engine: null,
+
     /* ============================================================
  * Initialization
  * ============================================================
@@ -41,6 +43,9 @@ const QuizApp = {
         this.cacheElements();
 this.cacheQuizElements();
 this.bindEvents();
+this.engine = new QuizEngine();
+
+        
 await this.checkAuthentication();
 
     },
@@ -145,6 +150,7 @@ if (!this.quiz.questions.length) {
 
             const authUser = await OmnoraAuth.getCurrentUser();
 this.student = await OmnoraSupabase.getStudentProfile(authUser.id);
+            await this.engine.initialize(this.student);
 
             this.prefillStudent();
 
@@ -237,6 +243,7 @@ this.openQuiz();
 
 this.student =
     await OmnoraSupabase.getStudentProfile(authUser.id);
+            await this.engine.initialize(this.student);
 
             this.prefillStudent();
 
@@ -282,15 +289,27 @@ this.student =
 
         }
 
-        if (typeof this.initializeQuiz === "function") {
+        this.quiz.classLevel = this.student.class_level;
 
+await this.engine.startNewQuiz({
+    subject: this.quiz.subject,
+    difficulty: this.quiz.difficulty,
+    mode: this.quiz.mode
+});
 
+await this.engine.loadQuestions();
 
-            this.quiz.classLevel = this.student.class_level;
+this.quiz.questions = this.engine.questions;
 
-            await this.initializeQuiz();
+this.quiz.attemptId = this.engine.attempt.id;
 
-        }
+this.quiz.started = true;
+
+this.renderCurrentQuestion();
+
+if (typeof this.startTimer === "function") {
+    this.startTimer();
+}
 
     },
 
@@ -420,64 +439,71 @@ if (!this.quiz.classLevel) {
 
     },
 
-    submitAnswer(answer) {
-
-    const question =
-        this.quiz.questions[
-            this.quiz.currentIndex
-        ];
-
-    if (!question) return;
-
-    this.quiz.answers.push({
-
-        questionId:
-            question.id ??
-            this.quiz.currentIndex,
-
-        answer
-
-    });
+    async submitAnswer(answer) {
 
     const selectedAnswer =
         typeof answer === "string"
             ? answer.split(".")[0].trim()
             : null;
 
-    if (selectedAnswer === question.answer) {
-        this.quiz.score++;
+    try {
+
+        const result =
+            await this.engine.submitAnswer(selectedAnswer);
+
+        this.quiz.answers = [...this.engine.answers];
+
+        if (result.is_correct) {
+            this.quiz.score++;
+        }
+
+        this.updateProgress();
+
+        setTimeout(() => {
+            this.nextQuestion();
+        }, 300);
+
+    } catch (error) {
+
+        console.error(error);
+
+        this.showError(
+            error.message || "Unable to submit answer."
+        );
+
     }
 
-    this.updateProgress();
-
-    setTimeout(() => {
-    this.nextQuestion();
-}, 300);
+    }
 
 },
 
     nextQuestion() {
 
-        this.quiz.currentIndex++;
+        nextQuestion() {
 
-        if (
-            this.quiz.currentIndex >=
-            this.quiz.questions.length
-        ) {
+    const question =
+        this.engine.nextQuestion();
 
-            this.finishQuiz();
+    if (!question) {
 
-            return;
+        this.finishQuiz();
+
+        return;
+
+    }
+
+    this.quiz.currentIndex =
+        this.engine.currentQuestionIndex;
+
+    this.renderCurrentQuestion();
+
+    if (typeof this.startTimer === "function") {
+
+        this.startTimer();
+
+    }
 
         }
-
-        this.renderCurrentQuestion();
-
-if (typeof this.startTimer === "function") {
-
-    this.startTimer();
-
-}
 
     },
     
@@ -548,7 +574,7 @@ this.elements.finishButton =
     renderCurrentQuestion() {
 
         const question =
-            this.quiz.questions[this.quiz.currentIndex];
+    this.engine.getCurrentQuestion();
 
         if (!question) return;
 
@@ -753,10 +779,7 @@ if (this.elements.timer) {
         
         this.quiz.timer = null;
 
-        const result = await OmnoraSupabase.finishQuiz({
-    attempt_id: this.quiz.attemptId,
-    answers: this.quiz.answers
-});
+        const result = await this.engine.finishQuiz();
 
         if (this.elements.score) {
 
