@@ -325,5 +325,7 @@ reset() {
     this.completedAt = null;
 
 }
+    
+}
 
 window.QuizEngine = QuizEngine;
