@@ -95,14 +95,6 @@ const OmnoraSupabase = {
     return data || [];
 },
 
-    async updateLeaderboard() {
-    // Leaderboard is a database VIEW generated from profiles.
-    // It refreshes automatically when the profiles table is updated.
-    return {
-        success: true
-    };
-},
-
     async updateStudentProfile(payload) {
     const { data, error } = await this.client
         .from("profiles")
@@ -140,6 +132,35 @@ async checkDailyQuizEligibility(profileId) {
     }
 
     return data;
+},
+
+async submitQuizAnswer(payload) {
+
+    const { data, error } =
+        await this.client.rpc(
+            "submit_quiz_answer",
+            {
+                p_attempt_id: payload.attemptId,
+                p_profile_id: payload.profileId,
+                p_question_id: payload.questionId,
+                p_selected_answer: payload.selectedAnswer
+            }
+        );
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+
+},
+
+async updateLeaderboard() {
+    // Leaderboard is a database VIEW generated from profiles.
+    // It refreshes automatically when the profiles table is updated.
+    return {
+        success: true
+    };
 },
 
 window.OmnoraSupabase = OmnoraSupabase;
