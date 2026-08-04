@@ -36,19 +36,21 @@ const OmnoraSupabase = {
 
     async finishQuiz(payload) {
 
-        const { data, error } =
-            await this.client.rpc(
-                "finish_quiz",
-                payload
-            );
+    const { data, error } =
+        await this.client.rpc(
+            "finish_quiz",
+            {
+                p_attempt_id: payload.attemptId
+            }
+        );
 
-        if (error) {
-            throw error;
-        }
+    if (error) {
+        throw error;
+    }
 
-        return data;
+    return data;
 
-    },
+},
 
     async startQuiz(payload) {
     const { data, error } = await this.client.rpc(
