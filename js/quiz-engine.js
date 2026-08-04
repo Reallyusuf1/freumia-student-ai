@@ -42,7 +42,19 @@ class QuizEngine {
 
     return this.attempt;
     }
-    async resumeQuiz() {}
+        async resumeQuiz() {
+
+    if (
+        !this.eligibility ||
+        !this.eligibility.attempt
+    ) {
+        return null;
+    }
+
+    this.attempt = this.eligibility.attempt;
+
+    return this.attempt;
+        }
     async saveProgress() {}
     async restoreProgress() {}
 
