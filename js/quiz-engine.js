@@ -55,11 +55,46 @@ class QuizEngine {
 
     return this.attempt;
         }
+    
     async saveProgress() {}
     async restoreProgress() {}
 
     // Questions
-    async loadQuestions() {}
+    async loadQuestions() {
+
+    try {
+
+        const questions =
+            await OmnoraSupabase.getQuizQuestions({
+                profileId: this.profile.id,
+                classLevel: this.profile.class_level,
+                subject: "general",
+                difficulty: "easy"
+            });
+
+        if (questions && questions.length > 0) {
+
+            this.questions = questions;
+            return this.questions;
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Supabase questions unavailable. Using local question bank.",
+            error
+        );
+
+    }
+
+    // Fallback
+    this.questions = [...window.quizQuestions];
+
+    return this.questions;
+
+    }
+    
     getCurrentQuestion() {}
     async submitAnswer(answer) {}
     async nextQuestion() {}
