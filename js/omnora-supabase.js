@@ -116,7 +116,6 @@ const OmnoraSupabase = {
     }
 
     return data;
-    }
 
 },
 
@@ -163,6 +162,5 @@ async updateLeaderboard() {
     return {
         success: true
     };
-},
 
 window.OmnoraSupabase = OmnoraSupabase;
