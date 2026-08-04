@@ -157,10 +157,16 @@ async submitQuizAnswer(payload) {
 },
 
 async updateLeaderboard() {
+
     // Leaderboard is a database VIEW generated from profiles.
     // It refreshes automatically when the profiles table is updated.
+
     return {
         success: true
     };
+
+}
+
+};
 
 window.OmnoraSupabase = OmnoraSupabase;
