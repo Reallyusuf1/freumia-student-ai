@@ -89,11 +89,19 @@ class QuizEngine {
     }
 
     // Fallback
-    this.questions = [...window.quizQuestions];
 
-    return this.questions;
+const filteredQuestions = [...window.quizQuestions]
+    .filter(question =>
+        question.level === this.profile.class_level &&
+        question.subject === "general" &&
+        question.difficulty === "easy"
+    )
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 10);
 
-    }
+this.questions = filteredQuestions;
+
+return this.questions;
     
     getCurrentQuestion() {}
     async submitAnswer(answer) {}
