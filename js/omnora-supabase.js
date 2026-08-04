@@ -129,7 +129,7 @@ const OmnoraSupabase = {
 async checkDailyQuizEligibility(profileId) {
 
     const { data, error } = await this.client.rpc(
-        "can_start_daily",
+        "can_start_daily_quiz",
         {
             p_profile_id: profileId
         }
