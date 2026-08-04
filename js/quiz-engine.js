@@ -30,7 +30,18 @@ class QuizEngine {
     async checkEligibility() {}
 
     // Session
-    async startNewQuiz() {}
+    async startNewQuiz() {
+    const attempt = await OmnoraSupabase.startQuiz({
+        profile_id: this.profile.id,
+        class_level: this.profile.class_level,
+        subject: "general",
+        mode: "student"
+    });
+
+    this.attempt = attempt;
+
+    return this.attempt;
+    }
     async resumeQuiz() {}
     async saveProgress() {}
     async restoreProgress() {}
