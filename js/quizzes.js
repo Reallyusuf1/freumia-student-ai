@@ -100,20 +100,6 @@ await this.checkAuthentication();
         }
 
     },
-    async loadQuizQuestions() {
-
-    const questions = await OmnoraSupabase.getQuizQuestions(
-    this.quiz.classLevel,
-    this.quiz.subject
-);
-
-this.quiz.questions = questions;
-
-if (!this.quiz.questions.length) {
-    throw new Error("No quiz questions found.");
-}
-
-    },
 
     /* ============================================================
  * Authentication
@@ -387,58 +373,6 @@ showSuccess(message) {
     timer: null
 },
 
-    async initializeQuiz() {
-
-    this.quiz.currentIndex = 0;
-    this.quiz.score = 0;
-    this.quiz.answers = [];
-    this.quiz.started = false;
-
-    await this.loadQuizQuestions();
-
-    // TODO:
-    // Replace window.quizQuestions with
-    // OmnoraSupabase.getQuizQuestions()
-
-    await this.startQuiz();
-
-},
-
-    async startQuiz() {
-
-        if (!this.student?.id) {
-    return this.showError("Student profile not found.");
-}
-
-if (!this.quiz.classLevel) {
-    return this.showError("Class level is missing.");
-}
-
-    try {
-        const attempt = await OmnoraSupabase.startQuiz({
-    profile_id: this.student.id,
-    class_level: this.quiz.classLevel,
-    subject: this.quiz.subject,
-    mode: this.quiz.mode
-});
-
-        this.quiz.attemptId = attempt.id ?? attempt.attempt_id;
-
-        this.quiz.started = true;
-        this.renderCurrentQuestion();
-
-        if (typeof this.startTimer === "function") {
-            this.startTimer();
-        }
-    } catch (error) {
-        console.error(error);
-        this.showError("Unable to start quiz.");
-        return;
-        
-    }
-
-    },
-
     async submitAnswer(answer) {
 
     const selectedAnswer =
@@ -473,23 +407,15 @@ if (!this.quiz.classLevel) {
 
     }
 
-    }
-
 },
 
     nextQuestion() {
 
-        nextQuestion() {
-
-    const question =
-        this.engine.nextQuestion();
+    const question = this.engine.nextQuestion();
 
     if (!question) {
-
         this.finishQuiz();
-
         return;
-
     }
 
     this.quiz.currentIndex =
@@ -498,14 +424,10 @@ if (!this.quiz.classLevel) {
     this.renderCurrentQuestion();
 
     if (typeof this.startTimer === "function") {
-
         this.startTimer();
-
     }
 
-        }
-
-    },
+},
     
 
     resetQuiz() {
