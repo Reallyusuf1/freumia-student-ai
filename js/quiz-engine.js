@@ -17,7 +17,14 @@ class QuizEngine {
     }
 
     // Entry Point
-    async initialize() {}
+    async initialize(profile) {
+    this.profile = profile;
+
+    this.eligibility =
+        await OmnoraSupabase.checkDailyQuizEligibility(profile.id);
+
+    return this.eligibility;
+    }
 
     // Eligibility
     async checkEligibility() {}
