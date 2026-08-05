@@ -61,6 +61,28 @@ class QuestionBankSeeder {
 
         return chunks;
     }
+    
+validateQuestion(question) {
+    const requiredFields = [
+        "class_level",
+        "subject",
+        "question",
+        "options",
+        "correct_answer"
+    ];
+
+    for (const field of requiredFields) {
+        if (question[field] === undefined || question[field] === null) {
+            throw new Error(`Missing required field: ${field}`);
+        }
+    }
+
+    if (!Array.isArray(question.options) || question.options.length < 2) {
+        throw new Error("Question must have at least two options.");
+    }
+
+    return true;
+}
 
 }
 
