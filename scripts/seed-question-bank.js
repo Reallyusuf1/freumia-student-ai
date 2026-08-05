@@ -84,6 +84,20 @@ validateQuestion(question) {
     return true;
 }
 
+    async uploadBatch(batch) {
+    batch.forEach((question) => this.validateQuestion(question));
+
+    const { error } = await this.client
+        .from("quiz_questions")
+        .insert(batch);
+
+    if (error) {
+        throw error;
+    }
+
+    this.inserted += batch.length;
+            }
+
 }
 
 // ======================================================
