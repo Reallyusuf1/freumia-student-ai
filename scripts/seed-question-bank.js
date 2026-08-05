@@ -96,7 +96,31 @@ validateQuestion(question) {
     }
 
     this.inserted += batch.length;
+        
             }
+    async processAllQuestions() {
+    this.total = this.questions.length;
+
+    const batches = this.chunkArray(
+        this.questions,
+        BATCH_SIZE
+    );
+
+    for (const batch of batches) {
+        await this.uploadBatch(batch);
+
+        console.log(
+            `Uploaded ${this.inserted}/${this.total} questions`
+        );
+    }
+
+    return {
+        total: this.total,
+        inserted: this.inserted,
+        skipped: this.skipped,
+        failed: this.failed
+    };
+    }
 
 }
 
