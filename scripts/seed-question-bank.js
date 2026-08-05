@@ -16,6 +16,12 @@
  */
 const BATCH_SIZE = 100;
 const DRY_RUN = false;
+// ======================================================
+// Dependencies
+// ======================================================
+
+const supabase = window.supabaseClient;
+const questionBank = window.questionBank || [];
 
 // ======================================================
 // Imports
@@ -30,12 +36,32 @@ const DRY_RUN = false;
 // ======================================================
 
 class QuestionBankSeeder {
+
     constructor() {
         this.total = 0;
         this.inserted = 0;
         this.skipped = 0;
         this.failed = 0;
+
+        this.questions = questionBank;
+        this.client = supabase;
     }
+
+    async seedAllQuestions() {
+        console.log("Starting Question Bank Seeder...");
+    }
+
+    chunkArray(array, size) {
+
+        const chunks = [];
+
+        for (let i = 0; i < array.length; i += size) {
+            chunks.push(array.slice(i, i + size));
+        }
+
+        return chunks;
+    }
+
 }
 
 // ======================================================
