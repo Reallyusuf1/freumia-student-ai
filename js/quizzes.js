@@ -19,9 +19,21 @@ class QuizRepository {
 
     async loadQuestions(classLevel, subject) {
 
+    const { data, error } =
+        await OmnoraSupabase.client
+            .from("quiz_questions")
+            .select("*")
+            .eq("class_level", classLevel)
+            .eq("subject", subject)
+            .limit(20);
+
+    if (error) {
+        throw error;
     }
 
-}
+    return data || [];
+
+    }
 
 /* ============================================================
  * Quiz Controller
@@ -291,12 +303,15 @@ await this.engine.startNewQuiz({
     difficulty: this.quiz.difficulty,
     mode: this.quiz.mode
 });
-        // Commit 20A
-// Questions loaded from QuizRepository
+        
+        const questions =
+    await this.repository.loadQuestions(
+        this.quiz.classLevel,
+        this.quiz.subject
+    );
 
-await this.engine.loadQuestions();
-
-this.quiz.questions = this.engine.questions;
+this.quiz.questions = questions;
+this.engine.questions = questions;
 
 this.quiz.attemptId = this.engine.attempt.id;
 
