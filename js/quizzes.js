@@ -15,6 +15,14 @@ const QUIZ_CONFIG = Object.freeze({
     PASSING_SCORE: 50
 });
 
+class QuizRepository {
+
+    async loadQuestions(classLevel, subject) {
+
+    }
+
+}
+
 /* ============================================================
  * Quiz Controller
  * ============================================================
@@ -44,6 +52,7 @@ const QuizApp = {
 this.cacheQuizElements();
 this.bindEvents();
 this.engine = new QuizEngine();
+this.repository = new QuizRepository();
 
         
 await this.checkAuthentication();
@@ -282,6 +291,8 @@ await this.engine.startNewQuiz({
     difficulty: this.quiz.difficulty,
     mode: this.quiz.mode
 });
+        // Commit 20A
+// Questions loaded from QuizRepository
 
 await this.engine.loadQuestions();
 
