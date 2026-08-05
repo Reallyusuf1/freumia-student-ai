@@ -31,7 +31,8 @@ class QuizRepository {
         throw error;
     }
 
-    return data || [];
+    console.log("Loaded questions:", data);
+return data || [];
 
     }
 }
