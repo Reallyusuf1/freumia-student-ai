@@ -119,6 +119,9 @@ validateQuestion(question) {
         inserted: this.inserted,
         skipped: this.skipped,
         failed: this.failed
+
+    };
+        
     }
         
     }
