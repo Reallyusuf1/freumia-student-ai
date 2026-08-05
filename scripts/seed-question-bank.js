@@ -120,7 +120,9 @@ validateQuestion(question) {
         skipped: this.skipped,
         failed: this.failed
     };
+        
     }
+    
     async function runSeeder() {
     try {
         const seeder = new QuestionBankSeeder();
@@ -142,8 +144,6 @@ validateQuestion(question) {
 
 if (DRY_RUN === false) {
     runSeeder();
-}
-
 }
 
 // =====================================================
