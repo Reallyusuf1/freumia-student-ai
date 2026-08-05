@@ -298,6 +298,9 @@ this.student =
         }
 
         this.quiz.classLevel = this.student.class_level;
+        if (!this.quiz.subject) {
+    this.quiz.subject = "Computer Studies";
+        }
 
 await this.engine.startNewQuiz({
     subject: this.quiz.subject,
