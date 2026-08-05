@@ -121,6 +121,28 @@ validateQuestion(question) {
         failed: this.failed
     };
     }
+    async function runSeeder() {
+    try {
+        const seeder = new QuestionBankSeeder();
+
+        const result = await seeder.processAllQuestions();
+
+        console.log("=================================");
+        console.log("Question Bank Seeder Complete");
+        console.log("=================================");
+        console.log(result);
+
+        return result;
+
+    } catch (error) {
+        console.error("Seeder failed:", error);
+        throw error;
+    }
+}
+
+if (DRY_RUN === false) {
+    runSeeder();
+}
 
 }
 
