@@ -19,6 +19,11 @@ class QuizRepository {
 
     async loadQuestions(classLevel, subject) {
 
+        console.log({
+    classLevel,
+    subject
+});
+
     const { data, error } =
         await OmnoraSupabase.client
             .from("quiz_questions")
