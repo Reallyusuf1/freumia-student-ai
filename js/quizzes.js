@@ -34,6 +34,7 @@ class QuizRepository {
     return data || [];
 
     }
+}
 
 /* ============================================================
  * Quiz Controller
