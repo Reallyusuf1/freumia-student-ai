@@ -21,6 +21,7 @@ const OmnoraSupabase = {
     transformQuestion(question)
     this.transformQuestion(batch)
 
+async insertQuizQuestions(batch)
 
     async getStudentProfile(userId) {
 
