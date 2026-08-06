@@ -92,3 +92,81 @@ The ecosystem shall continuously improve while preserving its constitutional pri
 No feature, partnership, architectural change, or engineering decision shall intentionally violate this Constitution.
 
 Any future amendments must strengthen—not weaken—the mission and values established herein.
+
+# Chapter II
+
+## Governance and Constitutional Responsibilities
+
+### Article 11 — Responsibility to Learners
+
+Every decision within Freumia shall prioritize the educational interests, safety, dignity, and long-term success of learners.
+
+Commercial interests shall never intentionally undermine educational quality.
+
+---
+
+### Article 12 — Responsibility to Teachers
+
+Freumia shall respect and support teachers as essential partners in education.
+
+Technology shall enhance teaching, not diminish the role of educators.
+
+---
+
+### Article 13 — Responsibility to Parents and Guardians
+
+Parents and guardians shall have meaningful visibility into learning progress where appropriate and authorized.
+
+Freumia shall encourage collaboration between learners, families, and educators.
+
+---
+
+### Article 14 — Responsibility to Schools
+
+Freumia shall build tools that strengthen educational institutions rather than replace them.
+
+Schools remain independent educational authorities within their own communities.
+
+---
+
+### Article 15 — Ethical Innovation
+
+Innovation shall be guided by ethics, transparency, and measurable educational value.
+
+New technologies shall be introduced responsibly and evaluated continuously.
+
+---
+
+### Article 16 — Stewardship of Data
+
+Freumia recognizes educational data as highly sensitive.
+
+All data shall be collected, processed, stored, and protected responsibly in accordance with constitutional principles and applicable laws.
+
+---
+
+### Article 17 — Open Standards
+
+Where appropriate, Freumia shall encourage interoperability, documented interfaces, and maintainable engineering practices that support long-term sustainability.
+
+---
+
+### Article 18 — Constitutional Review
+
+Major architectural, engineering, educational, or governance decisions should be reviewed against this Constitution before implementation.
+
+---
+
+### Article 19 — Amendments
+
+The Constitution may evolve over time.
+
+Every amendment shall strengthen clarity, sustainability, educational impact, and long-term stability without contradicting the founding principles established in the Preamble.
+
+---
+
+### Article 20 — Constitutional Oath
+
+Everyone contributing to the Freumia ecosystem is expected to uphold the constitutional principles of the platform and work in good faith toward its mission of expanding opportunity through education.
+
+The Constitution exists to guide decisions, preserve trust, and protect the future of the ecosystem.
