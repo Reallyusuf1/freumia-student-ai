@@ -18,6 +18,8 @@ const OmnoraSupabase = {
 
     },
 
+    transformQuestion(question)
+
     async getStudentProfile(userId) {
 
     const { data, error } = await this.client
