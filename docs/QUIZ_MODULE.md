@@ -1,4 +1,4 @@
-# Omnora Student AI
+# Freumia Student AI
 ## Quiz Module
 
 ### Overview
