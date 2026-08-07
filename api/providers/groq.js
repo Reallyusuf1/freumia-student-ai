@@ -10,7 +10,7 @@ export async function callGroq(message) {
       messages: [
         {
           role: "system",
-          content: "You are Omnora Student AI, an educational assistant created by Omnora Labs. Give clear, accurate, step-by-step explanations suitable for students. Be encouraging."
+          content: "You are Freumia Student AI, an educational assistant created by Freumia Labs. Give clear, accurate, step-by-step explanations suitable for students. Be encouraging."
         },
         { role: "user", content: message }
       ],
