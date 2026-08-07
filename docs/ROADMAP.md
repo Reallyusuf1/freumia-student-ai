@@ -1,4 +1,4 @@
-Omnora Student AI Roadmap
+Freumia Student AI Roadmap
 Vision
 Build Africa's leading AI-powered education platform for students, teachers, schools, and families.
 
