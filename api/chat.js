@@ -28,17 +28,17 @@ export default async function handler(req, res) {
 
     for (const provider of PROVIDERS) {
       try {
-        console.log(`[Omnora AI] Trying provider: ${provider.name}`);
+        console.log(`[Freumia AI] Trying provider: ${provider.name}`);
         const reply = await provider.fn(message.trim());
         
-        console.log(`[Omnora AI] Success with: ${provider.name}`);
+        console.log(`[Freumia AI] Success with: ${provider.name}`);
         return res.status(200).json({ 
           reply, 
           provider: provider.name 
         });
       } catch (err) {
         lastError = err;
-        console.warn(`[Omnora AI] ${provider.name} failed:`, err.message);
+        console.warn(`[Freumia AI] ${provider.name} failed:`, err.message);
         
         if (!err.isRateLimit) {
           // Non-rate-limit error → stop and return error
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error("[Omnora AI] Unexpected error:", error);
+    console.error("[Freumia AI] Unexpected error:", error);
     return res.status(500).json({ error: "Internal server error. Please try again." });
   }
 }
