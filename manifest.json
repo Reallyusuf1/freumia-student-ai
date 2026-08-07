@@ -1,7 +1,7 @@
 {
-  "name": "Omnora Student AI",
-  "short_name": "Omnora AI",
-  "description": "AI-powered educational platform by Omnora Labs.",
+  "name": "Freumia Student AI",
+  "short_name": "Freumia AI",
+  "description": "AI-powered educational platform by Freumia Labs.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0F172A",
