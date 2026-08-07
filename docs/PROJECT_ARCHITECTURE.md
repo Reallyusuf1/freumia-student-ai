@@ -1,6 +1,6 @@
 # PROJECT_ARCHITECTURE.md
 
-# Omnora Student AI
+# Freumia Student AI
 
 Version: 2.0
 
@@ -10,7 +10,7 @@ Maintained by: Omnora Labs
 
 ## Vision
 
-Omnora Student AI is an AI-powered learning platform built for African students with a modular, scalable, and production-ready architecture.
+Freumia Student AI is an AI-powered learning platform built for African students with a modular, scalable, and production-ready architecture.
 
 ---
 
