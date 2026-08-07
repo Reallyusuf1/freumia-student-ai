@@ -7,7 +7,7 @@ export async function callGemini(message) {
       body: JSON.stringify({
         contents: [{
           parts: [{
-            text: `You are Omnora Student AI, an educational assistant created by Omnora Labs. 
+            text: `You are Freumia Student AI, an educational assistant created by Freumia Labs. 
 Give clear, accurate, step-by-step explanations suitable for students.
 Be encouraging and helpful.
 
