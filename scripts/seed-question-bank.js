@@ -109,6 +109,27 @@ class QuestionBankSeeder {
         return true;
     }
 
+        validateQuestionBankIntegrity() {
+
+        const seenIds = new Set();
+
+        for (const question of this.questions) {
+
+            this.validateQuestion(question);
+
+            if (seenIds.has(question.id)) {
+                throw new Error(
+                    `Duplicate question ID detected: ${question.id}`
+                );
+            }
+
+            seenIds.add(question.id);
+        }
+
+        return true;
+        }
+    
+
     async uploadBatch(batch) {
 
         batch.forEach((question) => this.validateQuestion(question));
@@ -121,6 +142,9 @@ class QuestionBankSeeder {
     }
 
     async processAllQuestions() {
+
+    this.validateQuestionBankIntegrity();
+        
     this.total = this.questions.length;
 
     const batches = this.chunkArray(
