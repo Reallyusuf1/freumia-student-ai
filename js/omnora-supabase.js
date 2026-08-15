@@ -175,3 +175,4 @@ async updateLeaderboard() {
 };
 
 window.OmnoraSupabase = OmnoraSupabase;
+
