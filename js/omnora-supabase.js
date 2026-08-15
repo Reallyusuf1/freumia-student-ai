@@ -18,6 +18,30 @@ const OmnoraSupabase = {
 
     },
 
+    transformQuestion(question) {
+
+        if (!question || typeof question !== "object") {
+            throw new Error("Invalid quiz question.");
+        }
+
+        if (!Array.isArray(question.options) || question.options.length < 4) {
+            throw new Error("Quiz question must contain four options.");
+        }
+
+        return {
+            class_level: question.level,
+            subject: question.subject,
+            difficulty: question.difficulty,
+            question: question.question,
+            option_a: question.options[0],
+            option_b: question.options[1],
+            option_c: question.options[2],
+            option_d: question.options[3],
+            correct_answer: question.answer
+        };
+
+    },
+
     async getStudentProfile(userId) {
 
     const { data, error } = await this.client
@@ -170,3 +194,4 @@ async updateLeaderboard() {
 };
 
 window.OmnoraSupabase = OmnoraSupabase;
+
