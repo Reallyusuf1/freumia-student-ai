@@ -42,6 +42,30 @@ const OmnoraSupabase = {
 
     },
 
+        async insertQuizQuestions(batch) {
+
+        if (!Array.isArray(batch) || batch.length === 0) {
+            throw new Error("Question batch must be a non-empty array.");
+        }
+
+        const transformed = batch.map((question) =>
+            this.transformQuestion(question)
+        );
+
+        const { error } = await this.client
+            .from("quiz_questions")
+            .insert(transformed);
+
+        if (error) {
+            throw error;
+        }
+
+        return {
+            success: true,
+            inserted: transformed.length
+        };
+    },
+
     async getStudentProfile(userId) {
 
     const { data, error } = await this.client
