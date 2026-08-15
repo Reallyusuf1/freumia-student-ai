@@ -47,6 +47,8 @@ class QuestionBankSeeder {
         this.skipped = 0;
         this.failed = 0;
 
+        this.dryRun = DRY_RUN;
+
         this.questions = questionBank;
         this.service = supabaseService;
     }
@@ -166,8 +168,10 @@ class QuestionBankSeeder {
         await this.uploadBatch(batch);
 
         console.log(
-            `Uploaded ${this.inserted}/${this.total} questions`
-        );
+    DRY_RUN
+        ? `DRY RUN: validated ${this.total} questions; no database writes performed`
+        : `Uploaded ${this.inserted}/${this.total} questions`
+);
     }
 
     return {
