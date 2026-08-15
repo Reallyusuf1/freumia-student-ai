@@ -66,29 +66,52 @@ class QuestionBankSeeder {
         return chunks;
     }
     
-validateQuestion(question) {
-    const requiredFields = [
-        "class_level",
-        "subject",
-        "question",
-        "options",
-        "correct_answer"
-    ];
+    validateQuestion(question) {
 
-    for (const field of requiredFields) {
-        if (question[field] === undefined || question[field] === null) {
-            throw new Error(`Missing required field: ${field}`);
+        const requiredFields = [
+            "id",
+            "subject",
+            "level",
+            "difficulty",
+            "question",
+            "options",
+            "answer"
+        ];
+
+        for (const field of requiredFields) {
+            if (
+                question[field] === undefined ||
+                question[field] === null ||
+                question[field] === ""
+            ) {
+                throw new Error(`Missing required field: ${field}`);
+            }
         }
-    }
 
-    if (!Array.isArray(question.options) || question.options.length < 2) {
-        throw new Error("Question must have at least two options.");
-    }
+        if (
+            !Array.isArray(question.options) ||
+            question.options.length !== 4
+        ) {
+            throw new Error(
+                `Question ${question.id} must contain exactly four options.`
+            );
+        }
 
-    return true;
-}
+        if (
+            typeof question.answer !== "string" ||
+            !["A", "B", "C", "D"].includes(question.answer.trim())
+        ) {
+            throw new Error(
+                `Question ${question.id} must have a valid answer (A-D).`
+            );
+        }
+
+        return true;
+    }
 
     async uploadBatch(batch) {
+
+        batch.forEach((question) => this.validateQuestion(question));
 
         const result =
             await this.service.insertQuizQuestions(batch);
@@ -164,4 +187,3 @@ if (DRY_RUN === false) {
 
 // Import Supabase client
 // Import question-bank.js
-    
