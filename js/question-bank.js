@@ -6538,6 +6538,10 @@ const questionBank = [
 
    ];
 
-window.quizQuestions = questionBank;
+// Canonical question bank export.
+window.questionBank = questionBank;
+
+// Backward-compatible alias for existing quiz fallback consumers.
+window.quizQuestions = window.questionBank;
    
    
