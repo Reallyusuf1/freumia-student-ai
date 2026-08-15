@@ -132,6 +132,16 @@ class QuestionBankSeeder {
 
     async uploadBatch(batch) {
 
+        if (DRY_RUN) {
+    batch.forEach((question) => this.validateQuestion(question));
+
+    return {
+        success: true,
+        inserted: 0,
+        dryRun: true
+    };
+        }
+
         batch.forEach((question) => this.validateQuestion(question));
 
         const result =
