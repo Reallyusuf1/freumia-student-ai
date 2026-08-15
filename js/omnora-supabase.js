@@ -18,11 +18,6 @@ const OmnoraSupabase = {
 
     },
 
-    transformQuestion(question)
-    this.transformQuestion(batch)
-
-async insertQuizQuestions(batch)
-
     async getStudentProfile(userId) {
 
     const { data, error } = await this.client
@@ -175,4 +170,3 @@ async updateLeaderboard() {
 };
 
 window.OmnoraSupabase = OmnoraSupabase;
-
