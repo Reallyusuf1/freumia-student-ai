@@ -20,8 +20,12 @@ const DRY_RUN = false;
 // Dependencies
 // ======================================================
 
-const supabase = window.supabaseClient;
+const supabaseService = window.OmnoraSupabase;
 const questionBank = window.questionBank || [];
+
+if (!supabaseService) {
+    throw new Error("OmnoraSupabase service is not initialized.");
+}
 
 // ======================================================
 // Imports
@@ -44,7 +48,7 @@ class QuestionBankSeeder {
         this.failed = 0;
 
         this.questions = questionBank;
-        this.client = supabase;
+        this.service = supabaseService;
     }
 
     async seedAllQuestions() {
@@ -85,19 +89,14 @@ validateQuestion(question) {
 }
 
     async uploadBatch(batch) {
-    batch.forEach((question) => this.validateQuestion(question));
 
-    const { error } = await this.client
-        .from("quiz_questions")
-        .insert(batch);
+        const result =
+            await this.service.insertQuizQuestions(batch);
 
-    if (error) {
-        throw error;
+        this.inserted += result.inserted;
+
     }
 
-    this.inserted += batch.length;
-        
-            }
     async processAllQuestions() {
     this.total = this.questions.length;
 
@@ -119,9 +118,6 @@ validateQuestion(question) {
         inserted: this.inserted,
         skipped: this.skipped,
         failed: this.failed
-
-    };
-        
     }
         
     }
@@ -168,3 +164,4 @@ if (DRY_RUN === false) {
 
 // Import Supabase client
 // Import question-bank.js
+    
