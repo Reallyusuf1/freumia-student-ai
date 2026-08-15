@@ -175,11 +175,12 @@ class QuestionBankSeeder {
     }
 
     return {
-        total: this.total,
-        inserted: this.inserted,
-        skipped: this.skipped,
-        failed: this.failed
-    }
+    total: this.total,
+    inserted: this.inserted,
+    skipped: this.skipped,
+    failed: this.failed,
+    dryRun: this.dryRun
+};
         
     }
     
