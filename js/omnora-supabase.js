@@ -66,6 +66,61 @@ const OmnoraSupabase = {
         };
     },
 
+    async getQuizQuestions({ classLevel, subject, limit = 20 } = {}) {
+    if (!classLevel || typeof classLevel !== "string") {
+        throw new Error("Quiz class level is required.");
+    }
+
+    if (!subject || typeof subject !== "string") {
+        throw new Error("Quiz subject is required.");
+    }
+
+    const safeLimit = Math.min(
+        Math.max(Number(limit) || 20, 1),
+        20
+    );
+
+    const { data, error } = await this.client
+        .from("quiz_questions")
+        .select(`
+            id,
+            class_level,
+            subject,
+            difficulty,
+            question,
+            option_a,
+            option_b,
+            option_c,
+            option_d,
+            correct_answer
+        `)
+        .eq("class_level", classLevel)
+        .eq("subject", subject)
+        .limit(safeLimit);
+
+    if (error) {
+        throw error;
+    }
+
+    return Array.isArray(data) ? data : [];
+},
+
+    async loadQuizQuestions({ classLevel, subject, limit = 20 } = {}) {
+    const questions = await this.getQuizQuestions({
+        classLevel,
+        subject,
+        limit
+    });
+
+    return {
+        success: true,
+        classLevel,
+        subject,
+        questions,
+        count: questions.length
+    };
+},
+
     async getStudentProfile(userId) {
 
     const { data, error } = await this.client
