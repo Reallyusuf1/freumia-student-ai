@@ -168,19 +168,17 @@ this.student = await OmnoraSupabase.getStudentProfile(authUser.id);
 
             this.prefillStudent();
 
-const eligibility =
-    await OmnoraSupabase.checkDailyQuizEligibility(
-        this.student.id
-    );
+this.quizEligibility =
+    this.engine.checkEligibility();
 
-if (!eligibility) {
-    this.showError("Unable to verify daily quiz.");
+if (!this.quizEligibility) {
+    this.showError(
+        "Unable to verify daily quiz."
+    );
     return;
 }
 
-this.quizEligibility = eligibility;
-
-this.openQuiz();
+await this.openQuiz();
 
         } catch (error) {
 
@@ -291,49 +289,110 @@ this.student =
 
     async openQuiz() {
 
+    if (!this.student?.id) {
+
+        this.showError(
+            "Student profile not found."
+        );
+
+        return;
+    }
+
+    if (!this.student.class_level) {
+
+        this.showError(
+            "Student class level is missing."
+        );
+
+        return;
+    }
+
+    if (!this.student.favorite_subject) {
+
+        this.showError(
+            "Student subject is missing."
+        );
+
+        return;
+    }
+
+    if (
+        !this.quizEligibility
+    ) {
+
+        this.showError(
+            "Daily quiz eligibility could not be verified."
+        );
+
+        return;
+    }
+
+    this.quiz.classLevel =
+        this.student.class_level;
+
+    this.quiz.subject =
+        this.student.favorite_subject;
+
+    try {
+
+        const attempt =
+            await this.engine.startNewQuiz({
+
+                subject:
+                    this.quiz.subject,
+
+                difficulty:
+                    this.quiz.difficulty,
+
+                mode:
+                    this.quiz.mode
+            });
+
+        await this.engine.loadQuestions();
+
+        this.quiz.questions =
+            this.engine.questions;
+
+        this.quiz.attemptId =
+            this.engine.attempt.id;
+
+        this.quiz.started = true;
+
         if (this.elements.verificationCard) {
 
-            this.elements.verificationCard.hidden = true;
-
+            this.elements.verificationCard.hidden =
+                true;
         }
 
         if (this.elements.quizContainer) {
 
-            this.elements.quizContainer.hidden = false;
-
+            this.elements.quizContainer.hidden =
+                false;
         }
 
-        this.quiz.classLevel = this.student.class_level;
-        if (!this.quiz.subject) {
-    this.quiz.subject = "Computer Studies";
+        this.renderCurrentQuestion();
+
+        if (
+            typeof this.startTimer ===
+            "function"
+        ) {
+
+            this.startTimer();
         }
 
-await this.engine.startNewQuiz({
-    subject: this.quiz.subject,
-    difficulty: this.quiz.difficulty,
-    mode: this.quiz.mode
-});
-        
-        const questions =
-    await this.repository.loadQuestions(
-        this.quiz.classLevel,
-        this.quiz.subject
-    );
+    } catch (error) {
 
-this.quiz.questions = questions;
-this.engine.questions = questions;
+        console.error(
+            "Quiz start failed:",
+            error
+        );
 
-this.quiz.attemptId = this.engine.attempt.id;
-
-this.quiz.started = true;
-
-this.renderCurrentQuestion();
-
-if (typeof this.startTimer === "function") {
-    this.startTimer();
-}
-
-    },
+        this.showError(
+            error.message ||
+            "Unable to start quiz."
+        );
+    }
+},
 
     showVerification() {
 
