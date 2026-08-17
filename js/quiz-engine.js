@@ -68,57 +68,63 @@ class QuizEngine {
      */
 
     async startNewQuiz({
-        subject,
-        difficulty = null,
-        mode = "student"
-    } = {}) {
+    subject,
+    difficulty = null,
+    mode = "student"
+} = {}) {
 
-        if (!this.profile) {
-            throw new Error(
-                "QuizEngine is not initialized."
-            );
-        }
+    if (!this.profile) {
+        throw new Error(
+            "QuizEngine is not initialized."
+        );
+    }
 
-        if (!subject) {
-            throw new Error(
-                "Quiz subject is required."
-            );
-        }
+    if (this.eligibility === false) {
+        throw new Error(
+            "You have already completed today's quiz. Come back tomorrow."
+        );
+    }
 
-        const attempt =
-            await OmnoraSupabase.startQuiz({
+    if (!subject) {
+        throw new Error(
+            "Quiz subject is required."
+        );
+    }
 
-                profile_id:
-                    this.profile.id,
+    const attempt =
+        await OmnoraSupabase.startQuiz({
 
-                class_level:
-                    this.profile.class_level,
+            profile_id:
+                this.profile.id,
 
-                subject,
-
-                mode
-            });
-
-        this.attempt = {
-            id:
-                attempt?.id ??
-                attempt?.attempt_id ??
-                attempt,
+            class_level:
+                this.profile.class_level,
 
             subject,
 
-            difficulty,
-
             mode
-        };
+        });
 
-        this.questions = [];
-        this.currentQuestionIndex = 0;
-        this.answers = [];
+    this.attempt = {
+        id:
+            attempt?.id ??
+            attempt?.attempt_id ??
+            attempt,
 
-        this.startedAt = new Date();
+        subject,
 
-        return this.attempt;
+        difficulty,
+
+        mode
+    };
+
+    this.questions = [];
+    this.currentQuestionIndex = 0;
+    this.answers = [];
+
+    this.startedAt = new Date();
+
+    return this.attempt;
     }
 
 
