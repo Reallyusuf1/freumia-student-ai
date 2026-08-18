@@ -108,7 +108,7 @@ console.log("USER ERROR:", userError);
                 const { error } =
                     await window.supabaseClient.auth.signInWithOAuth({
 
-                        provider: "twitter",
+                        provider: "x",
 
                         options: {
                             redirectTo:
