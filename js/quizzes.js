@@ -418,15 +418,6 @@ const QuizApp = {
 
         }
 
-
-        if (!this.student.favorite_subject) {
-
-            throw new Error(
-                "Student subject is missing."
-            );
-
-        }
-
     },
 
 
@@ -676,17 +667,6 @@ const QuizApp = {
         }
 
 
-        if (!this.student.favorite_subject) {
-
-            this.showError(
-                "Student subject is missing."
-            );
-
-            return;
-
-        }
-
-
         if (
             this.quizEligibility !== true
         ) {
@@ -702,8 +682,7 @@ const QuizApp = {
             this.student.class_level;
 
 
-        this.quiz.subject =
-            this.student.favorite_subject;
+        this.quiz.subject = "Computer Studies";
 
 
         try {
