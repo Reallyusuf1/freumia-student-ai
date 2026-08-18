@@ -3,44 +3,40 @@
  * Omnora Student AI
  * File: quizzes.js
  * Purpose: Daily Quiz Controller
+ *
+ * B-002.6A — Production Controller Refactor
+ *
+ * Responsibility:
+ * - Authentication flow
+ * - Quiz page flow
+ * - UI state
+ * - User interaction
+ * - Timer events
+ * - Rendering
+ *
+ * Must NOT:
+ * - Query Supabase tables directly
+ * - Execute SQL
+ * - Contain database business logic
+ * - Calculate database statistics
+ * - Update leaderboard directly
  * ============================================================
  */
+
+
 /* ============================================================
  * Configuration
  * ============================================================
  */
 
 const QUIZ_CONFIG = Object.freeze({
+
     TIME_LIMIT: 30,
+
     PASSING_SCORE: 50
+
 });
 
-class QuizRepository {
-
-    async loadQuestions(classLevel, subject) {
-
-        console.log({
-    classLevel,
-    subject
-});
-
-    const { data, error } =
-        await OmnoraSupabase.client
-            .from("quiz_questions")
-            .select("*")
-            .eq("class_level", classLevel)
-            .eq("subject", subject)
-            .limit(20);
-
-    if (error) {
-        throw error;
-    }
-
-    console.log("Loaded questions:", data);
-return data || [];
-
-    }
-}
 
 /* ============================================================
  * Quiz Controller
@@ -49,10 +45,10 @@ return data || [];
 
 const QuizApp = {
 
-    /* ============================================================
- * State
- * ============================================================
- */
+    /* ========================================================
+     * State
+     * ========================================================
+     */
 
     elements: {},
 
@@ -60,63 +56,206 @@ const QuizApp = {
 
     engine: null,
 
-    /* ============================================================
- * Initialization
- * ============================================================
- */
+    quizEligibility: null,
+
+    verificationInProgress: false,
+
+    finishing: false,
+
+
+    /* ========================================================
+     * Quiz State
+     * ========================================================
+     */
+
+    quiz: {
+
+        questions: [],
+
+        currentIndex: 0,
+
+        score: 0,
+
+        answers: [],
+
+        started: false,
+
+        attemptId: null,
+
+        classLevel: null,
+
+        subject: null,
+
+        difficulty: null,
+
+        mode: "student",
+
+        timer: null,
+
+        answerLocked: false
+
+    },
+
+
+    /* ========================================================
+     * Initialization
+     * ========================================================
+     */
 
     async init() {
 
-        this.cacheElements();
-this.cacheQuizElements();
-this.bindEvents();
-this.engine = new QuizEngine();
-this.repository = new QuizRepository();
+        try {
 
-        
-await this.checkAuthentication();
+            this.cacheElements();
+
+            this.cacheQuizElements();
+
+            this.bindEvents();
+
+            this.engine =
+                new QuizEngine();
+
+            await this.checkAuthentication();
+
+        } catch (error) {
+
+            console.error(
+                "Quiz initialization failed:",
+                error
+            );
+
+            this.showError(
+                "Unable to initialize the quiz."
+            );
+
+            this.showVerification();
+
+        }
 
     },
+
+
+    /* ========================================================
+     * DOM Elements
+     * ========================================================
+     */
 
     cacheElements() {
 
         this.elements.form =
-            document.getElementById("quizVerificationForm");
+            document.getElementById(
+                "quizVerificationForm"
+            );
 
         this.elements.omsId =
-            document.getElementById("omsId");
+            document.getElementById(
+                "omsId"
+            );
 
         this.elements.password =
-            document.getElementById("password");
+            document.getElementById(
+                "password"
+            );
 
         this.elements.submitButton =
-            document.getElementById("verifyQuizButton");
+            document.getElementById(
+                "verifyQuizButton"
+            );
 
         this.elements.verificationCard =
-            document.getElementById("quizVerificationCard");
+            document.getElementById(
+                "quizVerificationCard"
+            );
 
         this.elements.quizContainer =
-            document.getElementById("quizContainer");
+            document.getElementById(
+                "quizContainer"
+            );
 
     },
 
+
+    /* ========================================================
+     * Quiz DOM Elements
+     * ========================================================
+     */
+
+    cacheQuizElements() {
+
+        this.elements.question =
+            document.getElementById(
+                "questionText"
+            );
+
+        this.elements.answers =
+            document.getElementById(
+                "answersContainer"
+            );
+
+        this.elements.progress =
+            document.getElementById(
+                "quizProgress"
+            );
+
+        this.elements.score =
+            document.getElementById(
+                "quizScore"
+            );
+
+        this.elements.timer =
+            document.getElementById(
+                "quizTimer"
+            );
+
+        this.elements.nextButton =
+            document.getElementById(
+                "nextQuestionButton"
+            );
+
+        this.elements.resultSection =
+            document.getElementById(
+                "quizResult"
+            );
+
+        this.elements.resultScore =
+            document.getElementById(
+                "resultScore"
+            );
+
+        this.elements.resultTotal =
+            document.getElementById(
+                "resultTotal"
+            );
+
+        this.elements.resultPercentage =
+            document.getElementById(
+                "resultPercentage"
+            );
+
+        this.elements.resultStatus =
+            document.getElementById(
+                "resultStatus"
+            );
+
+        this.elements.earnedPoints =
+            document.getElementById(
+                "earnedPoints"
+            );
+
+        this.elements.finishButton =
+            document.getElementById(
+                "finishQuizButton"
+            );
+
+    },
+
+
+    /* ========================================================
+     * Event Binding
+     * ========================================================
+     */
+
     bindEvents() {
-
-        if (this.elements.finishButton) {
-
-    this.elements.finishButton.addEventListener(
-    "click",
-    () => {
-
-        this.elements.finishButton.disabled = true;
-
-        window.location.href =
-            "index.html";
-
-    }
-);
-
-        }
 
         if (this.elements.form) {
 
@@ -127,12 +266,38 @@ await this.checkAuthentication();
 
         }
 
+        if (this.elements.finishButton) {
+
+            this.elements.finishButton.addEventListener(
+                "click",
+                () => {
+
+                    if (
+                        this.elements.finishButton.disabled
+                    ) {
+
+                        return;
+
+                    }
+
+                    this.elements.finishButton.disabled =
+                        true;
+
+                    window.location.href =
+                        "index.html";
+
+                }
+            );
+
+        }
+
     },
 
-    /* ============================================================
- * Authentication
- * ============================================================
- */
+
+    /* ========================================================
+     * Authentication
+     * ========================================================
+     */
 
     async checkAuthentication() {
 
@@ -140,10 +305,13 @@ await this.checkAuthentication();
 
             if (
                 typeof OmnoraAuth === "undefined" ||
-                !OmnoraAuth.getCurrentSession
+                typeof OmnoraAuth.getCurrentSession !==
+                    "function"
             ) {
 
-                console.warn("OmnoraAuth unavailable.");
+                console.warn(
+                    "OmnoraAuth unavailable."
+                );
 
                 this.showVerification();
 
@@ -151,8 +319,10 @@ await this.checkAuthentication();
 
             }
 
+
             const session =
                 await OmnoraAuth.getCurrentSession();
+
 
             if (!session) {
 
@@ -162,23 +332,40 @@ await this.checkAuthentication();
 
             }
 
-            const authUser = await OmnoraAuth.getCurrentUser();
-this.student = await OmnoraSupabase.getStudentProfile(authUser.id);
-            await this.engine.initialize(this.student);
+
+            const authUser =
+                await OmnoraAuth.getCurrentUser();
+
+
+            if (!authUser?.id) {
+
+                throw new Error(
+                    "Authenticated user not found."
+                );
+
+            }
+
+
+            await this.loadStudent(authUser.id);
+
+            await this.initializeEngine();
 
             this.prefillStudent();
 
-this.quizEligibility =
-    this.engine.checkEligibility();
+            await this.verifyDailyEligibility();
 
-if (!this.quizEligibility) {
-    this.showError(
-        "Unable to verify daily quiz."
-    );
-    return;
-}
+            if (
+                this.quizEligibility !== true
+            ) {
 
-await this.openQuiz();
+                this.showDailyQuizLocked();
+
+                return;
+
+            }
+
+
+            await this.openQuiz();
 
         } catch (error) {
 
@@ -187,11 +374,116 @@ await this.openQuiz();
                 error
             );
 
+            this.showError(
+                this.getErrorMessage(
+                    error,
+                    "Unable to verify student."
+                )
+            );
+
             this.showVerification();
 
         }
 
     },
+
+
+    /* ========================================================
+     * Student Loading
+     * ========================================================
+     */
+
+    async loadStudent(userId) {
+
+        this.student =
+            await OmnoraSupabase.getStudentProfile(
+                userId
+            );
+
+
+        if (!this.student?.id) {
+
+            throw new Error(
+                "Student profile not found."
+            );
+
+        }
+
+
+        if (!this.student.class_level) {
+
+            throw new Error(
+                "Student class level is missing."
+            );
+
+        }
+
+
+        if (!this.student.favorite_subject) {
+
+            throw new Error(
+                "Student subject is missing."
+            );
+
+        }
+
+    },
+
+
+    /* ========================================================
+     * Engine Initialization
+     * ========================================================
+     */
+
+    async initializeEngine() {
+
+        if (!this.engine) {
+
+            this.engine =
+                new QuizEngine();
+
+        }
+
+
+        await this.engine.initialize(
+            this.student
+        );
+
+    },
+
+
+    /* ========================================================
+     * Daily Eligibility
+     * ========================================================
+     */
+
+    async verifyDailyEligibility() {
+
+        this.quizEligibility =
+            this.engine.checkEligibility();
+
+
+        if (
+            typeof this.quizEligibility !==
+            "boolean"
+        ) {
+
+            throw new Error(
+                "Daily quiz eligibility could not be verified."
+            );
+
+        }
+
+
+        return this.quizEligibility;
+
+    },
+
+
+    /* ========================================================
+     * Student Prefill
+     * ========================================================
+     */
 
     prefillStudent() {
 
@@ -204,32 +496,62 @@ await this.openQuiz();
 
         }
 
+
         this.elements.omsId.value =
             this.student.oms_id || "";
 
-        this.elements.omsId.readOnly = true;
+
+        this.elements.omsId.readOnly =
+            true;
 
     },
+
+
+    /* ========================================================
+     * Manual Verification
+     * ========================================================
+     */
 
     async handleVerification(event) {
 
         event.preventDefault();
 
-        const omsId =
-            this.elements.omsId.value.trim();
 
-        const password =
-            this.elements.password.value;
+        if (
+            this.verificationInProgress
+        ) {
 
-        if (!omsId || !password) {
-
-            return this.showError(
-                "Please enter OMS-ID and password."
-            );
+            return;
 
         }
 
+
+        const omsId =
+            this.elements.omsId?.value
+                ?.trim() || "";
+
+
+        const password =
+            this.elements.password?.value || "";
+
+
+        if (!omsId || !password) {
+
+            this.showError(
+                "Please enter OMS-ID and password."
+            );
+
+            return;
+
+        }
+
+
+        this.verificationInProgress =
+            true;
+
+
         this.setLoading(true);
+
 
         try {
 
@@ -237,43 +559,86 @@ await this.openQuiz();
                 await OmnoraAuth.loginStudent({
 
                     omsId,
+
                     password
 
                 });
 
-            if (!result.success) {
 
-                return this.showError(
-                    result.message ||
+            if (!result?.success) {
+
+                throw new Error(
+                    result?.message ||
                     "Verification failed."
                 );
 
             }
 
-            const authUser =
-    await OmnoraAuth.getCurrentUser();
 
-this.student =
-    await OmnoraSupabase.getStudentProfile(authUser.id);
-            await this.engine.initialize(this.student);
+            const authUser =
+                await OmnoraAuth.getCurrentUser();
+
+
+            if (!authUser?.id) {
+
+                throw new Error(
+                    "Authenticated student could not be found."
+                );
+
+            }
+
+
+            await this.loadStudent(
+                authUser.id
+            );
+
+
+            await this.initializeEngine();
+
 
             this.prefillStudent();
+
+
+            await this.verifyDailyEligibility();
+
+
+            if (
+                this.quizEligibility !== true
+            ) {
+
+                this.showDailyQuizLocked();
+
+                return;
+
+            }
+
 
             this.showSuccess(
                 "Verification successful."
             );
 
-            this.openQuiz();
+
+            await this.openQuiz();
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "Student verification failed:",
+                error
+            );
+
 
             this.showError(
-                "Unable to verify student."
+                this.getErrorMessage(
+                    error,
+                    "Unable to verify student."
+                )
             );
 
         } finally {
+
+            this.verificationInProgress =
+                false;
 
             this.setLoading(false);
 
@@ -281,134 +646,288 @@ this.student =
 
     },
 
-    /* ============================================================
- * Quiz Flow
- * ============================================================
- */
-    
+
+    /* ========================================================
+     * Open Quiz
+     * ========================================================
+     */
 
     async openQuiz() {
 
-    if (!this.student?.id) {
+        if (!this.student?.id) {
 
-        this.showError(
-            "Student profile not found."
-        );
+            this.showError(
+                "Student profile not found."
+            );
 
-        return;
-    }
+            return;
 
-    if (!this.student.class_level) {
-
-        this.showError(
-            "Student class level is missing."
-        );
-
-        return;
-    }
-
-    if (!this.student.favorite_subject) {
-
-        this.showError(
-            "Student subject is missing."
-        );
-
-        return;
-    }
-
-    if (
-        !this.quizEligibility
-    ) {
-
-        this.showError(
-            "Daily quiz eligibility could not be verified."
-        );
-
-        return;
-    }
-
-    this.quiz.classLevel =
-        this.student.class_level;
-
-    this.quiz.subject =
-        this.student.favorite_subject;
-
-    try {
-
-        const attempt =
-            await this.engine.startNewQuiz({
-
-                subject:
-                    this.quiz.subject,
-
-                difficulty:
-                    this.quiz.difficulty,
-
-                mode:
-                    this.quiz.mode
-            });
-
-        await this.engine.loadQuestions();
-
-        this.quiz.questions =
-            this.engine.questions;
-
-        this.quiz.attemptId =
-            this.engine.attempt.id;
-
-        this.quiz.started = true;
-
-        if (this.elements.verificationCard) {
-
-            this.elements.verificationCard.hidden =
-                true;
         }
 
-        if (this.elements.quizContainer) {
 
-            this.elements.quizContainer.hidden =
-                false;
+        if (!this.student.class_level) {
+
+            this.showError(
+                "Student class level is missing."
+            );
+
+            return;
+
         }
 
-        this.renderCurrentQuestion();
+
+        if (!this.student.favorite_subject) {
+
+            this.showError(
+                "Student subject is missing."
+            );
+
+            return;
+
+        }
+
 
         if (
-            typeof this.startTimer ===
-            "function"
+            this.quizEligibility !== true
         ) {
 
+            this.showDailyQuizLocked();
+
+            return;
+
+        }
+
+
+        this.quiz.classLevel =
+            this.student.class_level;
+
+
+        this.quiz.subject =
+            this.student.favorite_subject;
+
+
+        try {
+
+            this.setQuizLoading(true);
+
+
+            /*
+             * ------------------------------------------------
+             * Start quiz through QuizEngine.
+             *
+             * QuizEngine owns the service/RPC interaction.
+             * Controller does not query Supabase directly.
+             * ------------------------------------------------
+             */
+
+            const attempt =
+                await this.engine.startNewQuiz({
+
+                    subject:
+                        this.quiz.subject,
+
+                    difficulty:
+                        this.quiz.difficulty,
+
+                    mode:
+                        this.quiz.mode
+
+                });
+
+
+            /*
+             * ------------------------------------------------
+             * Questions are loaded by QuizEngine.
+             * ------------------------------------------------
+             */
+
+            await this.engine.loadQuestions();
+
+
+            this.quiz.questions =
+                Array.isArray(
+                    this.engine.questions
+                )
+                    ? [
+                        ...this.engine.questions
+                    ]
+                    : [];
+
+
+            if (!this.quiz.questions.length) {
+
+                throw new Error(
+                    "No quiz questions are available for your class and subject."
+                );
+
+            }
+
+
+            this.quiz.attemptId =
+                attempt?.id ||
+                this.engine.attempt?.id ||
+                null;
+
+
+            if (!this.quiz.attemptId) {
+
+                throw new Error(
+                    "Quiz attempt could not be created."
+                );
+
+            }
+
+
+            this.quiz.started =
+                true;
+
+
+            this.quiz.currentIndex =
+                this.engine.currentQuestionIndex;
+
+
+            this.quiz.score =
+                0;
+
+
+            this.quiz.answers =
+                [];
+
+
+            this.quiz.answerLocked =
+                false;
+
+
+            this.hideVerification();
+
+            this.showQuizContainer();
+
+            this.renderCurrentQuestion();
+
             this.startTimer();
-        }
 
-    } catch (error) {
+        } catch (error) {
 
-        console.error(
-            "Quiz start failed:",
-            error
-        );
+            console.error(
+                "Quiz start failed:",
+                error
+            );
 
-        this.showError(
-            error.message ||
-            "Unable to start quiz."
-        );
-    }
-},
 
-    showVerification() {
+            this.quiz.started =
+                false;
 
-        if (this.elements.verificationCard) {
 
-            this.elements.verificationCard.hidden = false;
+            this.showError(
+                this.getErrorMessage(
+                    error,
+                    "Unable to start quiz."
+                )
+            );
 
-        }
+        } finally {
 
-        if (this.elements.quizContainer) {
-
-            this.elements.quizContainer.hidden = true;
+            this.setQuizLoading(false);
 
         }
 
     },
+
+
+    /* ========================================================
+     * Verification / Quiz Visibility
+     * ========================================================
+     */
+
+    showVerification() {
+
+        if (
+            this.elements.verificationCard
+        ) {
+
+            this.elements.verificationCard.hidden =
+                false;
+
+        }
+
+
+        if (
+            this.elements.quizContainer
+        ) {
+
+            this.elements.quizContainer.hidden =
+                true;
+
+        }
+
+    },
+
+
+    hideVerification() {
+
+        if (
+            this.elements.verificationCard
+        ) {
+
+            this.elements.verificationCard.hidden =
+                true;
+
+        }
+
+    },
+
+
+    showQuizContainer() {
+
+        if (
+            this.elements.quizContainer
+        ) {
+
+            this.elements.quizContainer.hidden =
+                false;
+
+        }
+
+    },
+
+
+    showDailyQuizLocked() {
+
+        this.quiz.started =
+            false;
+
+
+        if (
+            this.elements.quizContainer
+        ) {
+
+            this.elements.quizContainer.hidden =
+                true;
+
+        }
+
+
+        if (
+            this.elements.verificationCard
+        ) {
+
+            this.elements.verificationCard.hidden =
+                false;
+
+        }
+
+
+        this.showError(
+            "You've done today's quiz. Come back tomorrow."
+        );
+
+    },
+
+
+    /* ========================================================
+     * Loading State
+     * ========================================================
+     */
 
     setLoading(isLoading) {
 
@@ -418,8 +937,10 @@ this.student =
 
         }
 
+
         this.elements.submitButton.disabled =
             isLoading;
+
 
         this.elements.submitButton.textContent =
             isLoading
@@ -428,465 +949,982 @@ this.student =
 
     },
 
-    /* ============================================================
- * Helpers
- * ============================================================
- */
-    
 
-showToast(message, type = "error") {
-    console[type === "error" ? "error" : "log"](message);
+    setQuizLoading(isLoading) {
 
-    // TODO:
-    // Replace with Omnora UI Toast component.
-},
+        if (
+            !this.elements.quizContainer
+        ) {
 
-showError(message) {
-    this.showToast(message, "error");
-},
+            return;
 
-showSuccess(message) {
-    this.showToast(message, "success");
-},
-/* ============================================================
- * Commit 2
- * Quiz Engine
- * ============================================================
- */
+        }
 
-    quiz: {
-    questions: [],
-    currentIndex: 0,
-    score: 0,
-    answers: [],
-    started: false,
 
-    attemptId: null,
-    classLevel: null,
-    subject: null,
-    difficulty: null,
-    timer: null
-},
+        this.elements.quizContainer
+            .setAttribute(
+                "aria-busy",
+                String(isLoading)
+            );
+
+    },
+
+
+    /* ========================================================
+     * Quiz Answer
+     * ========================================================
+     */
 
     async submitAnswer(answer) {
 
-    const selectedAnswer =
-        typeof answer === "string"
-            ? answer.split(".")[0].trim()
-            : null;
+        if (
+            !this.quiz.started ||
+            !this.engine
+        ) {
 
-    try {
+            return;
 
-        const result =
-            await this.engine.submitAnswer(selectedAnswer);
-
-        this.quiz.answers = [...this.engine.answers];
-
-        if (result.is_correct) {
-            this.quiz.score++;
         }
 
-        this.updateProgress();
 
-        setTimeout(() => {
-            this.nextQuestion();
-        }, 300);
+        if (
+            this.quiz.answerLocked
+        ) {
 
-    } catch (error) {
+            return;
 
-        console.error(error);
+        }
 
-        this.showError(
-            error.message || "Unable to submit answer."
-        );
 
-    }
+        const selectedAnswer =
+            this.normalizeAnswer(answer);
 
-},
+
+        /*
+         * Timeout is handled separately.
+         * Database requires a non-null answer.
+         */
+
+        if (!selectedAnswer) {
+
+            this.showError(
+                "Please select an answer."
+            );
+
+            return;
+
+        }
+
+
+        this.quiz.answerLocked =
+            true;
+
+
+        try {
+
+            const result =
+                await this.engine.submitAnswer(
+                    selectedAnswer
+                );
+
+
+            this.quiz.answers =
+                [
+                    ...this.engine.answers
+                ];
+
+
+            if (
+                result?.is_correct === true
+            ) {
+
+                this.quiz.score++;
+
+            }
+
+
+            this.updateProgress();
+
+
+            setTimeout(
+                () => {
+
+                    this.quiz.answerLocked =
+                        false;
+
+                    this.nextQuestion();
+
+                },
+                300
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Answer submission failed:",
+                error
+            );
+
+
+            this.quiz.answerLocked =
+                false;
+
+
+            this.showError(
+                this.getErrorMessage(
+                    error,
+                    "Unable to submit answer."
+                )
+            );
+
+        }
+
+    },
+
+
+    /* ========================================================
+     * Answer Normalization
+     * ========================================================
+     */
+
+    normalizeAnswer(answer) {
+
+        if (
+            typeof answer !==
+            "string"
+        ) {
+
+            return null;
+
+        }
+
+
+        const normalized =
+            answer
+                .split(".")[0]
+                .trim()
+                .toUpperCase();
+
+
+        if (
+            !["A", "B", "C", "D"]
+                .includes(normalized)
+        ) {
+
+            return null;
+
+        }
+
+
+        return normalized;
+
+    },
+
+
+    /* ========================================================
+     * Next Question
+     * ========================================================
+     */
 
     nextQuestion() {
 
-    const question = this.engine.nextQuestion();
+        if (
+            !this.quiz.started
+        ) {
 
-    if (!question) {
-        this.finishQuiz();
-        return;
-    }
+            return;
 
-    this.quiz.currentIndex =
-        this.engine.currentQuestionIndex;
+        }
 
-    this.renderCurrentQuestion();
 
-    if (typeof this.startTimer === "function") {
+        const question =
+            this.engine.nextQuestion();
+
+
+        if (!question) {
+
+            this.finishQuiz();
+
+            return;
+
+        }
+
+
+        this.quiz.currentIndex =
+            this.engine.currentQuestionIndex;
+
+
+        this.renderCurrentQuestion();
+
         this.startTimer();
-    }
-
-},
-    
-
-    resetQuiz() {
-
-        this.quiz.currentIndex = 0;
-        this.quiz.score = 0;
-        this.quiz.answers = [];
-        this.quiz.started = false;
-
-    },
-/* ============================================================
- * Commit 3
- * Quiz UI Integration
- * ============================================================
- */
-
-    cacheQuizElements() {
-
-        this.elements.question =
-            document.getElementById("questionText");
-
-        this.elements.answers =
-            document.getElementById("answersContainer");
-
-        this.elements.progress =
-            document.getElementById("quizProgress");
-
-        this.elements.score =
-            document.getElementById("quizScore");
-
-        this.elements.timer =
-            document.getElementById("quizTimer");
-
-        this.elements.nextButton =
-            document.getElementById("nextQuestionButton");
-
-        this.elements.resultSection =
-    document.getElementById("quizResult");
-
-this.elements.resultScore =
-    document.getElementById("resultScore");
-
-this.elements.resultTotal =
-    document.getElementById("resultTotal");
-
-this.elements.resultPercentage =
-    document.getElementById("resultPercentage");
-
-this.elements.resultStatus =
-    document.getElementById("resultStatus");
-
-        this.elements.earnedPoints =
-    document.getElementById("earnedPoints");
-
-this.elements.finishButton =
-    document.getElementById("finishQuizButton");
 
     },
 
-    /* ============================================================
- * UI Rendering
- * ============================================================
- */
-    
+
+    /* ========================================================
+     * Render Current Question
+     * ========================================================
+     */
 
     renderCurrentQuestion() {
 
         const question =
-    this.engine.getCurrentQuestion();
+            this.engine.getCurrentQuestion();
 
-        if (!question) return;
 
-        if (this.elements.question) {
+        if (!question) {
+
+            this.showError(
+                "Current quiz question is unavailable."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            this.elements.question
+        ) {
 
             this.elements.question.textContent =
-                question.question;
+                question.question || "";
 
         }
 
-        if (this.elements.answers) {
 
-            this.elements.answers.innerHTML = "";
+        if (
+            this.elements.answers
+        ) {
 
-            question.options.forEach(option => {
+            this.elements.answers.innerHTML =
+                "";
 
-                const button =
-                    document.createElement("button");
 
-                button.type = "button";
+            const options =
+                Array.isArray(
+                    question.options
+                )
+                    ? question.options
+                    : this.buildOptions(question);
 
-                button.className =
-                    "quiz-answer";
 
-                button.textContent = option;
+            options.forEach(
+                (option) => {
 
-                button.addEventListener("click", () => {
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
 
-    if (button.disabled) return;
 
-    const buttons =
-        this.elements.answers.querySelectorAll(".quiz-answer");
+                    button.type =
+                        "button";
 
-    buttons.forEach(btn => {
-        btn.disabled = true;
-        btn.classList.remove("selected");
-    });
 
-    button.classList.add("selected");
+                    button.className =
+                        "quiz-answer";
 
-    setTimeout(() => {
-        this.submitAnswer(option);
-    }, 800);
 
-});
+                    button.textContent =
+                        option;
 
-                this.elements.answers.appendChild(button);
 
-            });
+                    button.addEventListener(
+                        "click",
+                        () => {
+
+                            if (
+                                this.quiz.answerLocked
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            const buttons =
+                                this.elements.answers
+                                    .querySelectorAll(
+                                        ".quiz-answer"
+                                    );
+
+
+                            buttons.forEach(
+                                (btn) => {
+
+                                    btn.disabled =
+                                        true;
+
+                                    btn.classList.remove(
+                                        "selected"
+                                    );
+
+                                }
+                            );
+
+
+                            button.classList.add(
+                                "selected"
+                            );
+
+
+                            setTimeout(
+                                () => {
+
+                                    this.submitAnswer(
+                                        option
+                                    );
+
+                                },
+                                300
+                            );
+
+                        }
+                    );
+
+
+                    this.elements.answers
+                        .appendChild(
+                            button
+                        );
+
+                }
+            );
 
         }
+
 
         this.updateProgress();
 
     },
 
-    updateProgress() {
 
-    const current =
-        this.quiz.currentIndex + 1;
+    /* ========================================================
+     * Option Compatibility
+     * ========================================================
+     */
 
-    const total =
-        this.quiz.questions.length;
+    buildOptions(question) {
 
-    if (this.elements.progress) {
-
-        this.elements.progress.textContent =
-            `Question ${current} of ${total}`;
-
-    }
-
-    if (this.elements.score) {
-
-        this.elements.score.textContent =
-            `Score: ${this.quiz.score}`;
-
-    }
-
-    const progressFill =
-        document.getElementById("progressFill");
-
-    if (progressFill) {
-
-        progressFill.style.width =
-            `${(current / total) * 100}%`;
-
-    }
-
-},
-
-    formatTime(seconds) {
-
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-
-    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-
-},
-    
-    startTimer() {
-
-        clearInterval(this.quiz.timer);
-
-        let remaining = QUIZ_CONFIG.TIME_LIMIT;
-
-        if (this.elements.timer) {
-
-            this.elements.timer.textContent =
-    this.formatTime(remaining);
-
-        }
-
-        this.quiz.timer = setInterval(() => {
-
-            remaining--;
-
-            if (this.elements.timer) {
-
-                this.elements.timer.textContent =
-    this.formatTime(remaining);
-
-            }
-
-            if (remaining <= 0) {
-
-                clearInterval(this.quiz.timer);
-
-                this.submitAnswer(null);
-
-            }
-
-        }, 1000);
+        return [
+            question.option_a,
+            question.option_b,
+            question.option_c,
+            question.option_d
+        ]
+            .filter(
+                (option) =>
+                    typeof option === "string" &&
+                    option.trim()
+            );
 
     },
 
-    // TODO:
-    // Commit 8B
-    // return await OmnoraSupabase.finishQuiz(result);
 
-        // TODO Commit 8B:
-// OmnoraSupabase.finishQuiz()
+    /* ========================================================
+     * Progress
+     * ========================================================
+     */
 
-// TODO Commit 8C:
-// Leaderboard update
+    updateProgress() {
 
-// TODO Commit 8D:
-// Student XP update
+        const current =
+            this.quiz.currentIndex + 1;
 
-    async saveQuizAttempt() {
 
-    if (!this.quiz.attemptId) {
-        throw new Error("Quiz attempt not found.");
-    }
+        const total =
+            this.quiz.questions.length;
 
-    const response =
-        await OmnoraSupabase.finishQuiz(
-            this.quiz.attemptId
+
+        if (
+            this.elements.progress
+        ) {
+
+            this.elements.progress.textContent =
+                `Question ${current} of ${total}`;
+
+        }
+
+
+        if (
+            this.elements.score
+        ) {
+
+            this.elements.score.textContent =
+                `Score: ${this.quiz.score}`;
+
+        }
+
+
+        const progressFill =
+            document.getElementById(
+                "progressFill"
+            );
+
+
+        if (
+            progressFill &&
+            total > 0
+        ) {
+
+            progressFill.style.width =
+                `${(current / total) * 100}%`;
+
+        }
+
+    },
+
+
+    /* ========================================================
+     * Timer
+     * ========================================================
+     */
+
+    formatTime(seconds) {
+
+        const minutes =
+            Math.floor(seconds / 60);
+
+
+        const secs =
+            seconds % 60;
+
+
+        return (
+            `${String(minutes).padStart(2, "0")}:` +
+            `${String(secs).padStart(2, "0")}`
         );
 
-    return {
-        success: true,
-        data: response
-    };
+    },
 
-},
 
-    async updateLeaderboard(result) {
+    startTimer() {
 
-    // TODO:
-    // Commit 8C
-    // Replace with:
-    // await OmnoraSupabase.updateLeaderboard(result);
+        clearInterval(
+            this.quiz.timer
+        );
 
-    return {
-        success: true
-    };
 
-},
+        let remaining =
+            QUIZ_CONFIG.TIME_LIMIT;
 
-    async updateStudentProfile(result) {
 
-    // TODO:
-    // Commit 8D
-    // Replace with:
-    // await OmnoraSupabase.updateStudentProfile(result);
+        if (
+            this.elements.timer
+        ) {
 
-    return {
-        success: true
-    };
+            this.elements.timer.textContent =
+                this.formatTime(
+                    remaining
+                );
 
-},
+        }
+
+
+        this.quiz.timer =
+            setInterval(
+                () => {
+
+                    remaining--;
+
+
+                    if (
+                        this.elements.timer
+                    ) {
+
+                        this.elements.timer.textContent =
+                            this.formatTime(
+                                remaining
+                            );
+
+                    }
+
+
+                    if (
+                        remaining <= 0
+                    ) {
+
+                        clearInterval(
+                            this.quiz.timer
+                        );
+
+
+                        this.quiz.timer =
+                            null;
+
+
+                        /*
+                         * Do not submit NULL.
+                         *
+                         * quiz_question_history requires
+                         * selected_answer to be non-null.
+                         *
+                         * Timeout handling will be finalized
+                         * in the QuizEngine/RPC layer.
+                         */
+
+                        this.handleTimeout();
+
+                    }
+
+                },
+                1000
+            );
+
+    },
+
+
+    /* ========================================================
+     * Timeout
+     * ========================================================
+     */
+
+    handleTimeout() {
+
+        if (
+            this.quiz.answerLocked
+        ) {
+
+            return;
+
+        }
+
+
+        this.quiz.answerLocked =
+            true;
+
+
+        this.showError(
+            "Time is up."
+        );
+
+
+        /*
+         * B-002.6A intentionally does not
+         * submit NULL to the database.
+         *
+         * Proper timeout persistence belongs
+         * to the Engine/RPC contract.
+         */
+
+        setTimeout(
+            () => {
+
+                this.quiz.answerLocked =
+                    false;
+
+                this.finishQuiz();
+
+            },
+            300
+        );
+
+    },
+
+
+    /* ========================================================
+     * Finish Quiz
+     * ========================================================
+     */
 
     async finishQuiz() {
 
-        clearInterval(this.quiz.timer);
-if (this.elements.timer) {
+        if (
+            this.finishing
+        ) {
 
-    this.elements.timer.textContent =
-        "Completed";
+            return;
 
-}
-        
-        this.quiz.timer = null;
-
-        const result = await this.engine.finishQuiz();
-
-        if (this.elements.score) {
-
-            this.elements.score.textContent =
-    result.score;
-            
         }
-        
-        await OmnoraSupabase.updateStudentProfile({
-    profileId: this.student.id,
-    totalQuizzes: result.total_quizzes,
-    totalPoints: result.total_points,
-    averageScore: result.average_score,
-    bestScore: result.best_score
-});
 
-        await OmnoraSupabase.updateLeaderboard();
 
-this.showQuizResult(result);
+        this.finishing =
+            true;
 
-},
+
+        clearInterval(
+            this.quiz.timer
+        );
+
+
+        this.quiz.timer =
+            null;
+
+
+        if (
+            this.elements.timer
+        ) {
+
+            this.elements.timer.textContent =
+                "Completed";
+
+        }
+
+
+        try {
+
+            const result =
+                await this.engine.finishQuiz();
+
+
+            this.quiz.started =
+                false;
+
+
+            this.quiz.attemptId =
+                this.engine.attempt?.id ||
+                this.quiz.attemptId;
+
+
+            this.showQuizResult(
+                result
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Quiz completion failed:",
+                error
+            );
+
+
+            this.showError(
+                this.getErrorMessage(
+                    error,
+                    "Unable to complete quiz."
+                )
+            );
+
+        } finally {
+
+            this.finishing =
+                false;
+
+        }
+
+    },
+
+
+    /* ========================================================
+     * Result
+     * ========================================================
+     */
 
     showQuizResult(result) {
 
         if (
-    !this.elements.resultSection ||
-    !this.elements.resultScore ||
-    !this.elements.resultTotal
-) {
-    return;
+            this.elements.quizContainer
+        ) {
+
+            this.elements.quizContainer.hidden =
+                true;
+
         }
 
-    if (this.elements.quizContainer) {
-        this.elements.quizContainer.hidden = true;
-    }
 
-    if (this.elements.resultSection) {
-    this.elements.resultSection.hidden = false;
-    }
+        if (
+            !this.elements.resultSection
+        ) {
+
+            return;
+
+        }
+
+
+        this.elements.resultSection.hidden =
+            false;
+
+
         this.elements.resultSection.setAttribute(
-    "tabindex",
-    "-1"
-);
-
-this.elements.resultSection.focus();
-
-    const percentage =
-        Math.round(
-            (result.score / result.total) * 100
+            "tabindex",
+            "-1"
         );
 
-    this.elements.resultScore.textContent =
-        result.score;
 
-    this.elements.resultTotal.textContent =
-        result.total;
+        this.elements.resultSection.focus();
 
-    this.elements.resultPercentage.textContent =
-        `${percentage}%`;
 
-    const passed =
-        percentage >= QUIZ_CONFIG.PASSING_SCORE;
+        const normalized =
+            this.normalizeResult(
+                result
+            );
 
-    this.elements.resultStatus.textContent =
-        passed ? "PASSED" : "FAILED";
 
-    this.elements.resultStatus.className =
-        passed
-            ? "result-status passed"
-            : "result-status failed";
+        if (
+            this.elements.resultScore
+        ) {
 
-        this.elements.resultStatus.setAttribute(
-    "aria-live",
-    "polite"
-);
-        
-        if (this.elements.earnedPoints) {
+            this.elements.resultScore.textContent =
+                normalized.score;
 
-    this.elements.earnedPoints.textContent =
-    `${result.xp} XP`;
+        }
+
+
+        if (
+            this.elements.resultTotal
+        ) {
+
+            this.elements.resultTotal.textContent =
+                normalized.total;
+
+        }
+
+
+        if (
+            this.elements.resultPercentage
+        ) {
+
+            this.elements.resultPercentage.textContent =
+                `${normalized.percentage}%`;
+
+        }
+
+
+        if (
+            this.elements.resultStatus
+        ) {
+
+            this.elements.resultStatus.textContent =
+                normalized.passed
+                    ? "PASSED"
+                    : "FAILED";
+
+
+            this.elements.resultStatus.className =
+                normalized.passed
+                    ? "result-status passed"
+                    : "result-status failed";
+
+
+            this.elements.resultStatus.setAttribute(
+                "aria-live",
+                "polite"
+            );
+
+        }
+
+
+        if (
+            this.elements.earnedPoints
+        ) {
+
+            this.elements.earnedPoints.textContent =
+                `${normalized.points} XP`;
+
+        }
+
+    },
+
+
+    /* ========================================================
+     * Result Normalization
+     * ========================================================
+     */
+
+    normalizeResult(result) {
+
+        const raw =
+            Array.isArray(result)
+                ? result[0]
+                : result;
+
+
+        const score =
+            Number(
+                raw?.correct_answers ??
+                raw?.score ??
+                0
+            );
+
+
+        const total =
+            Number(
+                raw?.total_questions ??
+                raw?.total ??
+                this.quiz.questions.length ??
+                0
+            );
+
+
+        const percentage =
+            Number(
+                raw?.score_percentage ??
+                (
+                    total > 0
+                        ? (
+                            score / total
+                        ) * 100
+                        : 0
+                )
+            );
+
+
+        const points =
+            Number(
+                raw?.points_earned ??
+                raw?.xp ??
+                0
+            );
+
+
+        return {
+
+            score,
+
+            total,
+
+            percentage:
+                Math.round(
+                    percentage
+                ),
+
+            points,
+
+            passed:
+                percentage >=
+                QUIZ_CONFIG.PASSING_SCORE
+
+        };
+
+    },
+
+
+    /* ========================================================
+     * Helpers
+     * ========================================================
+     */
+
+    showToast(
+        message,
+        type = "error"
+    ) {
+
+        if (
+            type === "error"
+        ) {
+
+            console.error(
+                message
+            );
+
+        } else {
+
+            console.log(
+                message
+            );
+
+        }
+
+
+        /*
+         * TODO:
+         * Replace with the shared
+         * Omnora UI Toast component.
+         */
+
+    },
+
+
+    showError(message) {
+
+        this.showToast(
+            message,
+            "error"
+        );
+
+    },
+
+
+    showSuccess(message) {
+
+        this.showToast(
+            message,
+            "success"
+        );
+
+    },
+
+
+    getErrorMessage(
+        error,
+        fallback
+    ) {
+
+        if (
+            error?.message &&
+            typeof error.message ===
+                "string"
+        ) {
+
+            return error.message;
+
+        }
+
+
+        return fallback;
+
+    },
+
+
+    /* ========================================================
+     * Reset
+     * ========================================================
+     */
+
+    resetQuizState() {
+
+        clearInterval(
+            this.quiz.timer
+        );
+
+
+        this.quiz.timer =
+            null;
+
+
+        this.quiz.questions =
+            [];
+
+
+        this.quiz.currentIndex =
+            0;
+
+
+        this.quiz.score =
+            0;
+
+
+        this.quiz.answers =
+            [];
+
+
+        this.quiz.started =
+            false;
+
+
+        this.quiz.attemptId =
+            null;
+
+
+        this.quiz.answerLocked =
+            false;
+
+
+        this.finishing =
+            false;
 
     }
-        
-    }
+
 };
 
+
+/* ============================================================
+ * Application Bootstrap
+ * ============================================================
+ */
+
 document.addEventListener(
-
     "DOMContentLoaded",
-
     () => QuizApp.init()
-
 );
