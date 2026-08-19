@@ -107,9 +107,265 @@ async function logoutStudent() {
     return true;
 }
 
+
 /**
- * Global Auth API
+ * =====================================================
+ * OAuth Profile / Referral
+ * Google and X only.
+ *
+ * Student Signup keeps its existing referral flow.
+ * =====================================================
  */
+
+
+/**
+ * Find an OAuth user's profile.
+ *
+ * maybeSingle() is important because a new OAuth user
+ * may not have a profile yet.
+ */
+async function getOAuthProfile(userId) {
+
+    if (!userId) {
+        throw new Error("User ID is required.");
+    }
+
+    const supabase = getSupabase();
+
+    const { data, error } =
+        await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", userId)
+            .maybeSingle();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}
+
+
+/**
+ * Get an existing OAuth referral code.
+ *
+ * If the profile exists without a referral code,
+ * generate one and save it.
+ *
+ * Student Signup is NOT affected.
+ */
+async function getReferralCode(userId) {
+
+    if (!userId) {
+        throw new Error("User ID is required.");
+    }
+
+    const profile =
+        await getOAuthProfile(userId);
+
+    /**
+     * Existing referral code:
+     * return it without changing it.
+     */
+    if (profile?.referral_code) {
+        return profile.referral_code;
+    }
+
+    /**
+     * Generate a new unique referral code.
+     */
+    const referralCode =
+        await generateReferralCode();
+
+    /**
+     * If the profile does not exist yet,
+     * the caller will use this code when
+     * creating the profile.
+     */
+    if (!profile) {
+        return referralCode;
+    }
+
+    /**
+     * Existing profile without referral code.
+     */
+    const supabase = getSupabase();
+
+    const { error } =
+        await supabase
+            .from("profiles")
+            .update({
+                referral_code: referralCode
+            })
+            .eq("id", userId);
+
+    if (error) {
+        throw error;
+    }
+
+    return referralCode;
+}
+
+
+/**
+ * Ensure that a Google/X user has a profile
+ * and a referral code.
+ *
+ * This is completely separate from registerStudent().
+ */
+async function ensureOAuthProfile(user) {
+
+    if (!user?.id) {
+        throw new Error(
+            "Authenticated user is required."
+        );
+    }
+
+    /**
+     * Check whether profile already exists.
+     */
+    const existingProfile =
+        await getOAuthProfile(user.id);
+
+    /**
+     * Existing OAuth profile.
+     *
+     * Do not create another profile.
+     */
+    if (existingProfile) {
+
+        const referralCode =
+            await getReferralCode(user.id);
+
+        return {
+            profile: {
+                ...existingProfile,
+                referral_code: referralCode
+            },
+
+            referral_code: referralCode,
+
+            created: false
+        };
+    }
+
+
+    /**
+     * New OAuth user.
+     */
+    const supabase = getSupabase();
+
+    const metadata =
+        user.user_metadata || {};
+
+
+    /**
+     * Get name from Google/X metadata.
+     */
+    const fullName =
+        metadata.full_name ||
+        metadata.name ||
+        metadata.user_name ||
+        metadata.preferred_username ||
+        "Student";
+
+
+    /**
+     * Get avatar if provider supplied one.
+     */
+    const avatarUrl =
+        metadata.avatar_url ||
+        metadata.picture ||
+        null;
+
+
+    /**
+     * Generate unique referral code.
+     */
+    const referralCode =
+        await generateReferralCode();
+
+
+    /**
+     * Create OAuth profile.
+     *
+     * IMPORTANT:
+     *
+     * We intentionally do NOT use:
+     *
+     * oms_id
+     * school_name
+     * admission_number
+     * class_level
+     * password
+     *
+     * Those belong to Student Signup.
+     */
+    const {
+        data: profile,
+        error
+    } = await supabase
+        .from("profiles")
+        .insert({
+
+            id: user.id,
+
+            full_name: fullName,
+
+            avatar_url: avatarUrl,
+
+            referral_code: referralCode,
+
+            role: "student"
+
+        })
+        .select("*")
+        .single();
+
+
+    if (error) {
+        throw error;
+    }
+
+
+    /**
+     * Process referral link if this OAuth
+     * user came through somebody's referral.
+     *
+     * Referral failure must not break login.
+     */
+    try {
+
+        await processReferral(user.id);
+
+    } catch (error) {
+
+        console.error(
+            "OAuth Referral Processing:",
+            error
+        );
+    }
+
+
+    return {
+
+        profile,
+
+        referral_code: referralCode,
+
+        created: true
+
+    };
+}
+
+
+/**
+ * =====================================================
+ * Global Auth API
+ * =====================================================
+ */
+
 window.OmnoraAuth = {
 
     getCurrentUser,
@@ -123,15 +379,24 @@ window.OmnoraAuth = {
     registerStudent,
 
     loginStudent,
-    
+
+    getOAuthProfile,
+
+    getReferralCode,
+
+    ensureOAuthProfile,
+
     logoutStudent
 
 };
 
 
 /**
+ * =====================================================
  * Create Student Profile
+ * =====================================================
  */
+
 async function createStudentProfile(
     userId,
     profile
@@ -178,20 +443,26 @@ async function createStudentProfile(
                 avatar_url:
                     profile.avatar_url || null,
 
-                referral_code: profile.referral_code,
+                referral_code:
+                    profile.referral_code,
 
                 role: "student"
 
             });
+
 
     if (error) {
         throw error;
     }
 }
 
+
 /**
- * Generate unique referral code.
+ * =====================================================
+ * Generate Unique Referral Code
+ * =====================================================
  */
+
 async function generateReferralCode() {
 
     const characters =
@@ -201,28 +472,37 @@ async function generateReferralCode() {
 
         let code = "OMR-";
 
+
         for (let i = 0; i < 6; i++) {
 
             code += characters.charAt(
                 Math.floor(
-                    Math.random() * characters.length
+                    Math.random() *
+                    characters.length
                 )
             );
 
         }
 
+
         const supabase = getSupabase();
+
 
         const { data, error } =
             await supabase
                 .from("profiles")
                 .select("id")
-                .eq("referral_code", code)
+                .eq(
+                    "referral_code",
+                    code
+                )
                 .maybeSingle();
+
 
         if (error) {
             throw error;
         }
+
 
         if (!data) {
             return code;
@@ -232,39 +512,75 @@ async function generateReferralCode() {
 
 }
 
-async function processReferral(invitedProfileId) {
+
+/**
+ * =====================================================
+ * Process Referral
+ * =====================================================
+ */
+
+async function processReferral(
+    invitedProfileId
+) {
 
     const referralCode =
-        sessionStorage.getItem("omnora_referral");
+        sessionStorage.getItem(
+            "omnora_referral"
+        );
+
 
     if (!referralCode) {
         return;
     }
 
+
     const supabase = getSupabase();
 
-    const { error } = await supabase.rpc(
-        "process_student_referral",
-        {
-            p_referral_code: referralCode,
-            p_invited_profile_id: invitedProfileId
-        }
-    );
+
+    const { error } =
+        await supabase.rpc(
+            "process_student_referral",
+            {
+
+                p_referral_code:
+                    referralCode,
+
+                p_invited_profile_id:
+                    invitedProfileId
+
+            }
+        );
+
 
     if (error) {
         throw error;
     }
 
-    sessionStorage.removeItem("omnora_referral");
+
+    sessionStorage.removeItem(
+        "omnora_referral"
+    );
 }
 
+
 /**
+ * =====================================================
  * Register Student
+ * =====================================================
+ *
+ * IMPORTANT:
+ * This is the original Student Signup flow.
+ * OAuth referral logic does NOT replace it.
  */
+
 async function registerStudent(formData) {
 
     const supabase = getSupabase();
 
+
+    /**
+     * Required Student Signup fields.
+     */
     if (
         !formData.full_name ||
         !formData.school_name ||
@@ -277,24 +593,36 @@ async function registerStudent(formData) {
         );
     }
 
+
+    /**
+     * Generate OMS-ID.
+     */
     const {
-    data: omsId,
-    error: omsError
-} = await supabase.rpc("generate_oms_id");
+        data: omsId,
+        error: omsError
+    } = await supabase.rpc(
+        "generate_oms_id"
+    );
 
-if (omsError) {
-    throw omsError;
-}
 
+    if (omsError) {
+        throw omsError;
+    }
+
+
+    /**
+     * Create pseudo email.
+     */
     const pseudoEmail =
         `${omsId.toLowerCase()}@students.omnora.ai`;
 
+
+    /**
+     * Create Supabase Auth account.
+     */
     const {
-
         data,
-
         error
-
     } = await supabase.auth.signUp({
 
         email: pseudoEmail,
@@ -303,16 +631,33 @@ if (omsError) {
 
     });
 
+
     if (error) {
         throw error;
     }
 
-    if (!data?.user) {
-    throw new Error("Student account was not created.");
-    }
-    const referralCode =
-    await generateReferralCode();
 
+    if (!data?.user) {
+
+        throw new Error(
+            "Student account was not created."
+        );
+
+    }
+
+
+    /**
+     * Student Signup referral code.
+     *
+     * THIS REMAINS SEPARATE FROM GOOGLE/X.
+     */
+    const referralCode =
+        await generateReferralCode();
+
+
+    /**
+     * Create Student profile.
+     */
     await createStudentProfile(
 
         data.user.id,
@@ -323,16 +668,31 @@ if (omsError) {
 
             oms_id: omsId,
 
-            referral_code: referralCode,
+            referral_code: referralCode
 
         }
 
     );
+
+
+    /**
+     * Process referral.
+     */
     try {
-    await processReferral(data.user.id);
-} catch (error) {
-    console.error("Referral Processing:", error);
+
+        await processReferral(
+            data.user.id
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Referral Processing:",
+            error
+        );
+
     }
+
 
     return {
 
@@ -342,51 +702,92 @@ if (omsError) {
 
     };
 
-                }
+}
+
+
 /**
+ * =====================================================
  * Login Student
+ * =====================================================
  */
+
 async function loginStudent(loginData) {
 
     const supabase = getSupabase();
 
-    console.log("OMS-ID RECEIVED:", loginData.omsId);
 
-try {
+    console.log(
+        "OMS-ID RECEIVED:",
+        loginData.omsId
+    );
 
-    const pseudoEmail =
-        await OmnoraResolver.resolveOmsEmail(
-            loginData.omsId
+
+    try {
+
+        const pseudoEmail =
+            await OmnoraResolver.resolveOmsEmail(
+                loginData.omsId
+            );
+
+
+        console.log(
+            "Resolved Email:",
+            pseudoEmail
         );
 
-    console.log("Resolved Email:", pseudoEmail);
 
-    const {
-        data,
-        error
-    } = await supabase.auth.signInWithPassword({
-        email: pseudoEmail,
-        password: loginData.password
-    });
+        const {
+            data,
+            error
+        } = await supabase.auth.signInWithPassword({
 
-    console.log("AUTH DATA:", data);
-    console.log("AUTH ERROR:", error);
+            email: pseudoEmail,
 
-    if (error) {
+            password: loginData.password
+
+        });
+
+
+        console.log(
+            "AUTH DATA:",
+            data
+        );
+
+        console.log(
+            "AUTH ERROR:",
+            error
+        );
+
+
+        if (error) {
+
+            return {
+
+                success: false,
+
+                message:
+                    "Invalid OMS-ID or password."
+
+            };
+
+        }
+
+
         return {
-            success: false,
-            message: "Invalid OMS-ID or password."
+
+            success: true
+
         };
+
+
+    } catch (e) {
+
+        console.error(
+            "LOGIN EXCEPTION:",
+            e
+        );
+
+        throw e;
     }
 
-    return {
-        success: true
-    };
-
-} catch (e) {
-
-    console.error("LOGIN EXCEPTION:", e);
-
-    throw e;
-}
 }
