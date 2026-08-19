@@ -9,21 +9,83 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     /*
     =========================================
-    WAIT FOR SUPABASE CLIENT
+    SUPABASE CLIENT
     =========================================
     */
 
-    if (!window.supabaseClient) {
-        console.error("Supabase Client not initialized.");
+    const supabase = window.supabaseClient;
+
+    if (!supabase) {
+        console.error(
+            "Supabase Client not initialized."
+        );
+
         return;
     }
-
-    const supabase = window.supabaseClient;
 
 
     /*
     =========================================
-    OAUTH PROFILE
+    OAUTH REFERRAL CODE
+    =========================================
+
+    Used ONLY by:
+    - Google OAuth
+    - X OAuth
+
+    Student Signup has its own
+    referral-code system.
+    =========================================
+    */
+
+    async function getOAuthReferralCode() {
+
+        const characters =
+            "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+        while (true) {
+
+            let code = "OMR-";
+
+            for (let i = 0; i < 6; i++) {
+
+                code += characters.charAt(
+                    Math.floor(
+                        Math.random() *
+                        characters.length
+                    )
+                );
+
+            }
+
+            const {
+                data,
+                error
+            } = await supabase
+                .from("profiles")
+                .select("id")
+                .eq("referral_code", code)
+                .maybeSingle();
+
+            if (error) {
+                throw error;
+            }
+
+            if (!data) {
+                return code;
+            }
+        }
+    }
+
+
+    /*
+    =========================================
+    ENSURE OAUTH PROFILE
+    =========================================
+
+    Creates a profile ONLY if the
+    Google/X user does not already
+    have one.
     =========================================
     */
 
@@ -31,7 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         /*
         -----------------------------------------
-        Check whether profile already exists
+        Check existing profile
         -----------------------------------------
         */
 
@@ -44,6 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .eq("id", user.id)
             .maybeSingle();
 
+
         if (profileError) {
             throw profileError;
         }
@@ -51,13 +114,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         /*
         -----------------------------------------
-        Profile already exists
+        Existing profile
         -----------------------------------------
         */
 
         if (existingProfile) {
+
             console.log(
-                "Existing OAuth profile:",
+                "OAuth profile already exists:",
                 existingProfile
             );
 
@@ -67,40 +131,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         /*
         -----------------------------------------
-        Generate referral code
+        Generate OAuth referral code
         -----------------------------------------
-
-        Reuse the existing referral generator
-        from js/auth.js.
         */
 
-        if (
-            typeof generateReferralCode !==
-            "function"
-        ) {
-            throw new Error(
-                "Referral code generator is not available."
-            );
-        }
-
         const referralCode =
-            await generateReferralCode();
+            await getOAuthReferralCode();
 
 
         /*
         -----------------------------------------
-        Get user information from OAuth
+        OAuth metadata
         -----------------------------------------
         */
 
         const metadata =
             user.user_metadata || {};
 
+
         const fullName =
             metadata.full_name ||
             metadata.name ||
             metadata.user_name ||
-            "";
+            "Student";
 
 
         const avatarUrl =
@@ -111,7 +164,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         /*
         -----------------------------------------
-        Create OAuth profile
+        Create profile
         -----------------------------------------
         */
 
@@ -154,12 +207,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     /*
     =========================================
-    CHECK CURRENT SESSION
+    CHECK EXISTING SESSION
     =========================================
     */
 
     const {
-        data: { session },
+        data: {
+            session
+        },
         error: sessionError
     } = await supabase.auth.getSession();
 
@@ -182,31 +237,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     /*
     =========================================
-    GET CURRENT USER
-    =========================================
-    */
-
-    const {
-        data: { user },
-        error: userError
-    } = await supabase.auth.getUser();
-
-
-    console.log(
-        "USER:",
-        user
-    );
-
-
-    console.log(
-        "USER ERROR:",
-        userError
-    );
-
-
-    /*
-    =========================================
-    HANDLE AUTHENTICATED USER
+    OAUTH USER SESSION
     =========================================
     */
 
@@ -216,7 +247,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             /*
             -----------------------------------------
-            Ensure Google/X user has a profile
+            Make sure Google/X user has profile
             -----------------------------------------
             */
 
@@ -227,7 +258,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             /*
             -----------------------------------------
-            Continue to student profile
+            Continue to profile
             -----------------------------------------
             */
 
@@ -270,7 +301,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     /*
     =========================================
-    GOOGLE AUTH
+    GOOGLE AUTHENTICATION
     =========================================
     */
 
@@ -283,16 +314,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 event.preventDefault();
 
                 try {
-
-                    if (!window.supabaseClient) {
-
-                        alert(
-                            "Supabase Client not initialized."
-                        );
-
-                        return;
-                    }
-
 
                     const {
                         data,
@@ -314,14 +335,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                     console.log(
-                        "GOOGLE DATA:",
+                        "GOOGLE AUTH:",
                         data
-                    );
-
-
-                    console.log(
-                        "GOOGLE ERROR:",
-                        error
                     );
 
 
@@ -329,28 +344,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                         throw error;
                     }
 
-                } catch (err) {
+                } catch (error) {
 
                     console.error(
                         "Google Authentication Error:",
-                        err
+                        error
                     );
 
                     alert(
-                        err.message
+                        error.message
                     );
-
                 }
-
             }
         );
-
     }
 
 
     /*
     =========================================
-    X AUTH
+    X AUTHENTICATION
     =========================================
     */
 
@@ -363,16 +375,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 event.preventDefault();
 
                 try {
-
-                    if (!window.supabaseClient) {
-
-                        alert(
-                            "Supabase Client not initialized."
-                        );
-
-                        return;
-                    }
-
 
                     const {
                         data,
@@ -394,14 +396,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                     console.log(
-                        "X DATA:",
+                        "X AUTH:",
                         data
-                    );
-
-
-                    console.log(
-                        "X ERROR:",
-                        error
                     );
 
 
@@ -409,28 +405,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                         throw error;
                     }
 
-                } catch (err) {
+                } catch (error) {
 
                     console.error(
                         "X Authentication Error:",
-                        err
+                        error
                     );
 
                     alert(
-                        err.message
+                        error.message
                     );
-
                 }
-
             }
         );
-
     }
 
 
     /*
     =========================================
     STUDENT REGISTRATION
+    =========================================
+
+    This remains completely separate
+    from Google/X referral generation.
     =========================================
     */
 
@@ -445,7 +442,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             }
         );
-
     }
 
 });
