@@ -1,18 +1,24 @@
 /**
  * =====================================================
  * OMNORA STUDENT AI V2
- * Supabase Service Layer
- * B-002.1 — Production Service Contract
+ * Omnora Supabase Service Layer
+ * =====================================================
+ *
+ * Responsibility:
+ * - Supabase database access
+ * - Quiz RPC communication
+ * - Student profile access
+ *
+ * This file does NOT contain quiz UI/business logic.
  * =====================================================
  */
 
 const OmnoraSupabase = {
 
-    /**
-     * -------------------------------------------------
-     * Supabase Client
-     * -------------------------------------------------
-     */
+    // =====================================================
+    // Supabase Client
+    // =====================================================
+
     get client() {
 
         if (!window.supabaseClient) {
@@ -25,18 +31,11 @@ const OmnoraSupabase = {
     },
 
 
-    /**
-     * -------------------------------------------------
-     * Student Profile
-     * -------------------------------------------------
-     */
-    async getStudentProfile(userId) {
+    // =====================================================
+    // Student Profile
+    // =====================================================
 
-        if (!userId) {
-            throw new Error(
-                "User ID is required."
-            );
-        }
+    async getStudentProfile(userId) {
 
         const { data, error } =
             await this.client
@@ -53,18 +52,11 @@ const OmnoraSupabase = {
     },
 
 
-    /**
-     * -------------------------------------------------
-     * Daily Quiz Eligibility
-     * -------------------------------------------------
-     */
-    async checkDailyQuizEligibility(profileId) {
+    // =====================================================
+    // Daily Quiz Eligibility
+    // =====================================================
 
-        if (!profileId) {
-            throw new Error(
-                "Profile ID is required."
-            );
-        }
+    async checkDailyQuizEligibility(profileId) {
 
         const { data, error } =
             await this.client.rpc(
@@ -82,30 +74,11 @@ const OmnoraSupabase = {
     },
 
 
-    /**
-     * -------------------------------------------------
-     * Start Quiz
-     * -------------------------------------------------
-     */
+    // =====================================================
+    // Start Quiz
+    // =====================================================
+
     async startQuiz(payload) {
-
-        if (!payload?.profile_id) {
-            throw new Error(
-                "Profile ID is required."
-            );
-        }
-
-        if (!payload?.class_level) {
-            throw new Error(
-                "Class level is required."
-            );
-        }
-
-        if (!payload?.subject) {
-            throw new Error(
-                "Quiz subject is required."
-            );
-        }
 
         const { data, error } =
             await this.client.rpc(
@@ -114,7 +87,7 @@ const OmnoraSupabase = {
                     p_profile_id: payload.profile_id,
                     p_class_level: payload.class_level,
                     p_subject: payload.subject,
-                    p_mode: payload.mode || "student"
+                    p_mode: payload.mode
                 }
             );
 
@@ -126,11 +99,10 @@ const OmnoraSupabase = {
     },
 
 
-    /**
-     * -------------------------------------------------
-     * Get Quiz Questions
-     * -------------------------------------------------
-     */
+    // =====================================================
+    // Get Quiz Questions
+    // =====================================================
+
     async getQuizQuestions({
         profileId,
         classLevel,
@@ -138,29 +110,6 @@ const OmnoraSupabase = {
         difficulty = null,
         limit = 20
     }) {
-
-        if (!profileId) {
-            throw new Error(
-                "Profile ID is required."
-            );
-        }
-
-        if (!classLevel) {
-            throw new Error(
-                "Class level is required."
-            );
-        }
-
-        if (!subject) {
-            throw new Error(
-                "Quiz subject is required."
-            );
-        }
-
-        const safeLimit =
-            Number.isInteger(limit) && limit > 0
-                ? Math.min(limit, 50)
-                : 20;
 
         const { data, error } =
             await this.client.rpc(
@@ -170,7 +119,7 @@ const OmnoraSupabase = {
                     p_class_level: classLevel,
                     p_subject: subject,
                     p_difficulty: difficulty,
-                    p_limit: safeLimit
+                    p_limit: limit
                 }
             );
 
@@ -178,45 +127,15 @@ const OmnoraSupabase = {
             throw error;
         }
 
-        return Array.isArray(data)
-            ? data
-            : [];
+        return data || [];
     },
 
 
-    /**
-     * -------------------------------------------------
-     * Submit Quiz Answer
-     * -------------------------------------------------
-     */
+    // =====================================================
+    // Submit Quiz Answer
+    // =====================================================
+
     async submitQuizAnswer(payload) {
-
-        if (!payload?.attemptId) {
-            throw new Error(
-                "Attempt ID is required."
-            );
-        }
-
-        if (!payload?.profileId) {
-            throw new Error(
-                "Profile ID is required."
-            );
-        }
-
-        if (!payload?.questionId) {
-            throw new Error(
-                "Question ID is required."
-            );
-        }
-
-        if (
-            payload.selectedAnswer === undefined ||
-            payload.selectedAnswer === null
-        ) {
-            throw new Error(
-                "Selected answer is required."
-            );
-        }
 
         const { data, error } =
             await this.client.rpc(
@@ -225,8 +144,7 @@ const OmnoraSupabase = {
                     p_attempt_id: payload.attemptId,
                     p_profile_id: payload.profileId,
                     p_question_id: payload.questionId,
-                    p_selected_answer:
-                        payload.selectedAnswer
+                    p_selected_answer: payload.selectedAnswer
                 }
             );
 
@@ -238,25 +156,17 @@ const OmnoraSupabase = {
     },
 
 
-    /**
-     * -------------------------------------------------
-     * Finish Quiz
-     * -------------------------------------------------
-     */
-    async finishQuiz(payload) {
+    // =====================================================
+    // Finish Quiz
+    // =====================================================
 
-        if (!payload?.attemptId) {
-            throw new Error(
-                "Attempt ID is required."
-            );
-        }
+    async finishQuiz(payload) {
 
         const { data, error } =
             await this.client.rpc(
                 "finish_quiz",
                 {
-                    p_attempt_id:
-                        payload.attemptId
+                    p_attempt_id: payload.attemptId
                 }
             );
 
@@ -265,14 +175,56 @@ const OmnoraSupabase = {
         }
 
         return data;
+    },
+
+
+    // =====================================================
+    // Update Student Profile
+    // =====================================================
+
+    async updateStudentProfile(payload) {
+
+        const { data, error } =
+            await this.client
+                .from("profiles")
+                .update({
+                    total_quizzes: payload.totalQuizzes,
+                    total_points: payload.totalPoints,
+                    average_score: payload.averageScore,
+                    best_score: payload.bestScore,
+                    last_quiz_date: new Date().toISOString()
+                })
+                .eq("id", payload.profileId)
+                .select()
+                .single();
+
+        if (error) {
+            throw error;
+        }
+
+        return data;
+    },
+
+
+    // =====================================================
+    // Leaderboard
+    // =====================================================
+
+    async updateLeaderboard() {
+
+        // Leaderboard is database-driven.
+        // No manual refresh is required here.
+
+        return {
+            success: true
+        };
     }
 
 };
 
 
-/**
- * -----------------------------------------------------
- * Public API
- * -----------------------------------------------------
- */
+// =====================================================
+// Global Export
+// =====================================================
+
 window.OmnoraSupabase = OmnoraSupabase;
