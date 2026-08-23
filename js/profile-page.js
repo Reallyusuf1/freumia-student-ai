@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /* ==========================================
-   OMNORA STUDENTS AI V2
+   FREUMIA STUDENTS AI V2
    PROFILE PAGE
 ========================================== */
 
@@ -115,7 +115,7 @@ console.log("USER:", user);
 
     studentName.textContent = name;
     studentEmail.textContent = user.email;
-    memberSince.textContent = "Joined Omnora • " + joinedYear;
+    memberSince.textContent = "Joined Freumia • " + joinedmonth + joinedYear;
 
     fullName.value = name;
     email.value = user.email;
