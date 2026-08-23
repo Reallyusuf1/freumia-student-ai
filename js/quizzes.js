@@ -682,7 +682,7 @@ const QuizApp = {
             this.student.class_level;
 
 
-        this.quiz.subject = "Computer Studies";
+        this.quiz.subject = null;
 
 
         try {
