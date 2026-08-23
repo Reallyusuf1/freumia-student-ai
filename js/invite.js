@@ -14,7 +14,7 @@ async function initInvitePage() {
 
         const { data: profile, error } = await supabase
             .from("profiles")
-            .select("referral_code, oms_points")
+            .select("referral_code, fms_points")
             .eq("id", user.id)
             .single();
 
@@ -26,8 +26,8 @@ async function initInvitePage() {
         document.getElementById("referral-link").value =
             referralLink;
 
-        document.getElementById("oms-points").textContent =
-            profile.oms_points ?? 0;
+        document.getElementById("fms-points").textContent =
+            profile.fms_points ?? 0;
 
         loadReferralCount(user.id);
         
