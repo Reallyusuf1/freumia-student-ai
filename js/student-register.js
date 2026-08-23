@@ -36,7 +36,7 @@ function saveReferralFromUrl() {
     if (!referralCode) return;
 
     sessionStorage.setItem(
-        "omnora_referral",
+        "freumia_referral",
         referralCode
     );
 
@@ -420,14 +420,14 @@ function showRegistrationSuccess(
                         <span
                             id="student-id-value"
                         >
-                            ${escapeHtml(omsId)}
+                            ${escapeHtml(fmsId)}
                         </span>
 
 
                         <button
                             type="button"
-                            id="copy-oms-id-btn"
-                            class="copy-oms-id-btn"
+                            id="copy-fms-id-btn"
+                            class="copy-fms-id-btn"
                         >
                             📋
                         </button>
@@ -439,17 +439,17 @@ function showRegistrationSuccess(
 
                 <button
                     type="button"
-                    id="copy-oms-id-main-btn"
-                    class="copy-oms-id-main-btn"
+                    id="copy-fms-id-main-btn"
+                    class="copy-fms-id-main-btn"
                 >
-                    📋 Copy OMS-ID
+                    📋 Copy FMS-ID
                 </button>
 
 
                 <p class="save-message">
 
                     Please save your
-                    <strong>OMS-ID</strong>
+                    <strong>FMS-ID</strong>
                     carefully.
 
                     <br>
@@ -495,13 +495,13 @@ function showRegistrationSuccess(
 
     const copyButton =
         document.getElementById(
-            "copy-oms-id-btn"
+            "copy-fms-id-btn"
         );
 
 
     const copyMainButton =
         document.getElementById(
-            "copy-oms-id-main-btn"
+            "copy-fms-id-main-btn"
         );
 
 
@@ -509,8 +509,8 @@ function showRegistrationSuccess(
         "click",
         () => {
 
-            copyOMSId(
-                omsId,
+            copyFMSId(
+                fmsId,
                 copyButton
             );
 
@@ -522,8 +522,8 @@ function showRegistrationSuccess(
         "click",
         () => {
 
-            copyOMSId(
-                omsId,
+            copyFMSId(
+                fmsId,
                 copyMainButton
             );
 
@@ -580,19 +580,19 @@ function showRegistrationSuccess(
 
 /**
  * ==========================================================
- * COPY OMS-ID
+ * COPY FMS-ID
  * ==========================================================
  */
 
-async function copyOMSId(
-    omsId,
+async function copyFMSId(
+    fmsId,
     button
 ) {
 
     try {
 
         await navigator.clipboard.writeText(
-            omsId
+            fmsId
         );
 
 
@@ -629,7 +629,7 @@ async function copyOMSId(
     catch (error) {
 
         console.error(
-            "Copy OMS-ID failed:",
+            "Copy FMS-ID failed:",
             error
         );
 
@@ -681,8 +681,8 @@ async function copyOMSId(
         catch (fallbackError) {
 
             alert(
-                "Please copy your OMS-ID manually: " +
-                omsId
+                "Please copy your FMS-ID manually: " +
+                fmsId
             );
 
         }
@@ -988,7 +988,7 @@ function addRegistrationSuccessStyles() {
         }
 
 
-        .copy-oms-id-btn {
+        .copy-fms-id-btn {
 
             flex-shrink: 0;
 
@@ -1011,7 +1011,7 @@ function addRegistrationSuccessStyles() {
         }
 
 
-        .copy-oms-id-main-btn,
+        .copy-fms-id-main-btn,
         .continue-login-btn {
 
             width: 100%;
@@ -1035,7 +1035,7 @@ function addRegistrationSuccessStyles() {
         }
 
 
-        .copy-oms-id-main-btn {
+        .copy-fms-id-main-btn {
 
             margin-bottom: 20px;
 
@@ -1069,9 +1069,9 @@ function addRegistrationSuccessStyles() {
         }
 
 
-        .copy-oms-id-main-btn:hover,
+        .copy-fms-id-main-btn:hover,
         .continue-login-btn:hover,
-        .copy-oms-id-btn:hover {
+        .copy-fms-id-btn:hover {
 
             transform:
                 translateY(-1px);
@@ -1079,8 +1079,8 @@ function addRegistrationSuccessStyles() {
         }
 
 
-        .copy-oms-id-main-btn.copied,
-        .copy-oms-id-btn.copied {
+        .copy-fms-id-main-btn.copied,
+        .copy-fms-id-btn.copied {
 
             background:
                 #16a34a;
