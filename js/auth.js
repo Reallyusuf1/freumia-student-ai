@@ -411,7 +411,7 @@ async function createStudentProfile(
 
                 id: userId,
 
-                oms_id: profile.oms_id,
+                fms_id: profile.fms_id,
 
                 full_name: profile.full_name,
 
@@ -470,7 +470,7 @@ async function generateReferralCode() {
 
     while (true) {
 
-        let code = "OMR-";
+        let code = "FRM-";
 
 
         for (let i = 0; i < 6; i++) {
@@ -595,13 +595,13 @@ async function registerStudent(formData) {
 
 
     /**
-     * Generate OMS-ID.
+     * Generate FM-ID.
      */
     const {
-        data: omsId,
-        error: omsError
+        data: fmsId,
+        error: fmsError
     } = await supabase.rpc(
-        "generate_oms_id"
+        "generate_fms_id"
     );
 
 
@@ -614,7 +614,7 @@ async function registerStudent(formData) {
      * Create pseudo email.
      */
     const pseudoEmail =
-        `${omsId.toLowerCase()}@students.omnora.ai`;
+        `${omsId.toLowerCase()}@students.freumia.ai`;
 
 
     /**
@@ -666,7 +666,7 @@ async function registerStudent(formData) {
 
             ...formData,
 
-            oms_id: omsId,
+            fms_id: fmsId,
 
             referral_code: referralCode
 
@@ -698,7 +698,7 @@ async function registerStudent(formData) {
 
         success: true,
 
-        oms_id: omsId
+        fms_id: fmsId
 
     };
 
@@ -717,7 +717,7 @@ async function loginStudent(loginData) {
 
 
     console.log(
-        "OMS-ID RECEIVED:",
+        "FMS-ID RECEIVED:",
         loginData.omsId
     );
 
@@ -725,8 +725,8 @@ async function loginStudent(loginData) {
     try {
 
         const pseudoEmail =
-            await OmnoraResolver.resolveOmsEmail(
-                loginData.omsId
+            await OmnoraResolver.resolveFmsEmail(
+                loginData.fmsId
             );
 
 
@@ -766,7 +766,7 @@ async function loginStudent(loginData) {
                 success: false,
 
                 message:
-                    "Invalid OMS-ID or password."
+                    "Invalid FMS-ID or password."
 
             };
 
