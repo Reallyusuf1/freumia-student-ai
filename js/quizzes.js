@@ -149,7 +149,7 @@ const QuizApp = {
 
         this.elements.omsId =
             document.getElementById(
-                "omsId"
+                "fmsId"
             );
 
         this.elements.password =
@@ -480,7 +480,7 @@ const QuizApp = {
 
         if (
             !this.student ||
-            !this.elements.omsId
+            !this.elements.fmsId
         ) {
 
             return;
@@ -488,11 +488,11 @@ const QuizApp = {
         }
 
 
-        this.elements.omsId.value =
-            this.student.oms_id || "";
+        this.elements.fmsId.value =
+            this.student.fms_id || "";
 
 
-        this.elements.omsId.readOnly =
+        this.elements.fmsId.readOnly =
             true;
 
     },
@@ -517,8 +517,8 @@ const QuizApp = {
         }
 
 
-        const omsId =
-            this.elements.omsId?.value
+        const fmsId =
+            this.elements.fmsId?.value
                 ?.trim() || "";
 
 
@@ -529,7 +529,7 @@ const QuizApp = {
         if (!omsId || !password) {
 
             this.showError(
-                "Please enter OMS-ID and password."
+                "Please enter FMS-ID and password."
             );
 
             return;
@@ -549,7 +549,7 @@ const QuizApp = {
             const result =
                 await OmnoraAuth.loginStudent({
 
-                    omsId,
+                    fmsId,
 
                     password
 
@@ -1799,7 +1799,7 @@ const QuizApp = {
         /*
          * TODO:
          * Replace with the shared
-         * Omnora UI Toast component.
+         * Freumia UI Toast component.
          */
 
     },
