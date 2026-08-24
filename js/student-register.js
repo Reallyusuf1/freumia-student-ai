@@ -343,7 +343,7 @@ function showLoading(status) {
  */
 
 function showRegistrationSuccess(
-    omsId
+    fmsId
 ) {
 
     /*
