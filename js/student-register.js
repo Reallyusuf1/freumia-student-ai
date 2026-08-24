@@ -160,7 +160,7 @@ async function handleStudentRegistration(event) {
         if (result.success) {
 
             showRegistrationSuccess(
-                result.oms_id
+                result.fms_id
             );
 
             return;
