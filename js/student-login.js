@@ -28,7 +28,7 @@ async function handleStudentLogin(event) {
         // ------------------------------------------
 
         const loginData = {
-            omsId: getValue("omsId").toUpperCase(),
+            fmsId: getValue("fmsId").toUpperCase(),
             password: getValue("password"),
             rememberMe: document.getElementById("rememberMe")?.checked || false
         };
@@ -94,20 +94,20 @@ async function handleStudentLogin(event) {
  */
 function validateLogin(data) {
 
-    if (!data.omsId.trim()) {
+    if (!data.fmsId.trim()) {
 
         return {
             success: false,
-            message: "Please enter your OMS-ID."
+            message: "Please enter your FMS-ID."
         };
 
     }
 
-    if (!/^OMS-\d{6}$/.test(data.omsId)) {
+    if (!/^FMS-\d{6}$/.test(data.fmsId)) {
 
         return {
             success: false,
-            message: "Invalid OMS-ID format."
+            message: "Invalid FMS-ID format."
         };
 
     }
