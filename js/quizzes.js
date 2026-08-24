@@ -147,7 +147,7 @@ const QuizApp = {
                 "quizVerificationForm"
             );
 
-        this.elements.omsId =
+        this.elements.fmsId =
             document.getElementById(
                 "fmsId"
             );
@@ -526,7 +526,7 @@ const QuizApp = {
             this.elements.password?.value || "";
 
 
-        if (!omsId || !password) {
+        if (!fmsId || !password) {
 
             this.showError(
                 "Please enter FMS-ID and password."
