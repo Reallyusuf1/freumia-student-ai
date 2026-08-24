@@ -2,16 +2,16 @@
 
 /**
  * ============================================
- * OMNORA STUDENTS AI V2
+ * FREUMIA STUDENTS AI V2
  * Resolver Layer
  * File: js/resolver.js
  * ============================================
  */
 
 /**
- * Resolve OMS-ID to pseudo email.
+ * Resolve FMS-ID to pseudo email.
  */
-async function resolveOmsEmail(omsId) {
+async function resolveFmsEmail(fmsId) {
     const supabase = window.supabaseClient;
 
     if (!supabase) {
@@ -19,9 +19,9 @@ async function resolveOmsEmail(omsId) {
     }
 
     const { data, error } = await supabase.rpc(
-        "resolve_oms_email",
+        "resolve_fms_email",
         {
-    oms_id_input: omsId
+    fms_id_input: fmsId
         }
     );
 
@@ -33,5 +33,5 @@ async function resolveOmsEmail(omsId) {
 }
 
 window.OmnoraResolver = {
-    resolveOmsEmail
+    resolveFmsEmail
 };
