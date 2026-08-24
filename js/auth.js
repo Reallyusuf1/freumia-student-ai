@@ -525,7 +525,7 @@ async function processReferral(
 
     const referralCode =
         sessionStorage.getItem(
-            "omnora_referral"
+            "freumia_referral"
         );
 
 
@@ -558,7 +558,7 @@ async function processReferral(
 
 
     sessionStorage.removeItem(
-        "omnora_referral"
+        "freumia_referral"
     );
 }
 
@@ -605,8 +605,8 @@ async function registerStudent(formData) {
     );
 
 
-    if (omsError) {
-        throw omsError;
+    if (fmsError) {
+        throw fmsError;
     }
 
 
@@ -614,7 +614,7 @@ async function registerStudent(formData) {
      * Create pseudo email.
      */
     const pseudoEmail =
-        `${omsId.toLowerCase()}@students.freumia.ai`;
+        `${fmsId.toLowerCase()}@students.freumia.ai`;
 
 
     /**
@@ -718,7 +718,7 @@ async function loginStudent(loginData) {
 
     console.log(
         "FMS-ID RECEIVED:",
-        loginData.omsId
+        loginData.fmsId
     );
 
 
