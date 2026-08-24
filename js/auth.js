@@ -1,6 +1,6 @@
 /**
  * =====================================================
- * OMNORA STUDENTS AI V2
+ * FREUMIA STUDENTS AI V2
  * Authentication Core
  * File: js/auth.js
  * =====================================================
@@ -294,7 +294,7 @@ async function ensureOAuthProfile(user) {
      *
      * We intentionally do NOT use:
      *
-     * oms_id
+     * fms_id
      * school_name
      * admission_number
      * class_level
@@ -595,7 +595,7 @@ async function registerStudent(formData) {
 
 
     /**
-     * Generate FM-ID.
+     * Generate FMS-ID.
      */
     const {
         data: fmsId,
