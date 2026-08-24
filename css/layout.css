@@ -307,8 +307,6 @@ overflow:visible;
     overflow:visible;
 }
 
-}
-
 /* ==========================================
    MOBILE HERO LAYOUT
 ========================================== */
@@ -322,7 +320,8 @@ overflow:visible;
 
     .hero-visual {
         width: 100%;
-        min-height: auto;
+        height: auto;
+        min-height: 0;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -331,4 +330,4 @@ overflow:visible;
     height: auto;
    }
 
-  }
+}
