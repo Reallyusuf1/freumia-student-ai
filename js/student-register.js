@@ -647,7 +647,7 @@ async function copyFMSId(
 
 
         textarea.value =
-            omsId;
+            fmsId;
 
 
         textarea.style.position =
