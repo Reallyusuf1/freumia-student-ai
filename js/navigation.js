@@ -73,4 +73,35 @@ function initializeNavigation() {
     });
 }
 
+/* ==========================================
+   LOGOUT
+========================================== */
+
+const logoutButton =
+document.getElementById("logout-btn");
+
+if (logoutButton) {
+
+    logoutButton.addEventListener("click", async () => {
+
+        const confirmLogout = confirm(
+            "Are you sure you want to logout?"
+        );
+
+        if (!confirmLogout) return;
+
+        const { error } =
+        await window.supabaseClient.auth.signOut();
+
+        if (error) {
+            alert(error.message);
+            return;
+        }
+
+        window.location.href = "index.html";
+
+    });
+
+}
+
 document.addEventListener("DOMContentLoaded", initializeNavigation);
