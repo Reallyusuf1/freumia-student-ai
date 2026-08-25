@@ -115,7 +115,7 @@ console.log("USER:", user);
 
     studentName.textContent = name;
     studentEmail.textContent = user.email;
-    memberSince.textContent = "Joined Freumia • " + joinedmonth + joinedYear;
+    memberSince.textContent = "Joined Freumia • " + joinedYear;
 
     fullName.value = name;
     email.value = user.email;
