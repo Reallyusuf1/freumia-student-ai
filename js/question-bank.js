@@ -568,6 +568,549 @@ const questionBank = [
 
     answer: "A"
 },
+   // ============================================================
+// PRIMARY 1 — NEW QUESTIONS 361–390
+// ============================================================
+
+{
+    id: 361,
+    subject: "Mathematics",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "What is 5 + 2?",
+
+    options: [
+        "A. 6",
+        "B. 7",
+        "C. 8",
+        "D. 9"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 362,
+    subject: "English",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which word means the opposite of 'big'?",
+
+    options: [
+        "A. Tall",
+        "B. Long",
+        "C. Small",
+        "D. Wide"
+    ],
+
+    answer: "C"
+},
+
+{
+    id: 363,
+    subject: "Science",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which part of the body helps us to hear?",
+
+    options: [
+        "A. Ear",
+        "B. Eye",
+        "C. Nose",
+        "D. Mouth"
+    ],
+
+    answer: "A"
+},
+
+{
+    id: 364,
+    subject: "General Knowledge",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "What do we use to tell the time?",
+
+    options: [
+        "A. Clock",
+        "B. Plate",
+        "C. Cup",
+        "D. Shoe"
+    ],
+
+    answer: "A"
+},
+
+{
+    id: 365,
+    subject: "Mathematics",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "What is 9 - 3?",
+
+    options: [
+        "A. 5",
+        "B. 6",
+        "C. 7",
+        "D. 8"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 366,
+    subject: "English",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which word is a name of a place?",
+
+    options: [
+        "A. School",
+        "B. Run",
+        "C. Happy",
+        "D. Eat"
+    ],
+
+    answer: "A"
+},
+
+{
+    id: 367,
+    subject: "Science",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which of these gives us light during the day?",
+
+    options: [
+        "A. Moon",
+        "B. Star",
+        "C. Sun",
+        "D. Cloud"
+    ],
+
+    answer: "C"
+},
+
+{
+    id: 368,
+    subject: "General Knowledge",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "How many legs does a dog have?",
+
+    options: [
+        "A. Two",
+        "B. Three",
+        "C. Four",
+        "D. Five"
+    ],
+
+    answer: "C"
+},
+
+{
+    id: 369,
+    subject: "Mathematics",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which number is the smallest?",
+
+    options: [
+        "A. 8",
+        "B. 3",
+        "C. 6",
+        "D. 9"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 370,
+    subject: "English",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which word is a verb?",
+
+    options: [
+        "A. Jump",
+        "B. Table",
+        "C. Blue",
+        "D. Boy"
+    ],
+
+    answer: "A"
+},
+
+{
+    id: 371,
+    subject: "Science",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "What do humans use to taste food?",
+
+    options: [
+        "A. Tongue",
+        "B. Ear",
+        "C. Hand",
+        "D. Eye"
+    ],
+
+    answer: "A"
+},
+
+{
+    id: 372,
+    subject: "General Knowledge",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which one is used for cutting paper?",
+
+    options: [
+        "A. Spoon",
+        "B. Scissors",
+        "C. Cup",
+        "D. Pillow"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 373,
+    subject: "Mathematics",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "What is 3 + 4?",
+
+    options: [
+        "A. 6",
+        "B. 7",
+        "C. 8",
+        "D. 9"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 374,
+    subject: "English",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which letter comes before M?",
+
+    options: [
+        "A. K",
+        "B. L",
+        "C. N",
+        "D. O"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 375,
+    subject: "Science",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which of these is a living thing?",
+
+    options: [
+        "A. Stone",
+        "B. Chair",
+        "C. Tree",
+        "D. Book"
+    ],
+
+    answer: "C"
+},
+
+{
+    id: 376,
+    subject: "General Knowledge",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which animal is known as man's best friend?",
+
+    options: [
+        "A. Cat",
+        "B. Dog",
+        "C. Goat",
+        "D. Horse"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 377,
+    subject: "Mathematics",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "How many fingers are on one hand?",
+
+    options: [
+        "A. 4",
+        "B. 5",
+        "C. 6",
+        "D. 10"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 378,
+    subject: "English",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which word rhymes with 'cat'?",
+
+    options: [
+        "A. Dog",
+        "B. Hat",
+        "C. Sun",
+        "D. Pen"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 379,
+    subject: "Science",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "What do we breathe in to stay alive?",
+
+    options: [
+        "A. Air",
+        "B. Water",
+        "C. Sand",
+        "D. Soil"
+    ],
+
+    answer: "A"
+},
+
+{
+    id: 380,
+    subject: "General Knowledge",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which day comes after Monday?",
+
+    options: [
+        "A. Sunday",
+        "B. Tuesday",
+        "C. Wednesday",
+        "D. Friday"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 381,
+    subject: "Mathematics",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "What is 7 - 4?",
+
+    options: [
+        "A. 2",
+        "B. 3",
+        "C. 4",
+        "D. 5"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 382,
+    subject: "English",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which sentence is correct?",
+
+    options: [
+        "A. The boy run.",
+        "B. The boy runs.",
+        "C. The boy running.",
+        "D. The boy runs yesterday."
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 383,
+    subject: "Science",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which of these is a source of water?",
+
+    options: [
+        "A. River",
+        "B. Chair",
+        "C. Book",
+        "D. Shoe"
+    ],
+
+    answer: "A"
+},
+
+{
+    id: 384,
+    subject: "General Knowledge",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "What should we use to brush our teeth?",
+
+    options: [
+        "A. Toothbrush",
+        "B. Spoon",
+        "C. Comb",
+        "D. Ruler"
+    ],
+
+    answer: "A"
+},
+
+{
+    id: 385,
+    subject: "Mathematics",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which number is greater?",
+
+    options: [
+        "A. 4",
+        "B. 6",
+        "C. 2",
+        "D. 3"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 386,
+    subject: "English",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which of these is a plural word?",
+
+    options: [
+        "A. Book",
+        "B. Cat",
+        "C. Books",
+        "D. Boy"
+    ],
+
+    answer: "C"
+},
+
+{
+    id: 387,
+    subject: "Science",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which sense do we use with our eyes?",
+
+    options: [
+        "A. Hearing",
+        "B. Seeing",
+        "C. Smelling",
+        "D. Tasting"
+    ],
+
+    answer: "B"
+},
+
+{
+    id: 388,
+    subject: "General Knowledge",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which object can we use to carry books to school?",
+
+    options: [
+        "A. School bag",
+        "B. Plate",
+        "C. Cup",
+        "D. Pillow"
+    ],
+
+    answer: "A"
+},
+
+{
+    id: 389,
+    subject: "Mathematics",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "What is 1 + 8?",
+
+    options: [
+        "A. 7",
+        "B. 8",
+        "C. 9",
+        "D. 10"
+    ],
+
+    answer: "C"
+},
+
+{
+    id: 390,
+    subject: "English",
+    level: "Primary 1",
+    difficulty: "Easy",
+
+    question: "Which word describes something that is not difficult?",
+
+    options: [
+        "A. Hard",
+        "B. Easy",
+        "C. Heavy",
+        "D. Slow"
+    ],
+
+    answer: "B"
+},
   
 // ============================================================
 // PRIMARY 2
