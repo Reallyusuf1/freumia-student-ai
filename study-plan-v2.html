@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ==========================================================
+         FREUMIA STUDENTS AI — STUDY PLAN V2
+    =========================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Study Plan | Freumia Students AI</title>
+
+    <meta
+        name="description"
+        content="Your personalized Freumia Students AI study plan and learning progress."
+    >
+
+    <meta name="theme-color" content="#071127">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="assets/images/favicon.png"
+    >
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- Existing Freumia global architecture -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/navigation.css">
+
+    <!-- Study Plan V2 -->
+    <link rel="stylesheet" href="css/study-plan-v2.css">
+</head>
+
+<body class="study-plan-v2-page">
+
+    <!-- ==========================================================
+         BACKGROUND
+    =========================================================== -->
+    <div class="spv2-background" aria-hidden="true">
+        <span class="spv2-orb spv2-orb-one"></span>
+        <span class="spv2-orb spv2-orb-two"></span>
+        <span class="spv2-grid"></span>
+    </div>
+
+    <!-- ==========================================================
+         HEADER
+    =========================================================== -->
+    <header class="spv2-header">
+        <div class="spv2-header-inner">
+
+            <a
+                href="index.html"
+                class="spv2-brand"
+                aria-label="Freumia Students AI Home"
+            >
+                <span class="spv2-brand-mark" aria-hidden="true">
+                    <i class="fa-solid fa-brain"></i>
+                </span>
+
+                <span class="spv2-brand-copy">
+                    <strong>FREUMIA</strong>
+                    <small>Students AI</small>
+                </span>
+            </a>
+
+            <nav
+                class="spv2-desktop-nav"
+                aria-label="Primary navigation"
+            >
+                <a href="index.html">Home</a>
+                <a href="feature.html">Features</a>
+                <a href="quizzes.html">Daily Quiz</a>
+                <a
+                    href="study-plan-v2.html"
+                    class="is-active"
+                    aria-current="page"
+                >
+                    Study Plan
+                </a>
+                <a href="leaderboard-v2.html">Leaderboard</a>
+                <a href="student-profile.html">Profile</a>
+            </nav>
+
+            <div class="spv2-header-actions">
+                <button
+                    type="button"
+                    id="notificationButton"
+                    class="spv2-icon-button"
+                    aria-label="Notifications"
+                >
+                    <i class="fa-regular fa-bell"></i>
+                    <span
+                        id="notificationBadge"
+                        class="spv2-notification-badge"
+                        hidden
+                    ></span>
+                </button>
+
+                <button
+                    type="button"
+                    id="mobileMenuButton"
+                    class="spv2-menu-button"
+                    aria-label="Open navigation"
+                    aria-expanded="false"
+                    aria-controls="spv2MobileNav"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <nav
+            id="spv2MobileNav"
+            class="spv2-mobile-nav"
+            aria-label="Mobile navigation"
+            hidden
+        >
+            <a href="index.html">
+                <i class="fa-solid fa-house"></i>
+                Home
+            </a>
+
+            <a href="feature.html">
+                <i class="fa-solid fa-sparkles"></i>
+                Features
+            </a>
+
+            <a href="quizzes.html">
+                <i class="fa-solid fa-circle-question"></i>
+                Daily Quiz
+            </a>
+
+            <a
+                href="study-plan-v2.html"
+                class="is-active"
+                aria-current="page"
+            >
+                <i class="fa-solid fa-book-open"></i>
+                Study Plan
+            </a>
+
+            <a href="leaderboard-v2.html">
+                <i class="fa-solid fa-trophy"></i>
+                Leaderboard
+            </a>
+
+            <a href="student-profile.html">
+                <i class="fa-solid fa-user"></i>
+                Profile
+            </a>
+        </nav>
+    </header>
+
+    <!-- ==========================================================
+         MAIN
+    =========================================================== -->
+    <main class="spv2-main">
+
+        <!-- ======================================================
+             HERO
+        ======================================================= -->
+        <section class="spv2-hero" aria-labelledby="studyPlanTitle">
+
+            <div class="spv2-hero-copy">
+
+                <span class="spv2-eyebrow">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    Personalized Learning
+                </span>
+
+                <h1 id="studyPlanTitle">
+                    AI Study
+                    <span>Plan</span>
+                </h1>
+
+                <p>
+                    Your personal roadmap to academic success.
+                    Freumia uses your learning activity to keep
+                    your study plan focused and practical.
+                </p>
+
+                <div class="spv2-hero-meta">
+                    <span>
+                        <i class="fa-regular fa-calendar"></i>
+                        <strong id="currentDate">Loading date…</strong>
+                    </span>
+
+                    <span id="studentClassMeta">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <strong>Student</strong>
+                    </span>
+                </div>
+            </div>
+
+            <div class="spv2-hero-visual" aria-hidden="true">
+                <div class="spv2-brain-glow"></div>
+
+                <div class="spv2-brain-orbit spv2-orbit-one"></div>
+                <div class="spv2-brain-orbit spv2-orbit-two"></div>
+
+                <img
+                    src="assets/images/omnora-brain.png"
+                    alt=""
+                    class="spv2-brain-image"
+                    loading="eager"
+                >
+
+                <div class="spv2-cap">
+                    <span></span>
+                </div>
+
+                <i class="fa-solid fa-book spv2-floating-icon spv2-book-icon"></i>
+                <i class="fa-solid fa-star spv2-floating-icon spv2-star-icon"></i>
+                <i class="fa-solid fa-chart-line spv2-floating-icon spv2-chart-icon"></i>
+            </div>
+        </section>
+
+        <!-- ======================================================
+             TODAY'S PLAN
+        ======================================================= -->
+        <section
+            class="spv2-card spv2-today-card"
+            aria-labelledby="todayPlanTitle"
+        >
+            <div class="spv2-card-heading">
+
+                <div class="spv2-heading-title">
+                    <span class="spv2-heading-icon purple">
+                        <i class="fa-regular fa-calendar-days"></i>
+                    </span>
+
+                    <div>
+                        <h2 id="todayPlanTitle">Today's Plan</h2>
+                        <p id="planSubtitle">
+                            Built from your learning activity
+                        </p>
+                    </div>
+                </div>
+
+                <time
+                    id="todayDate"
+                    class="spv2-date-pill"
+                    datetime=""
+                >
+                    —
+                </time>
+            </div>
+
+            <div
+                id="todayPlanList"
+                class="spv2-plan-list"
+                aria-live="polite"
+            >
+                <div class="spv2-loading-row">
+                    <span class="spv2-spinner"></span>
+                    Loading your study plan…
+                </div>
+            </div>
+
+            <button
+                id="startPlanButton"
+                type="button"
+                class="spv2-primary-button"
+                disabled
+            >
+                <i class="fa-solid fa-bullseye"></i>
+                <span>Start Today's Plan</span>
+                <i class="fa-solid fa-arrow-right spv2-button-arrow"></i>
+            </button>
+        </section>
+
+        <!-- ======================================================
+             WEEKLY PROGRESS
+        ======================================================= -->
+        <section
+            class="spv2-card spv2-week-card"
+            aria-labelledby="weeklyProgressTitle"
+        >
+            <div class="spv2-card-heading">
+                <div class="spv2-heading-title">
+                    <span class="spv2-heading-icon blue">
+                        <i class="fa-solid fa-chart-column"></i>
+                    </span>
+
+                    <div>
+                        <h2 id="weeklyProgressTitle">
+                            Weekly Progress
+                        </h2>
+                        <p>Completed learning days this week</p>
+                    </div>
+                </div>
+
+                <strong
+                    id="weeklyProgressLabel"
+                    class="spv2-progress-label"
+                >
+                    —
+                </strong>
+            </div>
+
+            <div
+                id="weekDays"
+                class="spv2-week-days"
+                aria-label="Weekly study progress"
+            ></div>
+
+            <div class="spv2-progress-track">
+                <span
+                    id="weeklyProgressBar"
+                    class="spv2-progress-fill"
+                    style="width: 0%"
+                ></span>
+            </div>
+
+            <p
+                id="weeklyProgressMessage"
+                class="spv2-progress-message"
+            >
+                Keep going. Consistency is the key 💪
+            </p>
+        </section>
+
+        <!-- ======================================================
+             STATS
+        ======================================================= -->
+        <section
+            class="spv2-stats-grid"
+            aria-label="Study statistics"
+        >
+            <article class="spv2-stat-card">
+                <span class="spv2-stat-icon purple">
+                    <i class="fa-solid fa-fire"></i>
+                </span>
+
+                <span class="spv2-stat-label">
+                    Study Streak
+                </span>
+
+                <strong id="studyStreakValue">
+                    —
+                </strong>
+
+                <small>Days</small>
+            </article>
+
+            <article class="spv2-stat-card">
+                <span class="spv2-stat-icon green">
+                    <i class="fa-solid fa-book-open"></i>
+                </span>
+
+                <span class="spv2-stat-label">
+                    Hours Studied
+                </span>
+
+                <strong id="hoursStudiedValue">
+                    —
+                </strong>
+
+                <small>This Week</small>
+            </article>
+
+            <article class="spv2-stat-card">
+                <span class="spv2-stat-icon gold">
+                    <i class="fa-solid fa-trophy"></i>
+                </span>
+
+                <span class="spv2-stat-label">
+                    Quizzes Done
+                </span>
+
+                <strong id="quizzesDoneValue">
+                    —
+                </strong>
+
+                <small>This Week</small>
+            </article>
+
+            <article class="spv2-stat-card">
+                <span class="spv2-stat-icon blue">
+                    <i class="fa-regular fa-star"></i>
+                </span>
+
+                <span class="spv2-stat-label">
+                    Average Score
+                </span>
+
+                <strong id="averageScoreValue">
+                    —
+                </strong>
+
+                <small>This Week</small>
+            </article>
+        </section>
+
+        <!-- ======================================================
+             AI RECOMMENDATION
+        ======================================================= -->
+        <section
+            class="spv2-card spv2-recommendation-card"
+            aria-labelledby="recommendationTitle"
+        >
+            <div class="spv2-recommendation-copy">
+
+                <div class="spv2-recommendation-heading">
+                    <span class="spv2-heading-icon pink">
+                        <i class="fa-solid fa-robot"></i>
+                    </span>
+
+                    <h2 id="recommendationTitle">
+                        AI Recommendation
+                    </h2>
+                </div>
+
+                <p id="recommendationText">
+                    Analyzing your recent learning activity…
+                </p>
+
+                <div
+                    id="recommendationSubjects"
+                    class="spv2-recommendation-tags"
+                ></div>
+            </div>
+
+            <div
+                class="spv2-recommendation-visual"
+                aria-hidden="true"
+            >
+                <div class="spv2-recommendation-glow"></div>
+
+                <img
+                    src="assets/images/omnora-brain.png"
+                    alt=""
+                    loading="lazy"
+                >
+            </div>
+        </section>
+
+        <!-- ======================================================
+             QUICK ACTIONS
+        ======================================================= -->
+        <section
+            class="spv2-card spv2-actions-card"
+            aria-labelledby="quickActionsTitle"
+        >
+            <div class="spv2-card-heading compact">
+                <div class="spv2-heading-title">
+                    <span class="spv2-heading-icon gold">
+                        <i class="fa-solid fa-bolt"></i>
+                    </span>
+
+                    <h2 id="quickActionsTitle">
+                        Quick Actions
+                    </h2>
+                </div>
+            </div>
+
+            <div class="spv2-actions-grid">
+
+                <a
+                    href="index.html#ask-ai"
+                    class="spv2-action-button"
+                >
+                    <span class="spv2-action-icon robot">
+                        <i class="fa-solid fa-robot"></i>
+                    </span>
+                    <span>Ask AI</span>
+                </a>
+
+                <a
+                    href="quizzes.html"
+                    class="spv2-action-button"
+                >
+                    <span class="spv2-action-icon quiz">
+                        <i class="fa-solid fa-circle-question"></i>
+                    </span>
+                    <span>Daily Quiz</span>
+                </a>
+
+                <a
+                    href="index.html#features"
+                    class="spv2-action-button"
+                >
+                    <span class="spv2-action-icon materials">
+                        <i class="fa-solid fa-book"></i>
+                    </span>
+                    <span>Study Materials</span>
+                </a>
+
+                <a
+                    href="student-profile.html"
+                    class="spv2-action-button"
+                >
+                    <span class="spv2-action-icon notes">
+                        <i class="fa-solid fa-note-sticky"></i>
+                    </span>
+                    <span>My Profile</span>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- ======================================================
+             FINAL CTA
+        ======================================================= -->
+        <section class="spv2-final-cta">
+            <div class="spv2-final-cta-icon" aria-hidden="true">
+                <i class="fa-solid fa-bullseye"></i>
+            </div>
+
+            <p>
+                Stay consistent, stay focused,
+                <br class="spv2-desktop-break">
+                and let <strong>Freumia AI</strong> guide you to success.
+            </p>
+
+            <a
+                href="quizzes.html"
+                class="spv2-cta-button"
+            >
+                Let's Go!
+                <span aria-hidden="true">🚀</span>
+            </a>
+        </section>
+
+    </main>
+
+    <!-- ==========================================================
+         FOOTER
+    =========================================================== -->
+    <footer class="spv2-footer">
+        <p>
+            &copy;
+            <span id="footerYear">2026</span>
+            Freumia Students AI.
+            All Rights Reserved.
+        </p>
+    </footer>
+
+    <!-- ==========================================================
+         EXISTING SUPABASE ARCHITECTURE
+    =========================================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/omnora-supabase.js"></script>
+
+    <!-- Study Plan V2 -->
+    <script src="js/study-plan-v2.js"></script>
+</body>
+</html>
+
