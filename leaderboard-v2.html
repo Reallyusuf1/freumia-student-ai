@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#070d1f">
+    <meta name="description" content="Freumia Students AI World Leaderboard">
+    <title>Freumia Students AI — World Leaderboard</title>
+
+    <!-- Leaderboard V2 styles -->
+    <link rel="stylesheet" href="css/leaderboard-v2.css">
+
+    <!-- Icon font used by the leaderboard structure -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer">
+</head>
+
+<body id="leaderboard-page">
+
+    <!-- =========================================================
+         PAGE SHELL
+    ========================================================== -->
+    <div id="leaderboard-app" class="leaderboard-app">
+
+        <!-- =====================================================
+             TOP NAVIGATION
+        ====================================================== -->
+        <header id="leaderboard-header" class="leaderboard-header">
+            <nav id="leaderboard-nav" class="leaderboard-nav" aria-label="Main navigation">
+
+                <a id="brand-link"
+                   class="brand-link"
+                   href="index.html"
+                   aria-label="Freumia Students AI home">
+
+                    <span id="brand-icon" class="brand-icon" aria-hidden="true">
+                        <i class="fa-solid fa-trophy"></i>
+                    </span>
+
+                    <span id="brand-name" class="brand-name">
+                        FREUMIA STUDENTS <span>AI</span>
+                    </span>
+                </a>
+
+                <div id="leaderboard-nav-actions" class="leaderboard-nav-actions">
+
+                    <a id="home-link"
+                       class="nav-link"
+                       href="index.html">
+                        Home
+                    </a>
+
+                    <a id="features-link"
+                       class="nav-link"
+                       href="features.html">
+                        Features
+                    </a>
+
+                    <a id="profile-link"
+                       class="nav-link"
+                       href="student-profile.html">
+                        Profile
+                    </a>
+
+                    <a id="leaderboard-link"
+                       class="nav-link nav-link-active"
+                       href="leaderboard-v2.html"
+                       aria-current="page">
+                        Leaderboard
+                    </a>
+
+                    <button id="notification-button"
+                            class="notification-button"
+                            type="button"
+                            aria-label="Notifications">
+                        <i class="fa-regular fa-bell" aria-hidden="true"></i>
+                        <span id="notification-count" class="notification-count">3</span>
+                    </button>
+                </div>
+
+                <button id="mobile-menu-button"
+                        class="mobile-menu-button"
+                        type="button"
+                        aria-label="Open navigation menu"
+                        aria-expanded="false"
+                        aria-controls="leaderboard-nav-actions">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+
+            </nav>
+        </header>
+
+
+        <!--
+         DATA CONTRACT:
+         leaderboard-v2.js is responsible for loading live leaderboard
+         records from Supabase. This HTML contains no demo student names,
+         schools, admission numbers, scores, or fake statistics.
+    -->
+    <main id="leaderboard-main" class="leaderboard-main">
+
+            <!-- =================================================
+                 HERO / PAGE INTRO
+            ================================================== -->
+            <section id="leaderboard-hero"
+                     class="leaderboard-hero"
+                     aria-labelledby="leaderboard-title">
+
+                <div id="leaderboard-hero-icon"
+                     class="leaderboard-hero-icon"
+                     aria-hidden="true">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+
+                <p id="leaderboard-eyebrow" class="leaderboard-eyebrow">
+                    FREUMIA STUDENTS AI
+                </p>
+
+                <h1 id="leaderboard-title" class="leaderboard-title">
+                    World Leaderboard
+                </h1>
+
+                <p id="leaderboard-subtitle" class="leaderboard-subtitle">
+                    Top performing students across the world
+                </p>
+
+            </section>
+
+
+            <!-- =================================================
+                 PERIOD FILTER
+            ================================================== -->
+            <section id="leaderboard-period-section"
+                     class="leaderboard-period-section"
+                     aria-label="Leaderboard period">
+
+                <div id="leaderboard-period-tabs"
+                     class="leaderboard-period-tabs"
+                     role="tablist"
+                     aria-label="Leaderboard period">
+
+                    <button id="period-all-time"
+                            class="period-tab period-tab-active"
+                            type="button"
+                            role="tab"
+                            aria-selected="true"
+                            data-period="all-time">
+                        All Time
+                    </button>
+
+                    <button id="period-month"
+                            class="period-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            data-period="month">
+                        This Month
+                    </button>
+
+                    <button id="period-week"
+                            class="period-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            data-period="week">
+                        This Week
+                    </button>
+
+                    <button id="period-today"
+                            class="period-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            data-period="today">
+                        Today
+                    </button>
+
+                </div>
+            </section>
+
+
+            <!-- =================================================
+                 GLOBAL STATS
+            ================================================== -->
+            <section id="leaderboard-stats"
+                     class="leaderboard-stats"
+                     aria-label="Leaderboard statistics">
+
+                <article id="stat-students" class="leaderboard-stat-card">
+                    <div class="stat-icon stat-icon-students" aria-hidden="true">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <strong id="stat-students-value" class="stat-value" data-stat="students">—</strong>
+                    <span class="stat-label">Total Students</span>
+                </article>
+
+                <article id="stat-schools" class="leaderboard-stat-card">
+                    <div class="stat-icon stat-icon-schools" aria-hidden="true">
+                        <i class="fa-solid fa-school"></i>
+                    </div>
+                    <strong id="stat-schools-value" class="stat-value" data-stat="schools">—</strong>
+                    <span class="stat-label">Schools</span>
+                </article>
+
+                <article id="stat-quizzes" class="leaderboard-stat-card">
+                    <div class="stat-icon stat-icon-quizzes" aria-hidden="true">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                    </div>
+                    <strong id="stat-quizzes-value" class="stat-value" data-stat="quizzes">—</strong>
+                    <span class="stat-label">Quizzes Taken</span>
+                </article>
+
+                <article id="stat-accuracy" class="leaderboard-stat-card">
+                    <div class="stat-icon stat-icon-accuracy" aria-hidden="true">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <strong id="stat-accuracy-value" class="stat-value" data-stat="accuracy">—</strong>
+                    <span class="stat-label">Avg. Accuracy</span>
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 TOP 3 PODIUM
+                 Data is populated by leaderboard-v2.js from Supabase.
+            ================================================== -->
+            <section id="top-three-section"
+                     class="top-three-section"
+                     aria-labelledby="top-three-title">
+
+                <h2 id="top-three-title" class="sr-only">
+                    Top three students
+                </h2>
+
+                <!-- SECOND PLACE -->
+                <article id="podium-second"
+                         class="podium-card podium-second"
+                         data-rank="2"
+                         data-podium-slot="2">
+
+                    <div class="podium-rank-badge" aria-label="Second place">
+                        <span>2</span>
+                    </div>
+
+                    <div class="podium-avatar-wrap">
+                        <img id="second-avatar"
+                             class="podium-avatar"
+                             src=""
+                             alt=""
+                             hidden>
+                        <div id="second-avatar-placeholder"
+                             class="podium-avatar-placeholder"
+                             aria-hidden="true">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                    </div>
+
+                    <div id="second-country"
+                         class="podium-country"
+                         data-field="country"
+                         hidden>
+                    </div>
+
+                    <h3 id="second-name" class="podium-name" data-field="full_name">
+                        —
+                    </h3>
+
+                    <p id="second-location" class="podium-location" data-field="location">
+                        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                        <span>—</span>
+                    </p>
+
+                    <p id="second-school" class="podium-school" data-field="school_name">
+                        —
+                    </p>
+
+                    <span id="second-class" class="class-badge" data-field="class_level">
+                        —
+                    </span>
+
+                    <strong id="second-score" class="podium-score" data-field="total_points">
+                        <i class="fa-solid fa-star" aria-hidden="true"></i>
+                        — pts
+                    </strong>
+
+                </article>
+
+
+                <!-- FIRST PLACE -->
+                <article id="podium-first"
+                         class="podium-card podium-first"
+                         data-rank="1"
+                         data-podium-slot="1">
+
+                    <div class="podium-rank-badge" aria-label="First place">
+                        <span>1</span>
+                    </div>
+
+                    <div class="podium-crown" aria-hidden="true">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+
+                    <div class="podium-avatar-wrap">
+                        <img id="first-avatar"
+                             class="podium-avatar"
+                             src=""
+                             alt=""
+                             hidden>
+                        <div id="first-avatar-placeholder"
+                             class="podium-avatar-placeholder"
+                             aria-hidden="true">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                    </div>
+
+                    <div id="first-country"
+                         class="podium-country"
+                         data-field="country"
+                         hidden>
+                    </div>
+
+                    <h3 id="first-name" class="podium-name" data-field="full_name">
+                        —
+                    </h3>
+
+                    <p id="first-location" class="podium-location" data-field="location">
+                        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                        <span>—</span>
+                    </p>
+
+                    <p id="first-school" class="podium-school" data-field="school_name">
+                        —
+                    </p>
+
+                    <span id="first-class" class="class-badge" data-field="class_level">
+                        —
+                    </span>
+
+                    <strong id="first-score" class="podium-score" data-field="total_points">
+                        <i class="fa-solid fa-star" aria-hidden="true"></i>
+                        — pts
+                    </strong>
+
+                </article>
+
+
+                <!-- THIRD PLACE -->
+                <article id="podium-third"
+                         class="podium-card podium-third"
+                         data-rank="3"
+                         data-podium-slot="3">
+
+                    <div class="podium-rank-badge" aria-label="Third place">
+                        <span>3</span>
+                    </div>
+
+                    <div class="podium-avatar-wrap">
+                        <img id="third-avatar"
+                             class="podium-avatar"
+                             src=""
+                             alt=""
+                             hidden>
+                        <div id="third-avatar-placeholder"
+                             class="podium-avatar-placeholder"
+                             aria-hidden="true">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                    </div>
+
+                    <div id="third-country"
+                         class="podium-country"
+                         data-field="country"
+                         hidden>
+                    </div>
+
+                    <h3 id="third-name" class="podium-name" data-field="full_name">
+                        —
+                    </h3>
+
+                    <p id="third-location" class="podium-location" data-field="location">
+                        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                        <span>—</span>
+                    </p>
+
+                    <p id="third-school" class="podium-school" data-field="school_name">
+                        —
+                    </p>
+
+                    <span id="third-class" class="class-badge" data-field="class_level">
+                        —
+                    </span>
+
+                    <strong id="third-score" class="podium-score" data-field="total_points">
+                        <i class="fa-solid fa-star" aria-hidden="true"></i>
+                        — pts
+                    </strong>
+
+                </article>
+
+            </section>
+
+
+            <!-- =================================================
+                 LEADERBOARD TABLE
+            ================================================== -->
+            <section id="leaderboard-table-section"
+                     class="leaderboard-table-section"
+                     aria-labelledby="leaderboard-table-title">
+
+                <h2 id="leaderboard-table-title" class="sr-only">
+                    World student rankings
+                </h2>
+
+                <div id="leaderboard-table-wrapper"
+                     class="leaderboard-table-wrapper">
+
+                    <table id="leaderboard-table"
+                           class="leaderboard-table">
+
+                        <thead id="leaderboard-table-head">
+                            <tr>
+                                <th scope="col">Rank</th>
+                                <th scope="col">Student</th>
+                                <th scope="col">Adm. No.</th>
+                                <th scope="col">Class</th>
+                                <th scope="col">School</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="leaderboard-table-body">
+                            <!-- leaderboard-v2.js will render real Supabase users here. -->
+                            <tr id="leaderboard-loading-row" class="leaderboard-state-row">
+                                <td colspan="6">
+                                    <span class="leaderboard-loading" aria-live="polite">
+                                        Loading leaderboard…
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+
+            <!-- =================================================
+                 FULL LEADERBOARD CTA
+            ================================================== -->
+            <section id="full-leaderboard-section"
+                     class="full-leaderboard-section">
+
+                <a id="view-full-leaderboard-button"
+                   class="view-full-leaderboard-button"
+                   href="leaderboard-v2.html"
+                   aria-label="View the full leaderboard">
+                    <span class="view-full-icon" aria-hidden="true">
+                        <i class="fa-solid fa-ranking-star"></i>
+                    </span>
+
+                    <span class="view-full-text">
+                        View Full Leaderboard
+                    </span>
+
+                    <span class="view-full-arrow" aria-hidden="true">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </span>
+                </a>
+
+            </section>
+
+
+            <!-- =================================================
+                 MOTIVATION FOOTER
+            ================================================== -->
+            <section id="leaderboard-motivation"
+                     class="leaderboard-motivation"
+                     aria-label="Motivational message">
+
+                <div id="motivation-icon"
+                     class="motivation-icon"
+                     aria-hidden="true">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+
+                <p id="motivation-message" class="motivation-message">
+                    Keep learning. Keep growing.<br>
+                    The future belongs to the curious.
+                </p>
+
+                <div id="leaderboard-ai-mascot"
+                     class="leaderboard-ai-mascot"
+                     aria-hidden="true">
+                    <img src="assets/images/freumia-ai-mascot.webp"
+                         alt=""
+                         loading="lazy">
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- =====================================================
+             PAGE FOOTER
+        ====================================================== -->
+        <footer id="leaderboard-footer"
+                class="leaderboard-footer">
+
+            <p id="footer-brand">
+                FREUMIA STUDENTS AI
+            </p>
+
+            <p id="footer-copy">
+                &copy; <span id="footer-year">—</span> Freumia Students AI.
+                All rights reserved.
+            </p>
+
+        </footer>
+
+    </div>
+
+
+    <!-- Leaderboard V2 JavaScript -->
+    <script src="leaderboard-v2.js" defer></script>
+
+</body>
+</html>
