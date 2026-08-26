@@ -401,16 +401,6 @@ body.menu-open #hero {
     overflow: hidden;
     touch-action: none;
 }
-/*==================================
-LOGOUT
-================================*/
-#logout-btn{
-    background:#335eea;
-    color:#ffffff;
-}
-#logout-btn:hover{
-    background:#1d4ed8;
-}
 
 /*************************************************************
    END MOBILE NAVIGATION MODULE
