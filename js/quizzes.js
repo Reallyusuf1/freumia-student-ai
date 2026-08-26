@@ -896,9 +896,9 @@ const QuizApp = {
         }
 
 
-        this.showError(
-            "You've done today's quiz. Come back tomorrow."
-        );
+        alert(
+    "Daily Quiz Completed\n\nYou've already completed today's quiz. Please come back tomorrow for a new quiz."
+);
 
     },
 
