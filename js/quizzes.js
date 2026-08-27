@@ -897,8 +897,11 @@ const QuizApp = {
 
 
         alert(
-    "Daily Quiz Completed\n\nYou've already completed today's quiz. Please come back tomorrow for a new quiz."
+    "Daily Quiz Completed\n\n" +
+    "You've already completed today's quiz. Please come back tomorrow for a new quiz."
 );
+
+window.location.href = "index.html";
 
     },
 
