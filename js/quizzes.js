@@ -346,11 +346,25 @@ const QuizApp = {
             }
 
 
-            await this.loadStudent(authUser.id);
+            await this.loadStudent(
+    authUser.id
+);
 
 
-            const profileCheck =
-                this.validateQuizProfile();
+const provider =
+    session.user?.app_metadata?.provider ||
+    session.user?.identities?.[0]?.provider ||
+    "";
+
+
+const isGoogleUser =
+    provider === "google";
+
+
+const profileCheck =
+    this.validateQuizProfile(
+        isGoogleUser
+    );
 
 
             if (!profileCheck.valid) {
@@ -446,104 +460,138 @@ const QuizApp = {
      * ========================================================
      */
 
-    validateQuizProfile() {
+    validateQuizProfile(isGoogleUser = false) {
 
-        if (!this.student?.id) {
-
-            return {
-
-                valid: false,
-
-                missing: [
-                    "Student Profile"
-                ],
-
-                firstField: null
-
-            };
-
-        }
-
-
-        const missing = [];
-
-
-        if (
-            !this.student.fms_id ||
-            !String(this.student.fms_id).trim()
-        ) {
-
-            missing.push(
-                "FMS-ID"
-            );
-
-        }
-
-
-        if (
-            !this.student.full_name ||
-            !String(this.student.full_name).trim()
-        ) {
-
-            missing.push(
-                "Full Name"
-            );
-
-        }
-
-
-        if (
-            !this.student.country ||
-            !String(this.student.country).trim()
-        ) {
-
-            missing.push(
-                "Country"
-            );
-
-        }
-
-
-        if (
-            !this.student.class_level ||
-            !String(this.student.class_level).trim()
-        ) {
-
-            missing.push(
-                "Class Level"
-            );
-
-        }
-
-
-        const fieldMap = {
-
-            "FMS-ID": null,
-
-            "Full Name": "full-name",
-
-            "Country": "country",
-
-            "Class Level": "student-class"
-
-        };
-
+    if (!this.student?.id) {
 
         return {
 
-            valid:
-                missing.length === 0,
+            valid: false,
 
-            missing,
+            missing: [
+                "Student Profile"
+            ],
 
-            firstField:
-                fieldMap[
-                    missing[0]
-                ] || null
+            firstField: null
 
         };
 
-    },
+    }
+
+
+    const missing = [];
+
+
+    /*
+     * Full Name is required for every user.
+     */
+
+    if (
+        !this.student.full_name ||
+        !String(
+            this.student.full_name
+        ).trim()
+    ) {
+
+        missing.push(
+            "Full Name"
+        );
+
+    }
+
+
+    /*
+     * Country is required for every user.
+     */
+
+    if (
+        !this.student.country ||
+        !String(
+            this.student.country
+        ).trim()
+    ) {
+
+        missing.push(
+            "Country"
+        );
+
+    }
+
+
+    /*
+     * Class Level is required for every user.
+     */
+
+    if (
+        !this.student.class_level ||
+        !String(
+            this.student.class_level
+        ).trim()
+    ) {
+
+        missing.push(
+            "Class Level"
+        );
+
+    }
+
+
+    /*
+     * FMS-ID is required ONLY for normal
+     * FMS students.
+     *
+     * Google users do not need FMS-ID.
+     */
+
+    if (
+        !isGoogleUser &&
+        (
+            !this.student.fms_id ||
+            !String(
+                this.student.fms_id
+            ).trim()
+        )
+    ) {
+
+        missing.push(
+            "FMS-ID"
+        );
+
+    }
+
+
+    const fieldMap = {
+
+        "Full Name":
+            "full-name",
+
+        "Country":
+            "country",
+
+        "Class Level":
+            "student-class",
+
+        "FMS-ID":
+            null
+
+    };
+
+
+    return {
+
+        valid:
+            missing.length === 0,
+
+        missing,
+
+        firstField:
+            fieldMap[
+                missing[0]
+            ] || null
+
+    };
+
+},
 
 
     /* ========================================================
@@ -851,7 +899,7 @@ const QuizApp = {
 
 
         const profileCheck =
-            this.validateQuizProfile();
+    this.validateQuizProfile();
 
 
         if (!profileCheck.valid) {
