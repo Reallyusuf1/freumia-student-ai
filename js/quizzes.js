@@ -595,57 +595,289 @@ const profileCheck =
 
 
     /* ========================================================
-     * Missing Profile Alert
-     * ========================================================
-     */
+ * Premium Missing Profile Modal
+ * ========================================================
+ */
+showMissingProfileAlert(
+    profileCheck
+) {
 
-    showMissingProfileAlert(
-        profileCheck
-    ) {
+    const fields =
+        profileCheck.missing
+            .map(
+                field => `
+                    <li>
+                        <span class="profile-missing-check">
+                            !
+                        </span>
+                        <span>
+                            ${field}
+                        </span>
+                    </li>
+                `
+            )
+            .join("");
 
-        const fields =
-            profileCheck.missing
-                .map(
-                    field =>
-                        `• ${field}`
-                )
-                .join("\n");
 
-
-        alert(
-
-            "Profile Information Missing\n\n" +
-
-            "Your profile is incomplete. Please complete " +
-
-            "the following information before starting " +
-
-            "the quiz:\n\n" +
-
-            fields +
-
-            "\n\n" +
-
-            "You will be taken to your profile to update it."
-
+    const existingModal =
+        document.getElementById(
+            "profileMissingModal"
         );
 
 
-        if (
-            profileCheck.firstField
-        ) {
+    if (existingModal) {
+        existingModal.remove();
+    }
 
-            window.location.href =
-                `student-profile.html#${profileCheck.firstField}`;
 
-        } else {
+    const modal =
+        document.createElement("div");
 
-            window.location.href =
-                "student-profile.html";
+    modal.id =
+        "profileMissingModal";
 
+    modal.className =
+        "profile-missing-modal";
+
+    modal.setAttribute(
+        "role",
+        "dialog"
+    );
+
+    modal.setAttribute(
+        "aria-modal",
+        "true"
+    );
+
+    modal.setAttribute(
+        "aria-labelledby",
+        "profileMissingTitle"
+    );
+
+
+    modal.innerHTML = `
+
+        <div class="profile-missing-backdrop"></div>
+
+        <div class="profile-missing-card">
+
+            <button
+                type="button"
+                class="profile-missing-close"
+                id="profileMissingClose"
+                aria-label="Close"
+            >
+                &times;
+            </button>
+
+
+            <div class="profile-missing-icon">
+
+                <span>
+                    !
+                </span>
+
+            </div>
+
+
+            <div class="profile-missing-content">
+
+                <span class="profile-missing-badge">
+                    Profile Check
+                </span>
+
+
+                <h2 id="profileMissingTitle">
+                    Profile Information Missing
+                </h2>
+
+
+                <p class="profile-missing-description">
+                    Your profile is incomplete. Please
+                    complete the information below before
+                    starting your quiz.
+                </p>
+
+
+                <div class="profile-missing-section">
+
+                    <h3>
+                        Required Information
+                    </h3>
+
+
+                    <ul class="profile-missing-list">
+                        ${fields}
+                    </ul>
+
+                </div>
+
+
+                <p class="profile-missing-note">
+                    Complete your profile to unlock
+                    today's quiz.
+                </p>
+
+
+                <button
+                    type="button"
+                    id="profileMissingContinue"
+                    class="profile-missing-button"
+                >
+                    <span>
+                        Complete Profile
+                    </span>
+
+                    <span class="profile-missing-arrow">
+                        →
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+
+    document.body.appendChild(
+        modal
+    );
+
+
+    document.body.classList.add(
+        "profile-modal-open"
+    );
+
+
+    requestAnimationFrame(() => {
+
+        modal.classList.add(
+            "is-visible"
+        );
+
+    });
+
+
+    const target =
+        profileCheck.firstField;
+
+
+    const goToProfile = () => {
+
+        document.body.classList.remove(
+            "profile-modal-open"
+        );
+
+
+        modal.classList.remove(
+            "is-visible"
+        );
+
+
+        setTimeout(() => {
+
+            modal.remove();
+
+            if (target) {
+
+                window.location.href =
+                    `student-profile.html#${target}`;
+
+            } else {
+
+                window.location.href =
+                    "student-profile.html";
+
+            }
+
+        }, 180);
+
+    };
+
+
+    const continueButton =
+        document.getElementById(
+            "profileMissingContinue"
+        );
+
+
+    const closeButton =
+        document.getElementById(
+            "profileMissingClose"
+        );
+
+
+    const backdrop =
+        modal.querySelector(
+            ".profile-missing-backdrop"
+        );
+
+
+    if (continueButton) {
+
+        continueButton.addEventListener(
+            "click",
+            goToProfile
+        );
+
+    }
+
+
+    if (closeButton) {
+
+        closeButton.addEventListener(
+            "click",
+            goToProfile
+        );
+
+    }
+
+
+    if (backdrop) {
+
+        backdrop.addEventListener(
+            "click",
+            goToProfile
+        );
+
+    }
+
+
+    const escapeHandler =
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                goToProfile();
+
+            }
+
+        };
+
+
+    document.addEventListener(
+        "keydown",
+        escapeHandler,
+        {
+            once: true
         }
+    );
 
-    },
+
+    if (continueButton) {
+
+        setTimeout(() => {
+
+            continueButton.focus();
+
+        }, 50);
+
+    }
+
+},
 
 
     /* ========================================================
