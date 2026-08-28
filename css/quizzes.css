@@ -925,3 +925,607 @@
     }
 
   }
+/* =========================================================
+   PREMIUM PROFILE MISSING MODAL
+   ========================================================= */
+
+.profile-modal-open {
+    overflow: hidden;
+}
+
+
+.profile-missing-modal {
+    position: fixed;
+    inset: 0;
+
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    visibility: hidden;
+    opacity: 0;
+
+    transition:
+        opacity 180ms ease,
+        visibility 180ms ease;
+}
+
+
+.profile-missing-modal.is-visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.profile-missing-backdrop {
+    position: absolute;
+    inset: 0;
+
+    background:
+        rgba(2, 7, 20, 0.78);
+
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
+}
+
+
+.profile-missing-card {
+    position: relative;
+
+    width: min(
+        100%,
+        470px
+    );
+
+    max-height: min(
+        720px,
+        calc(100vh - 40px)
+    );
+
+    overflow-y: auto;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 35, 67, 0.98),
+            rgba(9, 20, 43, 0.98)
+        );
+
+    border:
+        1px solid
+        rgba(118, 103, 255, 0.35);
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 30px 80px
+        rgba(0, 0, 0, 0.55),
+
+        0 0 50px
+        rgba(91, 70, 255, 0.16);
+
+    transform:
+        translateY(18px)
+        scale(0.97);
+
+    transition:
+        transform 220ms ease;
+
+    scrollbar-width: thin;
+
+    animation:
+        profileModalCardIn
+        220ms ease
+        forwards;
+}
+
+
+.profile-missing-modal.is-visible
+.profile-missing-card {
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+@keyframes profileModalCardIn {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(20px)
+            scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* Close button */
+
+.profile-missing-close {
+    position: absolute;
+
+    top: 18px;
+    right: 18px;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    color: #ffffff;
+
+    font-size: 28px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 180ms ease,
+        transform 180ms ease;
+}
+
+
+.profile-missing-close:hover {
+    background:
+        rgba(255, 255, 255, 0.12);
+
+    transform:
+        rotate(90deg);
+}
+
+
+.profile-missing-close:focus-visible {
+    outline:
+        2px solid
+        rgba(108, 99, 255, 0.9);
+
+    outline-offset: 3px;
+}
+
+
+/* Icon */
+
+.profile-missing-icon {
+    width: 76px;
+    height: 76px;
+
+    margin:
+        38px auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #9333ea
+        );
+
+    box-shadow:
+        0 15px 35px
+        rgba(99, 70, 255, 0.35);
+}
+
+
+.profile-missing-icon span {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        2px solid
+        rgba(255, 255, 255, 0.85);
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    font-size: 25px;
+    font-weight: 800;
+}
+
+
+/* Content */
+
+.profile-missing-content {
+    padding:
+        0 30px 30px;
+
+    text-align: center;
+}
+
+
+.profile-missing-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        7px 14px;
+
+    border:
+        1px solid
+        rgba(108, 99, 255, 0.3);
+
+    border-radius: 999px;
+
+    background:
+        rgba(108, 99, 255, 0.10);
+
+    color:
+        #a9a1ff;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    letter-spacing:
+        0.02em;
+}
+
+
+.profile-missing-content h2 {
+    margin:
+        15px 0 12px;
+
+    color:
+        #ffffff;
+
+    font-size:
+        clamp(24px, 5vw, 30px);
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    letter-spacing:
+        -0.02em;
+}
+
+
+.profile-missing-description {
+    margin:
+        0 auto 24px;
+
+    max-width: 390px;
+
+    color:
+        rgba(226, 232, 240, 0.78);
+
+    font-size: 15px;
+
+    line-height: 1.65;
+}
+
+
+/* Required information */
+
+.profile-missing-section {
+    padding:
+        18px;
+
+    margin-bottom: 18px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.07);
+
+    border-radius: 18px;
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    text-align: left;
+}
+
+
+.profile-missing-section h3 {
+    margin:
+        0 0 13px;
+
+    color:
+        #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+.profile-missing-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+
+.profile-missing-list li {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-height: 40px;
+
+    padding:
+        9px 11px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(15, 23, 42, 0.55);
+
+    color:
+        #e5e7eb;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+.profile-missing-check {
+    width: 25px;
+    height: 25px;
+
+    flex: 0 0 25px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(108, 99, 255, 0.16);
+
+    color:
+        #a78bfa;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+/* Note */
+
+.profile-missing-note {
+    margin:
+        0 0 20px;
+
+    color:
+        rgba(203, 213, 225, 0.65);
+
+    font-size: 13px;
+
+    line-height: 1.55;
+}
+
+
+/* Main action */
+
+.profile-missing-button {
+    width: 100%;
+
+    min-height: 56px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    padding:
+        14px 20px;
+
+    border: 0;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    color:
+        #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 12px 28px
+        rgba(99, 70, 255, 0.28);
+
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        filter 180ms ease;
+}
+
+
+.profile-missing-button:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 16px 34px
+        rgba(99, 70, 255, 0.38);
+
+    filter:
+        brightness(1.08);
+}
+
+
+.profile-missing-button:active {
+    transform:
+        translateY(0);
+}
+
+
+.profile-missing-button:focus-visible {
+    outline:
+        2px solid
+        rgba(255, 255, 255, 0.9);
+
+    outline-offset: 3px;
+}
+
+
+.profile-missing-arrow {
+    font-size: 21px;
+
+    transition:
+        transform 180ms ease;
+}
+
+
+.profile-missing-button:hover
+.profile-missing-arrow {
+    transform:
+        translateX(4px);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .profile-missing-modal {
+        padding: 14px;
+    }
+
+
+    .profile-missing-card {
+        width: 100%;
+
+        max-height:
+            calc(100vh - 28px);
+
+        border-radius: 24px;
+    }
+
+
+    .profile-missing-close {
+        top: 14px;
+        right: 14px;
+
+        width: 38px;
+        height: 38px;
+
+        font-size: 25px;
+    }
+
+
+    .profile-missing-icon {
+        width: 68px;
+        height: 68px;
+
+        margin-top: 30px;
+
+        border-radius: 21px;
+    }
+
+
+    .profile-missing-icon span {
+        width: 38px;
+        height: 38px;
+
+        font-size: 22px;
+    }
+
+
+    .profile-missing-content {
+        padding:
+            0 20px 22px;
+    }
+
+
+    .profile-missing-content h2 {
+        font-size: 23px;
+    }
+
+
+    .profile-missing-description {
+        font-size: 14px;
+
+        line-height: 1.6;
+    }
+
+
+    .profile-missing-section {
+        padding: 15px;
+    }
+
+
+    .profile-missing-button {
+        min-height: 54px;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .profile-missing-modal,
+    .profile-missing-card,
+    .profile-missing-close,
+    .profile-missing-button,
+    .profile-missing-arrow {
+        animation: none;
+        transition: none;
+    }
+
+   }
