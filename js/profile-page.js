@@ -287,8 +287,18 @@ async function editProfile() {
 
     const admission =
         document.getElementById("admission-number");
+    
+    const fullName =
+    document.getElementById("full-name");
+
+const country =
+    document.getElementById("country");
 
     if (!editMode) {
+
+        fullName.removeAttribute("readonly");
+        
+        country.removeAttribute("readonly");
 
         school.removeAttribute("readonly");
 
@@ -319,15 +329,19 @@ async function editProfile() {
         .from("profiles")
         .upsert({
 
-            id: user.id,
+    id: user.id,
 
-            school_name: school.value,
+    full_name: fullName.value.trim(),
 
-            class_level: studentClass.value,
+    country: country.value.trim(),
 
-            admission_number: admission.value
+    school_name: school.value.trim(),
 
-        });
+    class_level: studentClass.value,
+
+    admission_number: admission.value.trim()
+
+});
 
     if (error) {
 
@@ -336,6 +350,10 @@ async function editProfile() {
         return;
 
     }
+    
+fullName.setAttribute("readonly", true);
+
+country.setAttribute("readonly", true);
 
     school.setAttribute("readonly", true);
 
