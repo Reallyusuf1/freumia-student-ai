@@ -216,15 +216,29 @@ justify-content: flex-start;
 }
 /* Hide AI Tutor and Daily Quiz on desktop only */
 @media (min-width: 769px) {
+    /* Hide AI Tutor and Daily Quiz */
     .floating-card-1,
     .floating-card-2 {
         display: none;
     }
 
-    /* Voice AI beside Teacher Dashboard */
+    /* Voice AI */
     .floating-card-3 {
         top: 20px;
         right: 200px;
         left: auto;
+
+        width: 170px;
+        min-height: 150px;
+    }
+
+    /* Teacher Dashboard */
+    .floating-card-4 {
+        top: 20px;
+        right: 10px;
+        left: auto;
+
+        width: 170px;
+        min-height: 150px;
     }
 }
