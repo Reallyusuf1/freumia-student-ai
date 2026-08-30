@@ -214,3 +214,10 @@ justify-content: flex-start;
 }
   
 }
+/* Hide AI Tutor and Daily Quiz on desktop only */
+@media (min-width: 769px) {
+    .floating-card-1,
+    .floating-card-2 {
+        display: none;
+    }
+}
