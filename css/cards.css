@@ -220,4 +220,11 @@ justify-content: flex-start;
     .floating-card-2 {
         display: none;
     }
+
+    /* Voice AI beside Teacher Dashboard */
+    .floating-card-3 {
+        top: 20px;
+        right: 200px;
+        left: auto;
+    }
 }
